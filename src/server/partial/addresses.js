@@ -214,6 +214,4 @@ router.delete("/api/addresses/:addressid", (req, res) => {
 });
 
 
-
-
 module.exports = router;
