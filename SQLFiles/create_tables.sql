@@ -34,12 +34,9 @@ CREATE TABLE users (
 
 CREATE TABLE passwords (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT,
-  system_password VARCHAR(255),
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  username VARCHAR(255),
+  system_password VARCHAR(255)
 );
-
-
 
 CREATE TABLE events_management (
   id INT AUTO_INCREMENT PRIMARY KEY,
