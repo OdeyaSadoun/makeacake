@@ -2,14 +2,15 @@ const express = require("express");
 const connection = require("./connection.js");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
-const router = express.Router();
-const app = express();
-app.use(express.json());
 
-router.use(bodyParser.json());
+const router = express.Router(); // Create a router object to define routes
+const app = express(); // Create an instance of the Express application
+app.use(express.json()); // Parse incoming requests with JSON payloads
 
+router.use(bodyParser.json()); // Parse request bodies as JSON
+
+// Route to retrieve all users
 router.get("/api/users", (req, res) => {
-  // get all users
   connection.query("SELECT * FROM users", (err, results) => {
     if (err) {
       console.error("Error executing MySQL query:", err);
@@ -20,8 +21,8 @@ router.get("/api/users", (req, res) => {
   });
 });
 
+// Route to retrieve a user by ID
 router.get("/api/users/:id", (req, res) => {
-  // get user by ID
   const userId = req.params.id;
   connection.query(
     "SELECT * FROM users WHERE id = ?",
@@ -43,92 +44,88 @@ router.get("/api/users/:id", (req, res) => {
   );
 });
 
-router.get("/api/users/:username", (req, res) => {
-  // get user by username
-  const username = req.params.username;
-  connection.query(
-    "SELECT * FROM users WHERE username = ?",
-    [username],
-    (err, results) => {
-      if (err) {
-        console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to retrieve user" });
-        return;
-      }
-
-      if (results.length === 0) {
-        res.status(404).json({ error: "User not found" });
-        return;
-      }
-
-      res.json(results[0]);
-    }
-  );
-});
-
-router.post("/api/users/login", (req, res) => {
-  // get user by username and password
-  const { username, password } = req.body;
-  connection.query(
-    "SELECT * FROM users WHERE id = (SELECT id FROM passwords WHERE username = ? AND system_password = ?)",
-    [username, password],
-    (err, results) => {
-      console.log(username, password);
-      if (err) {
-        console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to retrieve user" });
-        return;
-      }
-
-      if (results.length === 0) {
-        res.status(404).json({ error: "User not found" });
-        return;
-      }
-
-      res.json(results[0]);
-    }
-  );
-});
-
+// Route to handle user registration
 router.post("/api/users/register", (req, res) => {
-  // Add user
-  const { first_last_name, username, password, email, phone, city, street, house_number, date_of_birth, id_card, is_admin } = req.body;
+  const {
+    first_last_name,
+    username,
+    password,
+    email,
+    phone,
+    city,
+    street,
+    house_number,
+    date_of_birth,
+    id_card,
+    is_admin,
+  } = req.body;
 
+  // Check if the user already exists by username or id_card becouse they need to be uniqe
   connection.query(
-    "INSERT INTO users (first_last_name, username, email, phone, city, street, house_number, date_of_birth, id_card, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [first_last_name, username, email, phone, city, street, house_number, date_of_birth, id_card, is_admin],
+    "SELECT * FROM users WHERE username = ? OR id_card = ?",
+    [username, id_card],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to create user1" });
+        res.status(500).json({ error: "Failed to create user" });
         return;
       }
 
-      // Retrieve the generated user ID
-      const userId = results.insertId;
+      if (results.length > 0) {
+        // User with the same username or id_card already exists
+        res.status(400).json({ error: "User already exists" });
+        return;
+      }
 
-      // Insert the password into the passwords table
+      // Insert new user into the 'users' table
       connection.query(
-        "INSERT INTO passwords (username, password) VALUES (?, ?)",
-        [username, password],
-        (err) => {
+        "INSERT INTO users (first_last_name, username, email, phone, city, street, house_number, date_of_birth, id_card, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, false)",
+        [
+          first_last_name,
+          username,
+          email,
+          phone,
+          city,
+          street,
+          house_number,
+          date_of_birth,
+          id_card,
+          is_admin,
+        ],
+        (err, results) => {
           if (err) {
             console.error("Error executing MySQL query:", err);
-            res.status(500).json({ error: "Failed to create user2" });
+            res.status(500).json({ error: "Failed to create user" });
             return;
           }
 
-          res
-            .status(201)
-            .json({ message: "create user succefuly", status: 201 });
+          // Retrieve the generated user ID
+          const userId = results.insertId;
+
+          // Insert the password into the passwords table
+          connection.query(
+            "INSERT INTO passwords (username, password) VALUES (?, ?)",
+            [username, password],
+            (err) => {
+              if (err) {
+                console.error("Error executing MySQL query:", err);
+                res.status(500).json({ error: "Failed to create user" });
+                return;
+              }
+
+              res
+                .status(201)
+                .json({ message: "User created successfully", status: 201 });
+            }
+          );
         }
       );
     }
   );
 });
 
+// Route to update user email
 router.put("/api/users/:username/update_email", (req, res) => {
-  // update email of user
   const username = req.params.username;
   const { email, userid } = req.body;
   connection.query(
@@ -146,8 +143,8 @@ router.put("/api/users/:username/update_email", (req, res) => {
   );
 });
 
+// Route to update user phone
 router.put("/api/users/:username/update_phone", (req, res) => {
-  // update phone of user
   const username = req.params.username;
   const { phone, userid } = req.body;
   connection.query(
@@ -165,8 +162,8 @@ router.put("/api/users/:username/update_phone", (req, res) => {
   );
 });
 
+// Route to update user name
 router.put("/api/users/:username/update_name", (req, res) => {
-  // update name of user
   const username = req.params.username;
   const { first_last_name, userid } = req.body;
   connection.query(
@@ -184,8 +181,8 @@ router.put("/api/users/:username/update_name", (req, res) => {
   );
 });
 
+// Route to update user password
 router.put("/api/users/:username/update_password", (req, res) => {
-  // update password of user
   const username = req.params.username;
   const { system_password, userid } = req.body;
   connection.query(
