@@ -164,12 +164,12 @@ router.post("/api/users/register", (req, res) => {
 
 // Route to handle user login
 router.post("/api/users/login", (req, res) => {
-  const { username, password } = req.body;
+  const { username, system_password } = req.body;
   connection.query(
-    "SELECT * FROM users WHERE id = (SELECT id FROM passwords WHERE username = ? AND password = ?)",
-    [username, password],
+    "SELECT * FROM users WHERE id = (SELECT id FROM passwords WHERE username = ? AND system_password = ?)",
+    [username, system_password],
     (err, results) => {
-      console.log(username, password);
+      console.log(username, system_password);
       if (err) {
         console.error("Error executing MySQL query:", err);
         res.status(500).json({ error: "Failed to retrieve user" });
