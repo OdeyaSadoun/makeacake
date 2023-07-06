@@ -187,12 +187,13 @@ router.post("/api/users/login", (req, res) => {
 });
 
 // Route to update user email
-router.put("/api/users/:username/update_email", (req, res) => {
-  const username = req.params.username;
+router.put("/api/users/:userid/update_email", (req, res) => {
   const { email, userid } = req.body;
+  
+  // Check if the user exists by userid
   connection.query(
-    "UPDATE users SET email = ? WHERE userid = ?",
-    [email, userid],
+    "SELECT * FROM users WHERE userid = ?",
+    [userid],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -200,18 +201,38 @@ router.put("/api/users/:username/update_email", (req, res) => {
         return;
       }
 
-      res.json({ message: "Email updated successfully" });
+      if (results.length === 0) {
+        // User does not exist
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+      
+      // User exists, proceed with updating the email
+      connection.query(
+        "UPDATE users SET email = ? WHERE userid = ?",
+        [email, userid],
+        (err, updateResults) => {
+          if (err) {
+            console.error("Error executing MySQL query:", err);
+            res.status(500).json({ error: "Failed to update email" });
+            return;
+          }
+
+          res.json({ message: "Email updated successfully" });
+        }
+      );
     }
   );
 });
 
 // Route to update user phone
-router.put("/api/users/:username/update_phone", (req, res) => {
-  const username = req.params.username;
+router.put("/api/users/:userid/update_phone", (req, res) => {
   const { phone, userid } = req.body;
+  
+  // Check if the user exists by userid
   connection.query(
-    "UPDATE users SET phone = ? WHERE userid = ?",
-    [phone, userid],
+    "SELECT * FROM users WHERE userid = ?",
+    [userid],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -219,18 +240,38 @@ router.put("/api/users/:username/update_phone", (req, res) => {
         return;
       }
 
-      res.json({ message: "Phone updated successfully" });
+      if (results.length === 0) {
+        // User does not exist
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+      
+      // User exists, proceed with updating the phone number
+      connection.query(
+        "UPDATE users SET phone = ? WHERE userid = ?",
+        [phone, userid],
+        (err, updateResults) => {
+          if (err) {
+            console.error("Error executing MySQL query:", err);
+            res.status(500).json({ error: "Failed to update phone" });
+            return;
+          }
+
+          res.json({ message: "Phone updated successfully" });
+        }
+      );
     }
   );
 });
 
 // Route to update user name
-router.put("/api/users/:username/update_name", (req, res) => {
-  const username = req.params.username;
+router.put("/api/users/:userid/update_name", (req, res) => {
   const { first_last_name, userid } = req.body;
+
+  // Check if the user exists by userid
   connection.query(
-    "UPDATE users SET first_last_name = ? WHERE userid = ?",
-    [first_last_name, userid],
+    "SELECT * FROM users WHERE userid = ?",
+    [userid],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -238,18 +279,38 @@ router.put("/api/users/:username/update_name", (req, res) => {
         return;
       }
 
-      res.json({ message: "Name updated successfully" });
+      if (results.length === 0) {
+        // User does not exist
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+
+      // User exists, proceed with updating the name
+      connection.query(
+        "UPDATE users SET first_last_name = ? WHERE userid = ?",
+        [first_last_name, userid],
+        (err, updateResults) => {
+          if (err) {
+            console.error("Error executing MySQL query:", err);
+            res.status(500).json({ error: "Failed to update name" });
+            return;
+          }
+
+          res.json({ message: "Name updated successfully" });
+        }
+      );
     }
   );
 });
 
 // Route to update user password
-router.put("/api/users/:username/update_password", (req, res) => {
-  const username = req.params.username;
+router.put("/api/users/:userid/update_password", (req, res) => {
   const { system_password, userid } = req.body;
+
+  // Check if the user exists by userid
   connection.query(
-    "UPDATE passwords SET system_password = ? WHERE userid = ?",
-    [system_password, userid],
+    "SELECT * FROM users WHERE userid = ?",
+    [userid],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -257,14 +318,74 @@ router.put("/api/users/:username/update_password", (req, res) => {
         return;
       }
 
-      if (results.affectedRows === 0) {
+      if (results.length === 0) {
+        // User not found
         res.status(404).json({ error: "User not found" });
         return;
       }
 
-      res.json({ message: "Password updated successfully" });
+      // User exists, proceed with updating the password
+      connection.query(
+        "UPDATE passwords SET system_password = ? WHERE userid = ?",
+        [system_password, userid],
+        (err, updateResults) => {
+          if (err) {
+            console.error("Error executing MySQL query:", err);
+            res.status(500).json({ error: "Failed to update password" });
+            return;
+          }
+
+          if (updateResults.affectedRows === 0) {
+            // Password update failed
+            res.status(500).json({ error: "Failed to update password" });
+            return;
+          }
+
+          res.json({ message: "Password updated successfully" });
+        }
+      );
     }
   );
 });
+
+// Route to update user's is_admin value
+router.put("/api/users/:userid/update_is_admin", (req, res) => {
+  const { is_admin, userid } = req.body;
+
+  // Check if the user exists by userid
+  connection.query(
+    "SELECT * FROM users WHERE userid = ?",
+    [userid],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update is_admin" });
+        return;
+      }
+
+      if (results.length === 0) {
+        // User not found
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+
+      // User exists, proceed with updating the is_admin value
+      connection.query(
+        "UPDATE users SET is_admin = ? WHERE userid = ?",
+        [is_admin, userid],
+        (err, updateResults) => {
+          if (err) {
+            console.error("Error executing MySQL query:", err);
+            res.status(500).json({ error: "Failed to update is_admin" });
+            return;
+          }
+
+          res.json({ message: "is_admin updated successfully" });
+        }
+      );
+    }
+  );
+});
+
 
 module.exports = router;
