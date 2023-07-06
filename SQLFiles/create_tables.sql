@@ -93,3 +93,11 @@ CREATE TABLE order_event (
   FOREIGN KEY (order_id) REFERENCES orders(id),
   FOREIGN KEY (event_id) REFERENCES events_management(id)
 );
+
+CREATE TABLE product_user (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  product_id INT,
+  FOREIGN KEY (product_id) REFERENCES products(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
