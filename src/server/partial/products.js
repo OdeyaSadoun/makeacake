@@ -85,7 +85,7 @@ router.post("/api/users/:userid/products", (req, res) => {
 
 router.put("/api/products/:productname/update_price", (req, res) => {
   // update price of product
-  //const productname = req.params.productname;
+  //const product_name = req.params.product_name;
   const { price, id } = req.body;
   connection.query(
     "UPDATE products SET price = ? WHERE id = ?",
@@ -104,7 +104,7 @@ router.put("/api/products/:productname/update_price", (req, res) => {
 
 router.put("/api/products/:productname/update_quantity", (req, res) => {
     // update quantity of product
-    //const productname = req.params.productname;
+    //const product_name = req.params.product_name;
     const { quantity, id } = req.body;
     connection.query(
       "UPDATE products SET quantity = ? WHERE id = ?",
@@ -124,7 +124,7 @@ router.put("/api/products/:productname/update_quantity", (req, res) => {
 
 router.put("/api/products/:productname/update_sensitivity", (req, res) => {
   // update sensitivity of product
-  //const productname = req.params.productname;
+  //const product_name = req.params.product_name;
   const { sensitivity, id } = req.body;
   connection.query(
     "UPDATE products SET sensitivity = ? WHERE id = ?",
@@ -143,7 +143,7 @@ router.put("/api/products/:productname/update_sensitivity", (req, res) => {
 
 router.put("/api/products/:productname/update_kosher", (req, res) => {
     // update kosher type of product
-    //const productname = req.params.productname;
+    //const product_name = req.params.product_name;
     const { kosher_type, id } = req.body;
     connection.query(
       "UPDATE products SET kosher_type = ? WHERE id = ?",
@@ -163,7 +163,7 @@ router.put("/api/products/:productname/update_kosher", (req, res) => {
 
   router.put("/api/products/:productname/update_is_dairy", (req, res) => {
     // update is_dairy of product
-    //const productname = req.params.productname;
+    //const product_name = req.params.product_name;
     const { is_dairy, id } = req.body;
     connection.query(
       "UPDATE products SET is_dairy = ? WHERE id = ?",
@@ -178,5 +178,35 @@ router.put("/api/products/:productname/update_kosher", (req, res) => {
         res.json({ message: "is_dairy updated successfully" });
       }
     );
-  });    
+  });   
+  
+  router.delete("/api/users/:userid/products", (req, res) => {
+    // delete product
+    const { id } = req.body;
+    connection.query(
+      "DELETE FROM products WHERE id = ?",
+      [id],
+      (err, results) => {
+        if (err) {
+          console.error("Error executing MySQL query:", err);
+          res.status(500).json({ error: "Failed to update is_dairy" });
+          return;
+        }
+        connection.query(
+            "DELETE FROM media_product WHERE product_id = ?",
+            [id],
+            (err, results) => {
+              if (err) {
+                console.error("Error executing MySQL query:", err);
+                res.status(500).json({ error: "Failed to update is_dairy" });
+                return;
+              }  
+        res.json({ message: "is_dairy updated successfully" });
+            }
+        );
+      }
+    );
+  });
+  
+  
 module.exports = router;
