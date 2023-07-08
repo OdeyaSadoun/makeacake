@@ -34,12 +34,9 @@ CREATE TABLE users (
 
 CREATE TABLE passwords (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  user_id INT,
-  system_password VARCHAR(255),
-  FOREIGN KEY (user_id) REFERENCES users(id)
+  username VARCHAR(255),
+  system_password VARCHAR(255)
 );
-
-
 
 CREATE TABLE events_management (
   id INT AUTO_INCREMENT PRIMARY KEY,
@@ -92,4 +89,12 @@ CREATE TABLE order_event (
   event_id INT,
   FOREIGN KEY (order_id) REFERENCES orders(id),
   FOREIGN KEY (event_id) REFERENCES events_management(id)
+);
+
+CREATE TABLE product_user (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  product_id INT,
+  FOREIGN KEY (product_id) REFERENCES products(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
 );
