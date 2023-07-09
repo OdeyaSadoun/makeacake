@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Toolbar from './client/components/Toolbar';
 import Home from './client/pages/Home';
 import Shop from './client/pages/Shop';
@@ -14,7 +14,7 @@ const App = () => {
     <Router>
       <div>
         <Toolbar />
-        <Switch>
+        <Routes>
           <Route path="/" exact component={Home} />
           <Route path="/shop" component={Shop} />
           <Route path="/cart" component={Cart} />
@@ -24,7 +24,7 @@ const App = () => {
           <Route path="/login" component={Login} /> {/* Add this line */}
 
 
-        </Switch>
+        </Routes>
       </div>
     </Router>
   );
