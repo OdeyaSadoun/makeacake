@@ -5,6 +5,8 @@ import Home from './client/pages/Home';
 import Shop from './client/pages/Shop';
 import Cart from './client/pages/Cart';
 import LikedProductsPage from './client/pages/LikedProductsPage';
+import Login from './client/pages/LoginPage';
+import Register from './client/pages/RegisterPage';
 import AdminPage from './client/pages/AdminPage';
 
 const App = () => {
@@ -18,6 +20,10 @@ const App = () => {
           <Route path="/cart" component={Cart} />
           <Route path="/liked-products" component={LikedProductsPage} />
           <Route path="/admin" component={AdminPage} />
+          <Route path="/register" component={Register} /> 
+          <Route path="/login" component={Login} /> {/* Add this line */}
+
+
         </Switch>
       </div>
     </Router>
