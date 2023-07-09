@@ -1,12 +1,12 @@
 // Shop.js
 import React from 'react';
-import ProductList from '../components/ProductList';
+import ProductsList from '../components/ProductsList';
 
 const Shop = () => {
   return (
     <div>
       <h1>Shop</h1>
-      <ProductList />
+      <ProductsList />
     </div>
   );
 };

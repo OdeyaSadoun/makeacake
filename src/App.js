@@ -1,11 +1,11 @@
 import React from 'react';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import Toolbar from './components/Toolbar';
-import Home from './pages/Home';
-import Shop from './pages/Shop';
-import Cart from './pages/Cart';
-import LikedProductsPage from './pages/LikedProductsPage';
-import AdminPage from './pages/AdminPage';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import Toolbar from './client/components/Toolbar';
+import Home from './client/pages/Home';
+import Shop from './client/pages/Shop';
+import Cart from './client/pages/Cart';
+import LikedProductsPage from './client/pages/LikedProductsPage';
+import AdminPage from './client/pages/AdminPage';
 
 const App = () => {
   return (
