@@ -1,0 +1,12 @@
+/* Toolbar styles */
+.toolbar {
+    background-color: pink;
+    padding: 10px;
+  }
+  
+  .toolbar a {
+    color: white;
+    text-decoration: none;
+    margin-right: 10px;
+  }
+  
