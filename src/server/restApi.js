@@ -116,6 +116,72 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
+
+  /*********************************************************/
+
+  static async getAllOrders() {
+    const url = `${BASE_URL}/api/orders`;
+    return await RestAPI.fetchData(url);
+  }
+  
+  static async getOrderById(orderId) {
+    const url = `${BASE_URL}/api/orders/${orderId}`;
+    return await RestAPI.fetchData(url);
+  }
+  
+  static async getOrdersByUserId(userId) {
+    const url = `${BASE_URL}/api/users/${userId}/orders`;
+    return await RestAPI.fetchData(url);
+  }
+  
+  static async createOrder(order) {
+    const url = `${BASE_URL}/api/orders`;
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(order),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+  
+  static async updateOrderPaymentType(orderId, paymentType) {
+    const url = `${BASE_URL}/api/orders/${orderId}/update_payment_type`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ payment_type: paymentType }),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+  
+  static async updateOrderIsPaid(orderId, isPaid) {
+    const url = `${BASE_URL}/api/orders/${orderId}/update_is_paid`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ is_paid: isPaid }),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+  
+  static async updateOrderIsShipping(orderId, isShipping) {
+    const url = `${BASE_URL}/api/orders/${orderId}/update_is_shipping`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ is_shipping: isShipping }),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+  
 }
 
 export default RestAPI;
