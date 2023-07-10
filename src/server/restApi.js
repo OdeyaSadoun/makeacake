@@ -18,6 +18,11 @@ export class RestAPI {
     return await RestAPI.fetchData(url);
   }
 
+  static async getUserById(userid) {
+    const url = `${BASE_URL}/api/users/${userid}`;
+    return await RestAPI.fetchData(url);
+  }
+
   static async getUserByUsernameAndPassword(username, password) {
     const url = `${BASE_URL}/api/users/login`;
     const body = { username, password };
@@ -48,7 +53,7 @@ export class RestAPI {
   }
 
   static async updateEmailByUserId(userid, email) {
-    const url = `${BASE_URL}/api/users/${username}/email`;
+    const url = `${BASE_URL}/api/users/${userid}/update_email`;
     const body = { email };
     const options = {
       method: "PUT",
@@ -61,7 +66,7 @@ export class RestAPI {
   }
 
   static async updatePhoneByUserId(userid, phone) {
-    const url = `${BASE_URL}/api/users/${username}/phone`;
+    const url = `${BASE_URL}/api/users/${userid}/update_phone`;
     const body = { phone };
     const options = {
       method: "PUT",
@@ -73,9 +78,9 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async updateNameByUserId(userid, name) {
-    const url = `${BASE_URL}/api/users/${username}/name`;
-    const body = { name };
+  static async updateNameByUserId(userid, first_last_name) {
+    const url = `${BASE_URL}/api/users/${userid}/update_name`;
+    const body = { first_last_name };
     const options = {
       method: "PUT",
       headers: {
@@ -87,7 +92,7 @@ export class RestAPI {
   }
 
   static async updatePasswordByUserId(userid, password) {
-    const url = `${BASE_URL}/api/users/${username}/password`;
+    const url = `${BASE_URL}/api/users/${userid}/update_password`;
     const body = { password };
     const options = {
       method: "PUT",
@@ -99,13 +104,8 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async getUserById(id) {
-    const url = `${BASE_URL}/api/users/${id}`;
-    return await RestAPI.fetchData(url);
-  }
-  
-  static async updateIsAdmin(username, isAdmin) {
-    const url = `${BASE_URL}/api/users/${username}/isAdmin`;
+  static async updateIsAdminByUserId(userid, isAdmin) {
+    const url = `${BASE_URL}/api/users/${userid}/update_is_admin`;
     const body = { isAdmin };
     const options = {
       method: "PUT",
@@ -116,8 +116,6 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
-  
-
 }
 
 export default RestAPI;
