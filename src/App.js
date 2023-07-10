@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import {Route, Routes, useNavigate } from 'react-router-dom';
-import Login from './client/components/Login';
-import Register from './client/components/Register';
+import Login from './client/pages/LoginPage';
+import Register from './client/pages/RegisterPage';
 import Toolbar from './client/components/Toolbar';
 import Home from './client/pages/Home';
 import Shop from './client/pages/Shop';
