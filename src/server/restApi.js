@@ -123,17 +123,17 @@ export class RestAPI {
     const url = `${BASE_URL}/api/orders`;
     return await RestAPI.fetchData(url);
   }
-  
+
   static async getOrderById(orderId) {
     const url = `${BASE_URL}/api/orders/${orderId}`;
     return await RestAPI.fetchData(url);
   }
-  
+
   static async getOrdersByUserId(userId) {
     const url = `${BASE_URL}/api/users/${userId}/orders`;
     return await RestAPI.fetchData(url);
   }
-  
+
   static async createOrder(order) {
     const url = `${BASE_URL}/api/orders`;
     const options = {
@@ -145,7 +145,7 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
-  
+
   static async updateOrderPaymentType(orderId, paymentType) {
     const url = `${BASE_URL}/api/orders/${orderId}/update_payment_type`;
     const options = {
@@ -157,7 +157,7 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
-  
+
   static async updateOrderIsPaid(orderId, isPaid) {
     const url = `${BASE_URL}/api/orders/${orderId}/update_is_paid`;
     const options = {
@@ -169,7 +169,7 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
-  
+
   static async updateOrderIsShipping(orderId, isShipping) {
     const url = `${BASE_URL}/api/orders/${orderId}/update_is_shipping`;
     const options = {
@@ -181,7 +181,101 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
-  
+  /*********************************************************/
+  static async getAllProducts() {
+    const url = `${BASE_URL}/api/users/:userid/products`;
+    return await RestAPI.fetchData(url);
+  }
+
+  static async getProductById(productId) {
+    const url = `${BASE_URL}/api/users/:userid/products`;
+    return await RestAPI.fetchData(url);
+  }
+
+  static async getProductsByUserId(userId) {
+    const url = `${BASE_URL}/api/users/:userid/products`;
+    return await RestAPI.fetchData(url);
+  }
+
+  static async createProduct(product) {
+    const url = `${BASE_URL}/api/users/:userid/products`;
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(product),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
+  static async updateProductPrice(productId, price) {
+    const url = `${BASE_URL}/api/products/:productid/update_price`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ price }),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
+  static async updateProductQuantity(productId, quantity) {
+    const url = `${BASE_URL}/api/products/:productid/update_quantity`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ quantity }),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
+  static async updateProductSensitivity(productId, sensitivity) {
+    const url = `${BASE_URL}/api/products/:productid/update_sensitivity`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ sensitivity }),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
+  static async updateProductKosherType(productId, kosherType) {
+    const url = `${BASE_URL}/api/products/:productid/update_kosher`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ kosher_type: kosherType }),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
+  static async updateProductIsDairy(productId, isDairy) {
+    const url = `${BASE_URL}/api/products/:productid/update_is_dairy`;
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ is_dairy: isDairy }),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
+  static async deleteProduct(productId) {
+    const url = `${BASE_URL}/api/users/:userid/products`;
+    const options = {
+      method: "DELETE",
+    };
+    return await RestAPI.fetchData(url, options);
+  }
 }
 
 export default RestAPI;
