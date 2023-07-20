@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-// import RestAPI from '../server/RestAPI';
-// import './css/Login.css';
+import { useNavigate } from 'react-router-dom';
+import '../css/Login.css';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -19,32 +18,44 @@ const Login = () => {
       localStorage.setItem('user', JSON.stringify(user));
       navigate(`/${user.id}`);
     } else {
-      alert('Invalid username or password');
+      alert('שם משתמש או סיסמא שגויים, אנא נסה שנית.');
     }
   };
 
+  const handleRegister = () => {
+    // Add logic to navigate to the register page here
+    navigate('/register');
+  };
+
   return (
-    <div>
-      <div>
-        <label htmlFor="username">Username:</label>
-        <input
-          type="text"
-          id="username"
-          value={username}
-          onChange={(event) => setUsername(event.target.value)}
-        />
-      </div>
-      <div>
-        <label htmlFor="password">Password:</label>
-        <input
-          type="password"
-          id="password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-        />
-      </div>
-      <button onClick={handleLogin}>Login</button>
-      <Link to="/register">Register</Link>
+    <div className="container">
+      <h1>כניסה</h1>
+      <form>
+        <div className="form-group">
+          <label htmlFor="username">:שם משתמש</label>
+          <div className="input-wrapper">
+            <input
+              type="text"
+              id="username"
+              value={username}
+              onChange={(event) => setUsername(event.target.value)}
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <label htmlFor="password">:סיסמא</label>
+          <div className="input-wrapper">
+            <input
+              type="password"
+              id="password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+            />
+          </div>
+        </div>
+        <button onClick={handleLogin}>התחבר</button>
+        <button onClick={handleRegister}>הרשם</button>
+      </form>
     </div>
   );
 };
