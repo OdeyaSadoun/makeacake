@@ -28,11 +28,11 @@ const Login = () => {
   };
 
   return (
-    <div className="container">
+    <div className="container" dir="rtl">
       <h1>כניסה</h1>
       <form>
         <div className="form-group">
-          <label htmlFor="username">:שם משתמש</label>
+          <label htmlFor="username">שם משתמש:</label>
           <div className="input-wrapper">
             <input
               type="text"
@@ -43,7 +43,7 @@ const Login = () => {
           </div>
         </div>
         <div className="form-group">
-          <label htmlFor="password">:סיסמא</label>
+          <label htmlFor="password">סיסמה:</label>
           <div className="input-wrapper">
             <input
               type="password"
