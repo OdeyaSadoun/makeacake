@@ -14,7 +14,7 @@ body {
 }
 
 .container {
-  max-width: 400px;
+  max-width: 800px; /* Increased max-width for two columns */
   padding: 20px;
   background: #ffffff;
   border-radius: 8px;
@@ -29,8 +29,9 @@ h1 {
 }
 
 form {
-  display: flex;
-  flex-direction: column;
+  display: grid; /* Use CSS Grid for two-column layout */
+  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+  gap: 20px; /* Add gap between form groups */
 }
 
 .form-group {
@@ -39,10 +40,6 @@ form {
 
 label {
   font-weight: bold;
-}
-
-.input-wrapper {
-  position: relative;
 }
 
 input {
@@ -93,5 +90,9 @@ a:hover {
 @media (max-width: 768px) {
   .container {
     max-width: 90%;
+  }
+
+  form {
+    grid-template-columns: 1fr; /* Single column on smaller screens */
   }
 }
