@@ -5,7 +5,6 @@ export class RestAPI {
     var response;
     if (options) {
       response = await fetch(url, options);
-      console.log("hi fetchData register options");
     } else {
       response = await fetch(url);
     }
@@ -24,6 +23,7 @@ export class RestAPI {
   }
 
   static async getUserByUsernameAndPassword(username, password) {
+    console.log('function getUserByUsernameAndPassword',username, password);
     const url = `${BASE_URL}/api/users/login`;
     const body = { username, password };
     const options = {

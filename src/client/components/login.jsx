@@ -10,10 +10,9 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    console.log(username, password);
-    //const user = "";
+    console.log('before RestAPI', username, password);
     const user = await RestAPI.getUserByUsernameAndPassword(username, password);
-    console.log(user);
+    console.log('after RestAPI',user);
 
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
