@@ -1,5 +1,6 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import '../css/Toolbar.css';
 
 const Toolbar = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -30,33 +31,27 @@ const Toolbar = () => {
   };
 
   return (
-    <>
-      <div>
-      <h2>Hello, {user.first_last_name}!</h2>
-        <nav className="navbar">
-          <button className="NavLinkButton" onClick={handleHomeClick}>
-            Home
-          </button>
-          <br />
-          <button className="NavLinkButton" onClick={handleShopClick}>
-            Shop
-          </button>
-          <br />
-          <button className="NavLinkButton" onClick={handleCartClick}>
-            Cart
-          </button>
-          <br />
-          <button className="NavLinkButton" onClick={handleLikedProductsClick}>
-            Liked Products
-          </button>
-          <br />
-          {/* Add more buttons for other navigation links */}
-        </nav>
+    <div className="container">
+      <h2>{user.first_last_name} שלום</h2>
+      <nav className="navbar">
+        <button className="NavLinkButton" onClick={handleHomeClick}>
+          ראשי
+        </button>
+        <button className="NavLinkButton" onClick={handleShopClick}>
+          חנות
+        </button>
+        <button className="NavLinkButton" onClick={handleCartClick}>
+          עגלה
+        </button>
+        <button className="NavLinkButton" onClick={handleLikedProductsClick}>
+          אהבתי
+        </button>
+        {/* Add more buttons for other navigation links */}
+      </nav>
 
-      </div>
-      <button onClick={handleLogout}>Logout</button>
-      <Outlet />
-    </>
+      <button onClick={handleLogout}>יציאה</button>
+
+    </div>
   );
 };
 
