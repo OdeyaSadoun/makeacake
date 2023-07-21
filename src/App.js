@@ -25,24 +25,16 @@ const App = () => {
 
   return (
     <div>
-      <h1>Make a Cack</h1>
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" Component={Register} />
         <Route path="/:username" Component={Home} />
 
-        {loggedIn ? (
-          <>
-            <Toolbar onLogout={handleLogout} />
-            <Route path="/:username" Component={Home} />
-            <Route path="/shop" element={<Shop />} />
-            <Route path="/cart" element={<Cart />} />
-            <Route path="/liked-products" element={<LikedProductsPage />} />
-            <Route path="/admin" element={<AdminPage />} />
-          </>
-        ) : (
-          <Route path="/" element={<Login />} />
-        )}
+        <Route path="/:username/shop" element={<Shop />} />
+        <Route path="/:username/cart" element={<Cart />} />
+        <Route path="/:username/liked-products" element={<LikedProductsPage />} />
+        <Route path="/admin/:username" element={<AdminPage />} />
+        <Route path="/" element={<Login />} />
       </Routes>
     </div>
   );
