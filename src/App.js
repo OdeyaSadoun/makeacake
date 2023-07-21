@@ -29,6 +29,7 @@ const App = () => {
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
         <Route path="/register" Component={Register} />
         <Route path="/:username" Component={Home} />
+        
 
         <Route path="/:username/shop" element={<Shop />} />
         <Route path="/:username/cart" element={<Cart />} />

@@ -31,8 +31,8 @@ const Toolbar = () => {
   };
 
   return (
-    <div className="container">
-      <h2>{user.first_last_name} שלום</h2>
+    <div className="tollbarcontainer" dir="rtl">
+      <h2>{user.first_last_name}</h2>
       <nav className="navbar">
         <button className="NavLinkButton" onClick={handleHomeClick}>
           ראשי
@@ -48,9 +48,9 @@ const Toolbar = () => {
         </button>
         {/* Add more buttons for other navigation links */}
       </nav>
-
-      <button onClick={handleLogout}>יציאה</button>
-
+      <button className="logoutButton" onClick={handleLogout}>
+        יציאה
+      </button>
     </div>
   );
 };

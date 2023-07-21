@@ -33,7 +33,7 @@ const Login = () => {
   };
 
   return (
-    <div className="container" dir="rtl">
+    <div className="logincontainer" dir="rtl">
       <h1>כניסה</h1>
       <form>
         <div className="form-group">

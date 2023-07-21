@@ -70,7 +70,7 @@ const Register = () => {
   };
 
   return (
-    <div className="container" dir="rtl">
+    <div className="registercontainer" dir="rtl">
       <h1>הרשמה</h1>
       <form>
         <div className="form-group">

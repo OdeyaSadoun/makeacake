@@ -1,16 +1,49 @@
-.container {
+/* Toolbar.css */
+.tollbarcontainer {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
+  background-color: #f2f2f2;
+  padding: 10px 2px; /* Adjust the horizontal padding as needed */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 100vw; /* Set the width to 100vw (100% of viewport width) */
 }
+
 
 .navbar {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
-  margin-bottom: 20px;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 .NavLinkButton {
-  margin-right: 10px;
+  margin-left: 10px;
+}
+
+.logoutButton {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+}
+
+/* Media Query for responsive design */
+@media screen and (max-width: 768px) {
+  .tollbarcontainer {
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .navbar {
+    justify-content: center;
+  }
+
+  .logoutButton {
+    margin-top: 10px;
+  }
 }
