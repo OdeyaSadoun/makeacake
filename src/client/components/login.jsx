@@ -12,11 +12,16 @@ const Login = () => {
     e.preventDefault();
     console.log('before RestAPI', username, password);
     const user = await RestAPI.getUserByUsernameAndPassword(username, password);
-    console.log('after RestAPI',user);
+    console.log('after RestAPI', user);
 
     if (user) {
       localStorage.setItem('user', JSON.stringify(user));
-      navigate(`/${user.id}`);
+      if (user.is_admin) {
+        navigate(`/admin/${user.username}`);
+      }
+      else {
+        navigate(`/${user.username}`);
+      }
     } else {
       alert('שם משתמש או סיסמא שגויים, אנא נסה שנית.');
     }
