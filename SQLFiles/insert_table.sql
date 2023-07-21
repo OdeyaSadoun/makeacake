@@ -2,17 +2,17 @@ use makeacake;
 
 INSERT INTO addresses (city, street, house_number)
 VALUES
-  ('Elad', 'Hameiri', '7'),
-  ('Elad', 'Rabi Yossi Ben Kissma', '36'),
-  ('Elad', 'Rabi Yochanan Ben Zackai ', '79'),
-  ('Elad', 'Avtalion', '11'),
-  ('Elad', 'Rabi Yonatan Ben Uziel', '34');
+  ('אלעד', 'המאירי', '7'),
+  ('אלעד', 'רבי יוסי בן קיסמא', '36'),
+  ('אלעד', 'רבי יוחנן בן זכאי ', '79'),
+  ('אלעד', 'אבטליון', '11'),
+  ('אלעד', 'רבי יונתן בן עוזיאל', '34');
 
 
 INSERT INTO users (first_last_name, username, email, phone, address_id, date_of_birth, id_card, is_admin)
 VALUES 
-  ('Efrat Bitton', 'efratb', 'efrat0548433327@gmail.com', '0556681079', 1, '2001-08-26', NULL, true),
-  ('Odeya Sadoun', 'odeyasa', 'odeya.sadoun@gmail.com', '0542943408', 2, '2001-10-21', NULL, false);
+  ('אפרת ביטון', 'efratb', 'efrat0548433327@gmail.com', '0556681079', 1, '2001-08-26', NULL, true),
+  ('אודיה סעדון', 'odeyasa', 'odeya.sadoun@gmail.com', '0542943408', 2, '2001-10-21', NULL, false);
 
 INSERT INTO passwords (username, system_password)
 VALUES
