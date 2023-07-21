@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/Login.css';
+import RestAPI from "../../server/RestAPI";
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -10,8 +11,8 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log(username, password);
-    const user = "";
-    // const user = await RestAPI.getUserByUsernameAndPassword(username, password);
+    //const user = "";
+    const user = await RestAPI.getUserByUsernameAndPassword(username, password);
     console.log(user);
 
     if (user) {
