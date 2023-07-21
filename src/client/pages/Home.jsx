@@ -1,8 +1,13 @@
 // Home.js
 import React from 'react';
+import Toolbar from '../components/Toolbar';
 
 const Home = () => {
-  return <h1>Welcome to our Dessert Shop!</h1>;
+  return(
+    <div>
+       <Toolbar/>
+    </div>
+  )
 };
 
 export default Home;

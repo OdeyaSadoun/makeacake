@@ -14,8 +14,8 @@ const App = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
     setLoggedIn(true);
-    navigate("/");
   };
 
   const handleLogout = () => {
@@ -28,11 +28,13 @@ const App = () => {
       <h1>Make a Cack</h1>
       <Routes>
         <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register" Component={Register} />
+        <Route path="/:username" Component={Home} />
+
         {loggedIn ? (
           <>
             <Toolbar onLogout={handleLogout} />
-            <Route path="/" element={<Home />} />
+            <Route path="/:username" Component={Home} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/liked-products" element={<LikedProductsPage />} />
