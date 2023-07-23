@@ -1,5 +1,5 @@
 const express = require("express");
-const connection = require("./connection.js");
+const connection = require("../connection.js");
 const bodyParser = require("body-parser");
 const crypto = require("crypto");
 const router = express.Router();

@@ -1,0 +1,98 @@
+/* Register.css */
+
+/* Global Styles */
+body {
+  background: rgb(51, 167, 181);
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.registercontainer {
+  max-width: 800px; /* Increased max-width for two columns */
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: right; /* Align text to the right */
+}
+
+h1 {
+  text-align: center;
+  color: #000000;
+  margin-bottom: 20px;
+}
+
+form {
+  display: grid; /* Use CSS Grid for two-column layout */
+  grid-template-columns: repeat(2, 1fr); /* Two equal columns */
+  gap: 20px; /* Add gap between form groups */
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  font-weight: bold;
+}
+
+input {
+  padding: 8px;
+  border: 2px solid #abb8c3;
+  border-radius: 4px;
+  font-size: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  direction: rtl; /* Cursor starts from right to left */
+}
+
+/* Add complete border around the input fields when focused */
+input:focus {
+  border: 2px solid #000000;
+}
+
+button {
+  background: #F38D9B;
+  color: #000000;
+  padding: 10px 20px;
+  margin-top: 10px; /* Add space between buttons */
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background: #F38D9B;
+  transform: scale(1.1);
+}
+
+a {
+  color: #000000;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+a:hover {
+  color: #F38D9B;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .container {
+    max-width: 90%;
+  }
+
+  form {
+    grid-template-columns: 1fr; /* Single column on smaller screens */
+  }
+}

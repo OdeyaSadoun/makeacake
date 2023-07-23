@@ -1,0 +1,32 @@
+/* Product list styles */
+.product-list {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 20px;
+    margin-top: 20px;
+  }
+  
+  .product-card {
+    background-color: pink;
+    padding: 20px;
+    border-radius: 5px;
+    color: white;
+  }
+  
+  .product-card h3 {
+    margin-top: 0;
+  }
+  
+  .product-card p {
+    margin-bottom: 10px;
+  }
+  
+  .product-card button {
+    padding: 10px 20px;
+    background-color: lightblue;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  

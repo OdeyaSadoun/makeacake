@@ -1,25 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { Route, Routes, useNavigate } from "react-router-dom";
+import Login from "./client/pages/LoginPage";
+import Register from "./client/pages/RegisterPage";
+import Toolbar from "./client/components/Toolbar";
+import Home from "./client/pages/Home";
+import Shop from "./client/pages/Shop";
+import Cart from "./client/pages/Cart";
+import LikedProductsPage from "./client/pages/LikedProductsPage";
+import AdminPage from "./client/pages/AdminPage";
 
-function App() {
+const App = () => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogin = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    setLoggedIn(true);
+  };
+
+  const handleLogout = () => {
+    setLoggedIn(false);
+    navigate("/login");
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <Routes>
+        <Route path="/login" element={<Login onLogin={handleLogin} />} />
+        <Route path="/register" Component={Register} />
+        <Route path="/:username" Component={Home} />
+        
+
+        <Route path="/:username/shop" element={<Shop />} />
+        <Route path="/:username/cart" element={<Cart />} />
+        <Route path="/:username/liked-products" element={<LikedProductsPage />} />
+        <Route path="/admin/:username" element={<AdminPage />} />
+        <Route path="/" element={<Login />} />
+      </Routes>
     </div>
   );
-}
+};
 
 export default App;
