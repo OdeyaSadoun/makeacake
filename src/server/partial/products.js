@@ -43,10 +43,10 @@ router.get("/api/users/:userid/products", (req, res) => {
 
 router.get("/api/users/:userid/products", (req, res) => {
   // get all user's products 
-  const username = req.params.username;
+  const userid = req.params.userid;
   connection.query(
-    "SELECT * FROM products NATURAL JOIN user_product WHERE user_product.username= ?" ,
-    [username],
+    "SELECT * FROM products NATURAL JOIN product_user WHERE product_user.user_id= ?" ,
+    [userid],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);

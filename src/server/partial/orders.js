@@ -64,7 +64,17 @@ router.get("/api/orders/:userid", (req, res) => {
   );
 });
 
-
+router.get("/api/orders/:", (req, res) => {
+    // get all products in order
+    connection.query("SELECT * FROM orders", (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to retrieve orders" });
+        return;
+      }
+      res.json(results);
+    });
+  });
 
 router.post("/api/orders", (req, res) => {
   // Add order
