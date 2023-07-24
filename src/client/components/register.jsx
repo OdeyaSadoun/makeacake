@@ -14,11 +14,18 @@ const Register = () => {
   const [idCard, setIdCard] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [passwordMatchError, setPasswordMatchError] = useState('');
+  const [passwordError, setPasswordError] = useState(false);
+  const [passwordMatchError, setPasswordMatchError] = useState(false);
+  const [isValidDate, setIsFutureDate] = useState(true);
+  const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
+  const [isValidEmail, setIsValidEmail] = useState(true);
+  const [isValidIDCard, setIsValidIDCard] = useState(true);
+  const [isFormValid, setIsFormValid] = useState(false);
+
   const navigate = useNavigate();
 
   const handleRegister = () => {
+    console.log('handleRegister');
     // Implement your registration logic here
     const userData = {
       first_last_name: firstLastName,
@@ -37,26 +44,46 @@ const Register = () => {
     };
 
     // Password validation
-    if (!isStrongPassword(password)) {
-      setPasswordError('הסיסמה חייבת להכיל לפחות 8 תווים, אות גדולה, אות קטנה, ומספר.');
-      return;
-    } else {
-      setPasswordError('');
+    if (!passwordError) {
+      alert('הסיסמה חייבת להכיל לפחות 8 תווים, אות גדולה, אות קטנה, ומספר.');
     }
-
-    // Confirm password match validation
-    if (password !== confirmPassword) {
-      setPasswordMatchError('הסיסמה ואימות הסיסמה צריכים להיות תואמים.');
-      return;
-    } else {
-      setPasswordMatchError('');
+// confirmPassword validation
+    if (!passwordMatchError) {
+      alert('הסיסמא ואימות הסיסמא צריכים להיות זהים');
     }
-
+    //Check the date
+    if (!isValidDate) {
+      alert('Please enter a valid date of birth.');
+    }
+    //Check the phone
+    if (!isValidPhoneNumber) {
+      alert('Please enter a valid Israeli phone number.');
+    }
+    //Check the email
+    if (!isValidEmail) {
+      alert('Please enter a valid email address.');
+    } 
+    //Check the idCard
+    if (!isValidIDCard) {
+      alert('Please enter a valid id card.');
+    } 
     // Send the userData object to your server to handle registration
     console.log(userData);
+    console.log(isFormValid, 'isFormValid');
+    console.log(isValidEmail, 'isValidEmail');
+    console.log(isValidPhoneNumber, 'isValidPhoneNumber');
+    console.log(isValidDate, 'isValidDate');
+    console.log(isValidIDCard, 'isValidIDCard');
+    console.log(passwordError, 'passwordError');
+    console.log(passwordMatchError, 'passwordMatchError');
 
-    // After successful registration, you can redirect to the login page
-    navigate('/login');
+    if(isValidEmail && isValidPhoneNumber && isValidDate && isValidIDCard && passwordError && passwordMatchError){
+      // After successful registration, you can redirect to the login page
+      setIsFormValid(true);   
+      alert('sucssess.');
+      navigate('/login');
+    }
+    
   };
 
   const handleLogin = () => {
@@ -66,7 +93,46 @@ const Register = () => {
   // Function to check if the password is strong enough
   const isStrongPassword = (password) => {
     const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{8,}$/;
-    return passwordRegex.test(password);
+    setPasswordError(passwordRegex.test(password));
+    setPassword(password);
+  };
+
+   // Function to check if the confirm password like a password
+  const checkConfirmPassword = (confirmPassword) => {
+   if (password === confirmPassword){
+      setPasswordMatchError(true);
+   }
+   setConfirmPassword(confirmPassword);
+  };
+  // Function to check if the date is correct
+  const handleDateChange = (date) => {
+    const inputDate = new Date(date);
+    const currentDate = new Date();
+    if(inputDate > currentDate){
+      setIsFutureDate(false);
+    }
+    setDateOfBirth(date);
+  };
+
+  // Function to check if the phone is coorect
+  const handlePhoneNumberChange = (phone) => {
+    // Regular expression to check for Israeli phone number format
+    const phoneNumberRegex = /^(\+972|0)(5\d)(\d{7})$/;
+    setIsValidPhoneNumber(phoneNumberRegex.test(phone));
+    setPhone(phone);
+  };
+// Function to check if the email is coorect
+  const handleEmailChange = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setIsValidEmail(emailRegex.test(email));
+    setEmail(email);
+  };
+
+// Function to check if the idCard is coorect
+  const validateIDCard = (idCard) => {
+    const idCardRegex = /^\d{9}$/;
+    setIsValidIDCard(idCardRegex.test(idCard));
+    setIdCard(idCard);
   };
 
   return (
@@ -97,7 +163,7 @@ const Register = () => {
             type="email"
             id="email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => handleEmailChange(e.target.value)}
           />
         </div>
         <div className="form-group">
@@ -106,7 +172,7 @@ const Register = () => {
             type="text"
             id="phone"
             value={phone}
-            onChange={(e) => setPhone(e.target.value)}
+            onChange={(e) => handlePhoneNumberChange(e.target.value)}
           />
         </div>
         <div className="form-group">
@@ -144,7 +210,7 @@ const Register = () => {
             type="date"
             id="dateOfBirth"
             value={dateOfBirth}
-            onChange={(e) => setDateOfBirth(e.target.value)}
+            onChange={(e) => handleDateChange(e.target.value)}
           />
         </div>
         <div className="form-group">
@@ -153,7 +219,7 @@ const Register = () => {
             type="text"
             id="idCard"
             value={idCard}
-            onChange={(e) => setIdCard(e.target.value)}
+            onChange={(e) => validateIDCard(e.target.value)}
           />
         </div>
         <div className="form-group">
@@ -162,7 +228,7 @@ const Register = () => {
             type="password"
             id="password"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={(e) => isStrongPassword(e.target.value)}
           />
         </div>
         <div className="form-group">
@@ -171,12 +237,12 @@ const Register = () => {
             type="password"
             id="confirmPassword"
             value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
+            onChange={(e) =>  checkConfirmPassword(e.target.value)}
           />
         </div>
         {passwordError && <p className="error-message">{passwordError}</p>}
         {passwordMatchError && <p className="error-message">{passwordMatchError}</p>}
-        <button onClick={handleRegister}>הרשם</button>
+        <button onClick={handleRegister} disabled={isFormValid}>הרשם</button>
         <button onClick={handleLogin}>חזרה להתחברות</button>
       </form>
     </div>
