@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from "./client/pages/loginPage";
-import Register from "./client/pages/RegisterPage";
+import Register from "./client/pages/registerPage";
 import Toolbar from "./client/components/toolbar";
 import Home from "./client/pages/home";
 import Shop from "./client/pages/shop";
