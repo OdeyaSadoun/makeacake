@@ -1,6 +1,6 @@
 // LikedProductsPage.js
 import React from 'react';
-import LikedProducts from '../components/LikedProducts';
+import LikedProducts from '../components/likedProducts';
 
 const LikedProductsPage = () => {
   return (

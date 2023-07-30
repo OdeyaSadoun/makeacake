@@ -12,7 +12,7 @@ const LikedProducts = () => {
     // Implement logic to remove the product from the liked list
   };
 
-  return (
+  return (   
     <div>
       {likedProducts.map((product) => (
         <div key={product.id}>

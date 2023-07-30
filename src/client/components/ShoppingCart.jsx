@@ -9,7 +9,7 @@ const ShoppingCart = () => {
 
   const handleUpdateQuantity = (itemId, newQuantity) => {
     // Implement logic to update the quantity of the item in the cart
-  };
+  };   
 
   return (
     <div>

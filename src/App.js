@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Login from "./client/pages/LoginPage";
+import Login from "./client/pages/loginPage";
 import Register from "./client/pages/RegisterPage";
-import Toolbar from "./client/components/Toolbar";
-import Home from "./client/pages/Home";
-import Shop from "./client/pages/Shop";
-import Cart from "./client/pages/Cart";
-import LikedProductsPage from "./client/pages/LikedProductsPage";
-import AdminPage from "./client/pages/AdminPage";
+import Toolbar from "./client/components/toolbar";
+import Home from "./client/pages/home";
+import Shop from "./client/pages/shop";
+import Cart from "./client/pages/cart";
+import LikedProductsPage from "./client/pages/likedProductsPage";
+import AdminPage from "./client/pages/adminPage";
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -34,7 +34,6 @@ const App = () => {
         <Route path="/:username/shop" element={<Shop />} />
         <Route path="/:username/cart" element={<Cart />} />
         <Route path="/:username/liked-products" element={<LikedProductsPage />} />
-        {/* <Route path="/:username/private-page" element={<PrivatePage />} /> */}
         <Route path="/admin/:username" element={<AdminPage />} />
         <Route path="/" element={<Login />} />
       </Routes>

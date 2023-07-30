@@ -1,6 +1,6 @@
 // Cart.js
 import React from 'react';
-import ShoppingCart from '../components/ShoppingCart';
+import ShoppingCart from '../components/shoppingCart';
 
 const Cart = () => {
   return (
