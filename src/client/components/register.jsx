@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../css/Register.css';
+import RestAPI from "../../server/RestAPI";
 
 const Register = () => {
-  const [firstLastName, setFirstLastName] = useState('');
+  const [first_last_name, setFirstLastName] = useState('');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [city, setCity] = useState('');
   const [street, setStreet] = useState('');
-  const [numhouse, setNumhouse] = useState('');
-  const [dateOfBirth, setDateOfBirth] = useState('');
-  const [idCard, setIdCard] = useState('');
-  const [password, setPassword] = useState('');
+  const [house_number, setNumhouse] = useState('');
+  const [date_of_birth, setDateOfBirth] = useState('');
+  const [id_card, setIdCard] = useState('');
+  const [system_password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [is_admin, setIsAdmin] = useState('false');
   const [passwordError, setPasswordError] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState(false);
   const [isValidDate, setIsFutureDate] = useState(true);
@@ -34,7 +36,7 @@ const Register = () => {
       phone,     
       city,
       street,
-      numhouse,
+      house_number,
       date_of_birth,
       id_card,
       system_password,
@@ -78,7 +80,7 @@ const Register = () => {
         userData.phone,
         userData.city,
         userData.street,
-        userData.numhouse,
+        userData.house_number,
         userData.date_of_birth,
         userData.id_card,
         userData.system_password,
@@ -103,7 +105,7 @@ const Register = () => {
 
    // Function to check if the confirm password like a password
   const checkConfirmPassword = (confirmPassword) => {
-   if (password === confirmPassword){
+   if (system_password === confirmPassword){
       setPasswordMatchError(true);
    }
    setConfirmPassword(confirmPassword);
@@ -148,7 +150,7 @@ const Register = () => {
           <input
             type="text"
             id="firstLastName"
-            value={firstLastName}
+            value={first_last_name}
             onChange={(e) => setFirstLastName(e.target.value)}
           />
         </div>
@@ -204,7 +206,7 @@ const Register = () => {
           <input
             type="text"
             id="numhouse"
-            value={numhouse}
+            value={house_number}
             onChange={(e) => setNumhouse(e.target.value)}
           />
         </div>
@@ -213,7 +215,7 @@ const Register = () => {
           <input
             type="date"
             id="dateOfBirth"
-            value={dateOfBirth}
+            value={date_of_birth}
             onChange={(e) => handleDateChange(e.target.value)}
           />
         </div>
@@ -222,7 +224,7 @@ const Register = () => {
           <input
             type="text"
             id="idCard"
-            value={idCard}
+            value={id_card}
             onChange={(e) => validateIDCard(e.target.value)}
           />
         </div>
@@ -231,7 +233,7 @@ const Register = () => {
           <input
             type="password"
             id="password"
-            value={password}
+            value={system_password}
             onChange={(e) => isStrongPassword(e.target.value)}
           />
         </div>
