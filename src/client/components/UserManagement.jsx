@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-const UserManagement = () => {
+const userManagement = () => {
   const [users, setUsers] = useState([]);
 
   const handleAddUser = () => {
@@ -30,4 +30,4 @@ const UserManagement = () => {
   );
 };
 
-export default UserManagement;
+export default userManagement;

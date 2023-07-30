@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const UserOrders = () => {
+const userOrders = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
@@ -21,4 +21,4 @@ const UserOrders = () => {
   );
 };
 
-export default UserOrders;
+export default userOrders;
