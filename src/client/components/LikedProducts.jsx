@@ -1,26 +1,19 @@
-import React, { useEffect, useState } from 'react';
+// LikedProducts.js
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-const LikedProducts = () => {
-  const [likedProducts, setLikedProducts] = useState([]);
-
-  useEffect(() => {
-    // Fetch liked products for the user from the server
-    // Update the 'likedProducts' state with the fetched data
-  }, []);
-
-  const handleRemoveLikedProduct = (productId) => {
-    // Implement logic to remove the product from the liked list
-  };
-
+const LikedProducts = ({ likedProducts }) => {
   return (
     <div>
+      <h2>Liked Products</h2>
       {likedProducts.map((product) => (
         <div key={product.id}>
-          <p>Name: {product.name}</p>
-          <p>Price: {product.price}</p>
-          <button onClick={() => handleRemoveLikedProduct(product.id)}>Remove</button>
+          <h3>{product.name}</h3>
+          <p>Price: ${product.price}</p>
         </div>
       ))}
+      <Link to="/">Go Back to Products</Link>
+      <Link to="/cart">Go to Cart</Link>
     </div>
   );
 };
