@@ -31,6 +31,10 @@ const ProductItem = ({ product, onAddToCart, onLike }) => {
 };
 
 export default ProductItem;
+<<<<<<< HEAD
 
 
 
+=======
+   
+>>>>>>> 4d957511c6a645f9b19f6c5e0499601dcc1d234e

@@ -8,6 +8,7 @@ const ShoppingCart = () => {
   const cart = useContext(cartContext);
 
   const handleUpdateQuantity = (itemId, newQuantity) => {
+<<<<<<< HEAD
     setCart((prevCart) =>
       prevCart.map((item) => (item.id === itemId ? { ...item, quantity: parseInt(newQuantity, 10) } : item))
     );
@@ -16,6 +17,10 @@ const ShoppingCart = () => {
   const handleRemoveItem = (itemId) => {
     setCart(cart.filter((item) => item.id !== itemId));
   };
+=======
+    // Implement logic to update the quantity of the item in the cart
+  };   
+>>>>>>> 4d957511c6a645f9b19f6c5e0499601dcc1d234e
 
   return (
     <cartContext.Consumer>

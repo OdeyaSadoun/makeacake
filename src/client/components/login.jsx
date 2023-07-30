@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../css/Login.css';
-import RestAPI from "../../server/RestAPI";
-
+import '../css/login.css';
+import RestAPI from "../../server/restAPI";
+   
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

@@ -17,7 +17,7 @@ const Toolbar = () => {
   const handleHomeClick = () => {
     navigate(`/${user.username}`);
   };
-
+  
   const handleShopClick = () => {
     navigate(`/${user.username}/Shop`);
   };

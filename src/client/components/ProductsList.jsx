@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // ProductsList.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -5,6 +6,10 @@ import Main from '../components/Main'
 import { useContext } from 'react';
 import {cart} from './Main'
 
+=======
+import React from 'react';
+import ProductItem from './productItem';
+>>>>>>> 4d957511c6a645f9b19f6c5e0499601dcc1d234e
 
 const ProductsList = () => {
   const cart = useContext(cartContext);
