@@ -24,11 +24,11 @@ const Register = () => {
 
   const navigate = useNavigate();
 
-  const handleRegister = () => {
+  const handleRegister = async() => {
     console.log('handleRegister');
     // Implement your registration logic here
     const userData = {
-      first_last_name: firstLastName,
+      first_last_name,
       username,
       email,
       phone,
@@ -37,10 +37,10 @@ const Register = () => {
         street,
         numhouse,
       },
-      date_of_birth: dateOfBirth,
-      id_card: idCard,
-      password,
-      is_admin: false, // Assuming this is not part of the registration form
+      date_of_birth,
+      id_card,
+      system_password,
+      is_admin // Assuming this is not part of the registration form
     };
 
     // Password validation
@@ -68,18 +68,24 @@ const Register = () => {
       alert('Please enter a valid id card.');
     } 
     // Send the userData object to your server to handle registration
-    console.log(userData);
-    console.log(isFormValid, 'isFormValid');
-    console.log(isValidEmail, 'isValidEmail');
-    console.log(isValidPhoneNumber, 'isValidPhoneNumber');
-    console.log(isValidDate, 'isValidDate');
-    console.log(isValidIDCard, 'isValidIDCard');
-    console.log(passwordError, 'passwordError');
-    console.log(passwordMatchError, 'passwordMatchError');
+
 
     if(isValidEmail && isValidPhoneNumber && isValidDate && isValidIDCard && passwordError && passwordMatchError){
       // After successful registration, you can redirect to the login page
-      setIsFormValid(true);   
+      setIsFormValid(true); 
+      const newUser = await RestAPI.createUser(
+        userData.first_last_name,
+        userData.username,
+        userData.email,
+        userData.phone,
+        userData.city,
+        userData.street,
+        userData.numhouse,
+        userData.date_of_birth,
+        userData.id_card,
+        userData.system_password,
+        userData.is_admin
+      );  
       alert('sucssess.');
       navigate('/login');
     }

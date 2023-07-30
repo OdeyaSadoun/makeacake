@@ -37,9 +37,9 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async createUser(name, username, email, phone, website, password) {
+  static async createUser(first_last_name, username, system_password, email, phone, city, street, house_number, date_of_birth, id_card, is_admin) { 
     const url = `${BASE_URL}/api/users`;
-    const body = { name, username, email, phone, website, password };
+    const body = {first_last_name, username, system_password, email, phone, city, street, house_number, date_of_birth, id_card, is_admin };
     const options = {
       method: "POST",
       headers: {
