@@ -30,6 +30,11 @@ const Toolbar = () => {
     navigate(`/${user.username}/LikedProducts`);
   };
 
+  const handlePrivatPageClick = () => {
+    navigate(`/${user.username}/PrivatPage`);
+  };
+  
+
   return (
     <div className="tollbarcontainer" dir="rtl">
       <h2>{user.first_last_name}</h2>
@@ -46,7 +51,9 @@ const Toolbar = () => {
         <button className="NavLinkButton" onClick={handleLikedProductsClick}>
           אהבתי
         </button>
-        {/* Add more buttons for other navigation links */}
+        <button className="NavLinkButton" onClick={handlePrivatPageClick}>
+          אזור אישי
+        </button>
       </nav>
       <button className="logoutButton" onClick={handleLogout}>
         יציאה
