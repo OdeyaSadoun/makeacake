@@ -1,27 +1,26 @@
 const express = require('express');
-
-const users = require('./partial/users');
-const events_managment = require('./partial/events_managment');
-const orders = require('./partial/orders');
-const products = require('./partial/products');
-
-
 const cors = require('cors');
+
+const indexRouter = require('./server/routes/index_server');
+const addressesRouter = require('./server/routes/addresses');
+const eventsManagmentRouter = require('./server/routes/events_managment');
+const ordersRouter = require('./server/routes/orders');
+const productsRouter = require('./server/routes/products');
+const usersRouter = require('./server/routes/users');
+
 const app = express();
 
-app.use(cors()); // For using 2 ports one to server and one to client
+app.use(cors()); 
 app.use(express.json());
-app.use(users);
-app.use(events_managment);
-app.use(orders);
-app.use(products);
 
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  next();
-});
+app.use('/', indexRouter);
+app.use('/addresses', addressesRouter);
+app.use('/events-managment', eventsManagmentRouter);
+app.use('/orders', ordersRouter);
+app.use('/products', productsRouter);
+app.use('/users', usersRouter);
+
+module.exports = app;
 
 const port = 3001;
 app.listen(port, () => {
