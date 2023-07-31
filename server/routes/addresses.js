@@ -1,140 +1,190 @@
-const express = require("express");
-const connection = require("../connection.js");
+const connection = require("../models/connection.js");
 const bodyParser = require("body-parser");
-const crypto = require("crypto");
+const express = require("express");
+const router = express.Router();
+const AddressesDB = require("../models/addressQueries.js");
+/*Parse request bodies as JSON*/
+router.use(bodyParser.json());
 
-const router = express.Router(); // Create a router object to define routes
-const app = express(); // Create an instance of the Express application
-app.use(express.json()); // Parse incoming requests with JSON payloads
-
-router.use(bodyParser.json()); // Parse request bodies as JSON
-
-// Route to get all addresses
-router.get("/api/addresses", (req, res) => {
-  connection.query("SELECT * FROM addresses", (err, results) => {
-    if (err) {
-      console.error("Error executing MySQL query:", err);
+/*Route to get all addresses*/
+router.get("/", (req, res) => {
+  AddressesDB.getAllAddresses()
+    .then((results) => {
+      res.json(results);
+    })
+    .catch((error) => {
+      console.error("Error executing MySQL query:", error);
       res.status(500).json({ error: "Failed to retrieve addresses" });
       return;
-    }
+    });
+  // connection.query("SELECT * FROM addresses", (err, results) => {
+  //   if (err) {
+  //     console.error("Error executing MySQL query:", err);
+  //     res.status(500).json({ error: "Failed to retrieve addresses" });
+  //     return;
+  //   }
 
-    res.json(results);
-  });
+  //   res.json(results);
+  // });
 });
 
-// Route to get address by ID
-router.get("/api/addresses/:addressid", (req, res) => {
+/*Route to get address by ID*/
+router.get("/:addressid", (req, res) => {
+  const addressId = req.body;
+  AddressesDB.getAddressesById(addressId)
+    .then((results) => {
+      if (results.length === 0) {
+        res.status(404).json({ error: "Address not found" });
+        return;
+      }
+      res.json(results[0]);
+    })
+    .catch((error) => {
+      console.error("Error executing MySQL query:", error);
+      res.status(500).json({ error: "Failed to retrieve address" });
+      return;
+    });
+  // connection.query(
+  //   "SELECT * FROM addresses WHERE addressid = ?",
+  //   [addressId],
+  //   (err, results) => {
+  //     if (err) {
+  //       console.error("Error executing MySQL query:", err);
+  //       res.status(500).json({ error: "Failed to retrieve address" });
+  //       return;
+  //     }
+  //     if (results.length === 0) {
+  //       res.status(404).json({ error: "Address not found" });
+  //       return;
+  //     }
+  //     res.json(results[0]);
+  //   }
+  // );
+});
+
+/*Route to add new address*/
+router.post("/add-user", (req, res) => {
+  const { city, street, house_number } = req.body;
+
+  // Check if the address already exists
+  AddressesDB.getAddressByCityAndStreetAndNumberHouse(
+    city,
+    street,
+    house_number
+  )
+    .then((resultsGetAddressByCityAndStreetAndNumberHouse) => {
+      if (resultsGetAddressByCityAndStreetAndNumberHouse.length > 0) {
+        res.status(400).json({ error: "Address already exists" });
+        return;
+      }
+      AddressesDB.addAddress(city, street, house_number)
+        .then((resultsAddAddress) => {
+          const newAddressId = resultsAddAddress.insertId;
+          res.status(201).json({
+            message: "Address added successfully",
+            addressId: newAddressId,
+            status: 201,
+          });
+        })
+        .catch((errorAddAddress) => {
+          console.error("Error executing MySQL query:", errorAddAddress);
+          res.status(500).json({ error: "Failed to add address" });
+          return;
+        });
+    })
+    .catch((errorGetAddressByCityAndStreetAndNumberHouse) => {
+      console.error(
+        "Error executing MySQL query:",
+        errorGetAddressByCityAndStreetAndNumberHouse
+      );
+      res.status(500).json({
+        error: "Failed to get address by city and street and house number",
+      });
+      return;
+    });
+  // connection.query(
+  //   "SELECT * FROM addresses WHERE city = ? AND street = ? AND house_number = ?",
+  //   [city, street, house_number],
+  //   (err, addressResults) => {
+  //     if (err) {
+  //       console.error("Error executing MySQL query:", err);
+  //       res.status(500).json({ error: "Failed to add address" });
+  //       return;
+  //     }
+
+  //     if (addressResults.length > 0) {
+  //       // Address already exists
+  //       res.status(400).json({ error: "Address already exists" });
+  //       return;
+  //     }
+
+  // Insert new address into the 'addresses' table
+  // connection.query(
+  //   "INSERT INTO addresses (city, street, house_number) VALUES (?, ?, ?)",
+  //   [city, street, house_number],
+  //   (err, insertResults) => {
+  //     if (err) {
+  //       console.error("Error executing MySQL query:", err);
+  //       res.status(500).json({ error: "Failed to add address" });
+  //       return;
+  //     }
+
+  //     const newAddressId = insertResults.insertId;
+  //     res.status(201).json({
+  //       message: "Address added successfully",
+  //       addressId: newAddressId,
+  //       status: 201,
+  //     });
+  //   }
+  // );
+  //   }
+  // );
+});
+
+// Route to update address
+router.put("/:addressid/update", (req, res) => {
+  const { city, street, house_number } = req.body;
   const addressId = req.params.addressid;
+
+  // Check if the address exists by addressid
   connection.query(
     "SELECT * FROM addresses WHERE addressid = ?",
     [addressId],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to retrieve address" });
+        res.status(500).json({ error: "Failed to update address" });
         return;
       }
 
       if (results.length === 0) {
+        // Address not found
         res.status(404).json({ error: "Address not found" });
         return;
       }
 
-      res.json(results[0]);
-    }
-  );
-});
-
-// Route to add new address
-router.post("/api/addresses", (req, res) => {
-  const { city, street, house_number } = req.body;
-
-  // Check if the address already exists
-  connection.query(
-    "SELECT * FROM addresses WHERE city = ? AND street = ? AND house_number = ?",
-    [city, street, house_number],
-    (err, addressResults) => {
-      if (err) {
-        console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to add address" });
-        return;
-      }
-
-      if (addressResults.length > 0) {
-        // Address already exists
-        res.status(400).json({ error: "Address already exists" });
-        return;
-      }
-
-      // Insert new address into the 'addresses' table
+      // Address exists, proceed with updating the address
       connection.query(
-        "INSERT INTO addresses (city, street, house_number) VALUES (?, ?, ?)",
-        [city, street, house_number],
-        (err, insertResults) => {
+        "UPDATE addresses SET city = ?, street = ?, house_number = ? WHERE addressid = ?",
+        [city, street, house_number, addressId],
+        (err, updateResults) => {
           if (err) {
             console.error("Error executing MySQL query:", err);
-            res.status(500).json({ error: "Failed to add address" });
+            res.status(500).json({ error: "Failed to update address" });
             return;
           }
 
-          const newAddressId = insertResults.insertId;
-          res
-            .status(201)
-            .json({
-              message: "Address added successfully",
-              addressId: newAddressId,
-              status: 201
-            });
+          res.json({ message: "Address updated successfully" });
         }
       );
     }
   );
 });
 
-// Route to update address
-router.put("/api/addresses/:addressid/update", (req, res) => {
-    const { city, street, house_number } = req.body;
-    const addressId = req.params.addressid;
-  
-    // Check if the address exists by addressid
-    connection.query(
-      "SELECT * FROM addresses WHERE addressid = ?",
-      [addressId],
-      (err, results) => {
-        if (err) {
-          console.error("Error executing MySQL query:", err);
-          res.status(500).json({ error: "Failed to update address" });
-          return;
-        }
-  
-        if (results.length === 0) {
-          // Address not found
-          res.status(404).json({ error: "Address not found" });
-          return;
-        }
-  
-        // Address exists, proceed with updating the address
-        connection.query(
-          "UPDATE addresses SET city = ?, street = ?, house_number = ? WHERE addressid = ?",
-          [city, street, house_number, addressId],
-          (err, updateResults) => {
-            if (err) {
-              console.error("Error executing MySQL query:", err);
-              res.status(500).json({ error: "Failed to update address" });
-              return;
-            }
-  
-            res.json({ message: "Address updated successfully" });
-          }
-        );
-      }
-    );
-  });
-
 // Route to delete address
 router.delete("/api/addresses/:addressid", (req, res) => {
   const addressId = req.params.addressid;
-  
+
   // Check if the address is associated with any user
   connection.query(
     "SELECT * FROM users WHERE address_id = ?",
@@ -148,7 +198,9 @@ router.delete("/api/addresses/:addressid", (req, res) => {
 
       if (userResults.length > 0) {
         // Address is associated with user(s), cannot delete
-        res.status(400).json({ error: "Address is associated with user(s), cannot be deleted" });
+        res.status(400).json({
+          error: "Address is associated with user(s), cannot be deleted",
+        });
         return;
       }
 
@@ -165,7 +217,9 @@ router.delete("/api/addresses/:addressid", (req, res) => {
 
           if (eventResults.length > 0) {
             // Address is associated with events, cannot delete
-            res.status(400).json({ error: "Address is associated with event(s), cannot be deleted" });
+            res.status(400).json({
+              error: "Address is associated with event(s), cannot be deleted",
+            });
             return;
           }
 
@@ -182,7 +236,10 @@ router.delete("/api/addresses/:addressid", (req, res) => {
 
               if (orderResults.length > 0) {
                 // Address is associated with orders, cannot delete
-                res.status(400).json({ error: "Address is associated with order(s), cannot be deleted" });
+                res.status(400).json({
+                  error:
+                    "Address is associated with order(s), cannot be deleted",
+                });
                 return;
               }
 
@@ -212,6 +269,5 @@ router.delete("/api/addresses/:addressid", (req, res) => {
     }
   );
 });
-
 
 module.exports = router;
