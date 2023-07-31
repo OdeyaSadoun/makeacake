@@ -15,7 +15,7 @@ module.exports.getAllAddresses = () => {
 module.exports.getAddressesById = (addressId) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM addresses WHERE addressid = ?",
+      "SELECT * FROM addresses WHERE id = ?",
       [addressId],
       (error, results) => {
         if (error) {
