@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import '../css/Toolbar.css';
+import '../public/styles/toolbar.css';
 
 const Toolbar = () => {
   const user = JSON.parse(localStorage.getItem('user'));
