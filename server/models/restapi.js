@@ -12,6 +12,8 @@ export class RestAPI {
     return jsonData; // Return the parsed JSON data
   }
 
+  /*Users*/
+  /**********************************************************/
   static async getAllUsers() {
     const url = `${BASE_URL}/api/users`;
     return await RestAPI.fetchData(url);
@@ -117,6 +119,8 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
+  
+  /*Orders*/
   /*********************************************************/
 
   static async getAllOrders() {
@@ -181,6 +185,9 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
+
+  
+  /*Products*/
   /*********************************************************/
   static async getAllProducts() {
     const url = `${BASE_URL}/api/users/:userid/products`;

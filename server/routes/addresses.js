@@ -63,7 +63,7 @@ router.get("/:addressid", (req, res) => {
 });
 
 /*Route to add new address*/
-router.post("/add-user", (req, res) => {
+router.post("/add-address", (req, res) => {
   const { city, street, house_number } = req.body;
 
   // Check if the address already exists
@@ -102,6 +102,7 @@ router.post("/add-user", (req, res) => {
       });
       return;
     });
+  // console.log( city, street, house_number );
   // connection.query(
   //   "SELECT * FROM addresses WHERE city = ? AND street = ? AND house_number = ?",
   //   [city, street, house_number],
@@ -118,7 +119,7 @@ router.post("/add-user", (req, res) => {
   //       return;
   //     }
 
-  // Insert new address into the 'addresses' table
+  // // Insert new address into the 'addresses' table
   // connection.query(
   //   "INSERT INTO addresses (city, street, house_number) VALUES (?, ?, ?)",
   //   [city, street, house_number],
