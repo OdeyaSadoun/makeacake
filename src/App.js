@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
-import Login from "./client/pages/loginPage";
-import Register from "./client/pages/registerPage";
-import Toolbar from "./client/components/toolbar";
-import Home from "./client/pages/home";
-import Shop from "./client/pages/shop";
-import Cart from "./client/pages/cart";
-import LikedProductsPage from "./client/pages/likedProductsPage";
-import AdminPage from "./client/pages/adminPage";
+import Login from './components/login';
+import Register from './components/register';
+import Toolbar from './components/toolbar';
+import UserManagement from './components/user_management'
+import LikedProducts from './components/liked_products'
+import Shopping_cart from './components/shopping_cart';
+import Products_list from './components/products_list';
 
 const App = () => {
   const [loggedIn, setLoggedIn] = useState(false);
@@ -24,20 +23,19 @@ const App = () => {
   };
 
   return (
-    <div>
-      <Routes>
-        <Route path="/login" element={<Login onLogin={handleLogin} />} />
-        <Route path="/register" Component={Register} />
-        <Route path="/:username" Component={Home} />
-        
+    <cartContext.Provider value={{cart, setCart }}>
+    <Routes>
+      <Route path="/login" element={<Login onLogin={handleLogin} />} />
+      <Route path="/register" element={<Register/>} />
+      <Route path="/:username" element={<Toolbar/>} />
+      <Route path="/:username/shop" element={<Shopping_cart setCart={setCart}/>} />
+      <Route path="/:username/cart" element={<Products_list setCart={setCart}/>} />
+      <Route path="/:username/liked-products" element={<LikedProducts />} />
+      <Route path="/admin/:username" element={<UserManagement />} />
+      <Route path="/" element={<Login />} />
+    </Routes>
+  </cartContext.Provider>    
 
-        <Route path="/:username/shop" element={<Shop />} />
-        <Route path="/:username/cart" element={<Cart />} />
-        <Route path="/:username/liked-products" element={<LikedProductsPage />} />
-        <Route path="/admin/:username" element={<AdminPage />} />
-        <Route path="/" element={<Login />} />
-      </Routes>
-    </div>
   );
 };
 
