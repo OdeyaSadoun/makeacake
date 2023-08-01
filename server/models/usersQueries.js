@@ -1,8 +1,8 @@
 const connection = require("./connection.js");
 
-module.exports.getAllAddresses = () => {
+module.exports.getAllUsers = () => {
   return new Promise((resolve, reject) => {
-    connection.query("SELECT * FROM addresses", (error, results) => {
+    connection.query("SELECT * FROM users", (error, results) => {
       if (error) {
         reject(error);
       } else {
@@ -12,11 +12,11 @@ module.exports.getAllAddresses = () => {
   });
 };
 
-module.exports.getAddressesById = (addressId) => {
+module.exports.getUserById = (userId) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM addresses WHERE id = ?",
-      [addressId],
+      "SELECT * FROM users WHERE id = ?",
+      [userId],
       (error, results) => {
         if (error) {
           reject(error);
@@ -27,6 +27,23 @@ module.exports.getAddressesById = (addressId) => {
     );
   });
 };
+
+module.exports.getUserByUsernameAndPassword = (username, password) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "SELECT * FROM addresses WHERE id = ?",
+      [username, password],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      }
+    );
+  });
+};
+  
 
 module.exports.getAddressByCityAndStreetAndNumberHouse = (city, street, house_number) => {
     return new Promise((resolve, reject) => {
