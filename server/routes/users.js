@@ -12,61 +12,61 @@ router.use(bodyParser.json()); // Parse request bodies as JSON
 
 /*GET all users*/
 router.get("/", (req, res) => {
-  UsersDB.getAllUsers()
-    .then((results) => {
-      res.json(results);
-    })
-    .catch((error) => {
-      console.error("Error executing MySQL query:", error);
-      res.status(500).json({ error: "Failed to retrieve users" });
-      return;
-    });
-  // connection.query("SELECT * FROM users", (err, results) => {
-  //   if (err) {
-  //     console.error("Error executing MySQL query:", err);
+  // UsersDB.getAllUsers()
+  //   .then((results) => {
+  //     res.json(results);
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error executing MySQL query:", error);
   //     res.status(500).json({ error: "Failed to retrieve users" });
   //     return;
-  //   }
-  //   res.json(results);
-  // });
+  //   });
+  connection.query("SELECT * FROM users", (err, results) => {
+    if (err) {
+      console.error("Error executing MySQL query:", err);
+      res.status(500).json({ error: "Failed to retrieve users" });
+      return;
+    }
+    res.json(results);
+  });
 });
 
 /*GET user by id*/
 router.get("/:id", (req, res) => {
   const userId = req.body;
 
-  UsersDB.getUserById(userId)
-    .then((results) => {
-      if (results.length === 0) {
-        res.status(404).json({ error: "User not found" });
-        return;
-      }
-      res.json(results[0]);
-    })
-    .catch((error) => {
-      console.error("Error executing MySQL query:", error);
-      res.status(500).json({ error: "Failed to retrieve user" });
-      return;
-    });
-
-  // connection.query(
-  //   "SELECT * FROM users WHERE id = ?",
-  //   [userId],
-  //   (err, results) => {
-  //     if (err) {
-  //       console.error("Error executing MySQL query:", err);
-  //       res.status(500).json({ error: "Failed to retrieve user" });
-  //       return;
-  //     }
-
+  // UsersDB.getUserById(userId)
+  //   .then((results) => {
   //     if (results.length === 0) {
   //       res.status(404).json({ error: "User not found" });
   //       return;
   //     }
-
   //     res.json(results[0]);
-  //   }
-  // );
+  //   })
+  //   .catch((error) => {
+  //     console.error("Error executing MySQL query:", error);
+  //     res.status(500).json({ error: "Failed to retrieve user" });
+  //     return;
+  //   });
+
+  connection.query(
+    "SELECT * FROM users WHERE id = ?",
+    [userId],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to retrieve user" });
+        return;
+      }
+
+      if (results.length === 0) {
+        res.status(404).json({ error: "User not found" });
+        return;
+      }
+
+      res.json(results[0]);
+    }
+  );
 });
 
 // Route to handle user registration
