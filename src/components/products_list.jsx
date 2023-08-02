@@ -1,14 +1,21 @@
+<<<<<<< HEAD
 
+=======
+>>>>>>> e3629adee29838fff1e5ecb3fe7d91f261048212
 // ProductsList.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import Main from '../components/Main'
 import { useContext } from 'react';
-import {cart} from './Main'
+import {cartContext} from '../App';
 
+<<<<<<< HEAD
 
 const ProductsList = () => {
   const cart = useContext(cartContext);
+=======
+const ProductsList = ( ) => {
+  const {cart,setCart}  = useContext(cartContext);
+>>>>>>> e3629adee29838fff1e5ecb3fe7d91f261048212
   const [likedProducts, setLikedProducts] = useState([]);
 
   // Sample product data
@@ -19,8 +26,9 @@ const ProductsList = () => {
     // ... more products
   ];
 
-  const handleAddToCart = (product, quantity) => {
-    setCart([...cart, { ...product, quantity }]);
+  const handleAddToCart = (product) => {
+    setCart([...cart, { ...product, }]);
+    console.log(cart, 'cart');
   };
 
   const handleLike = (product, isLiked) => {
@@ -32,21 +40,21 @@ const ProductsList = () => {
   };
 
   return (
-    <cartContext.Consumer>
+
     <div>
       <h2>Product List</h2>
       {products.map((product) => (
         <div key={product.id}>
           <h3>{product.name}</h3>
           <p>Price: ${product.price}</p>
-          <button onClick={() => handleAddToCart(product, 1)}>Add to Cart</button>
+          <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
           <button onClick={() => handleLike(product, true)}>Like</button>
         </div>
       ))}
       <Link to="/cart">Go to Cart</Link>
       <Link to="/liked">Go to Liked Products</Link>
     </div>
-    </cartContext.Consumer>
+
   );
 };
 

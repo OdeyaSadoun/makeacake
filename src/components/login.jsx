@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+<<<<<<< HEAD
 import '../../public/styles/login.css';
 import RestAPI from "../server/models/restapi";
+=======
+>>>>>>> e3629adee29838fff1e5ecb3fe7d91f261048212
    
 const Login = () => {
   const [username, setUsername] = useState('');
