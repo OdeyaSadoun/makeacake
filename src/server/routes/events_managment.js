@@ -1,16 +1,13 @@
-const express = require("express");
 const connection = require("../models/connection.js");
 const bodyParser = require("body-parser");
-const crypto = require("crypto");
+const express = require("express");
+const router = express.Router();
 
-const router = express.Router(); // Create a router object to define routes
-const app = express(); // Create an instance of the Express application
-app.use(express.json()); // Parse incoming requests with JSON payloads
+/*Parse request bodies as JSON*/
+router.use(bodyParser.json());
 
-router.use(bodyParser.json()); // Parse request bodies as JSON
-
-// Get all events
-router.get("/api/events", (req, res) => {
+/*Get all events*/
+router.get("/", (req, res) => {
   connection.query("SELECT * FROM events_management", (err, results) => {
     if (err) {
       console.error("Error executing MySQL query:", err);
@@ -22,8 +19,8 @@ router.get("/api/events", (req, res) => {
   });
 });
 
-// Get event by ID
-router.get("/api/events/:eventid", (req, res) => {
+/*Get event by ID*/
+router.get("/:eventid", (req, res) => {
   const eventId = req.params.eventid;
   connection.query(
     "SELECT * FROM events_management WHERE id = ?",
@@ -45,8 +42,8 @@ router.get("/api/events/:eventid", (req, res) => {
   );
 });
 
-// Add new event
-router.post("/api/events", (req, res) => {
+/*POST add new event*/
+router.post("/add_event", (req, res) => {
   const {
     event_date_time,
     is_dairy,
@@ -144,7 +141,105 @@ router.put("/api/events/:eventid", (req, res) => {
   );
 });
 
-// Delete event
+/* PUT update event date and time*/
+router.put("/update_date_time/:eventid", (req, res) => {
+  const eventId = req.params.eventid;
+  const { event_date_time } = req.body;
+  connection.query(
+    "UPDATE events_management SET event_date_time = ? WHERE id = ?",
+    [event_date_time, eventId],
+    (err, updateResults) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update date and time event" });
+        return;
+      }
+
+      if (updateResults.affectedRows === 0) {
+        res.status(404).json({ error: "Event not found" });
+        return;
+      }
+
+      res.json({ message: "Event updated date and time successfully" });
+    }
+  );
+});
+
+/*PUT update dairy status*/
+router.put("/update_is_dairy/:eventid", (req, res) => {
+  const eventId = req.params.eventid;
+  const { is_dairy } = req.body;
+  connection.query(
+    "UPDATE events_management SET is_dairy = ? WHERE id = ?",
+    [is_dairy, eventId],
+    (err, updateResults) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update is dairy to event" });
+        return;
+      }
+
+      if (updateResults.affectedRows === 0) {
+        res.status(404).json({ error: "Event not found" });
+        return;
+      }
+
+      res.json({ message: "Event updated is dairy successfully" });
+    }
+  );
+});
+
+/*PUT Update event type*/
+router.put("/update_type/:eventid", (req, res) => {
+  const eventId = req.params.eventid;
+  const { event_type } = req.body;
+  connection.query(
+    "UPDATE events_management SET event_type = ? WHERE id = ?",
+    [event_type, eventId],
+    (err, updateResults) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update event's type" });
+        return;
+      }
+
+      if (updateResults.affectedRows === 0) {
+        res.status(404).json({ error: "Event not found" });
+        return;
+      }
+
+      res.json({ message: "Event updated type successfully" });    }
+  );
+});
+
+// // Update event address
+// router.put("/api/events/:eventid/address", (req, res) => {
+//   const eventId = req.params.eventid;
+//   const { event_address_id } = req.body;
+//   connection.query(
+//     "UPDATE events_management SET event_address_id = ? WHERE id = ?",
+//     [event_address_id, eventId],
+//     (err, updateResults) => {
+//       // ... (same error and response handling)
+//     }
+//   );
+// });
+
+// Update discount percentage
+router.put("/update_disxount/:eventid", (req, res) => {
+  const eventId = req.params.eventid;
+  const { discount_percentage } = req.body;
+  connection.query(
+    "UPDATE events_management SET discount_percentage = ? WHERE id = ?",
+    [discount_percentage, eventId],
+    (err, updateResults) => {
+      // ... (same error and response handling)
+    }
+  );
+});
+
+
+/*Delete event*/
 router.delete("/api/events/:eventid", (req, res) => {
   const eventId = req.params.eventid;
   connection.query(
