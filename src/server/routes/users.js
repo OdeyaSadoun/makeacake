@@ -209,7 +209,7 @@ router.post("/login", (req, res) => {
 });
 
 /*PUT update user email*/
-router.put("/:userid/update_email", (req, res) => {
+router.put("/update_email/:userid", (req, res) => {
   const { email, userid } = req.body;
 
   // Check if the user exists by userid
@@ -248,7 +248,7 @@ router.put("/:userid/update_email", (req, res) => {
 });
 
 /*PUT update user phone*/
-router.put("/:userid/update_phone", (req, res) => {
+router.put("/update_phone/:userid", (req, res) => {
   const { phone, userid } = req.body;
 
   // Check if the user exists by userid
@@ -287,7 +287,7 @@ router.put("/:userid/update_phone", (req, res) => {
 });
 
 /*PUT update user name*/
-router.put("/:userid/update_name", (req, res) => {
+router.put("/update_name/:userid", (req, res) => {
   const { first_last_name, userid } = req.body;
 
   // Check if the user exists by userid
@@ -326,7 +326,7 @@ router.put("/:userid/update_name", (req, res) => {
 });
 
 /*PUT update user password*/
-router.put("/:userid/update_password", (req, res) => {
+router.put("/update_password/:userid", (req, res) => {
   const { system_password, userid } = req.body;
 
   // Check if the user exists by userid
@@ -371,7 +371,7 @@ router.put("/:userid/update_password", (req, res) => {
 });
 
 /*PUT update user's is_admin value*/
-router.put("/:userid/update_is_admin", (req, res) => {
+router.put("/update_is_admin/:userid", (req, res) => {
   const { is_admin, userid } = req.body;
 
   // Check if the user exists by userid
