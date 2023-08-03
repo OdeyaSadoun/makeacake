@@ -104,7 +104,7 @@ router.post("/add_address", (req, res) => {
   //     });
   //     return;
   //   });
-  console.log( city, street, house_number );
+  console.log(city, street, house_number);
   connection.query(
     "SELECT * FROM addresses WHERE city = ? AND street = ? AND house_number = ?",
     [city, street, house_number],
@@ -121,25 +121,25 @@ router.post("/add_address", (req, res) => {
         return;
       }
 
-  // Insert new address into the 'addresses' table
-  connection.query(
-    "INSERT INTO addresses (city, street, house_number) VALUES (?, ?, ?)",
-    [city, street, house_number],
-    (err, insertResults) => {
-      if (err) {
-        console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to add address" });
-        return;
-      }
+      // Insert new address into the 'addresses' table
+      connection.query(
+        "INSERT INTO addresses (city, street, house_number) VALUES (?, ?, ?)",
+        [city, street, house_number],
+        (err, insertResults) => {
+          if (err) {
+            console.error("Error executing MySQL query:", err);
+            res.status(500).json({ error: "Failed to add address" });
+            return;
+          }
 
-      const newAddressId = insertResults.insertId;
-      res.status(201).json({
-        message: "Address added successfully",
-        addressId: newAddressId,
-        status: 201,
-      });
-    }
-  );
+          const newAddressId = insertResults.insertId;
+          res.status(201).json({
+            message: "Address added successfully",
+            addressId: newAddressId,
+            status: 201,
+          });
+        }
+      );
     }
   );
 });
