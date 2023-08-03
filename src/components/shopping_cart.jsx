@@ -7,8 +7,16 @@ const ShoppingCart = ( ) => {
   const {cart,setCart}  = useContext(cartContext);
   const [quantity, setQuantity] = useState(1);
 
+<<<<<<< HEAD
+  const handleUpdateQuantity = (itemId, newQuantity) => {
+
+    setCart((prevCart) =>
+      prevCart.map((item) => (item.id === itemId ? { ...item, quantity: parseInt(newQuantity, 10) } : item))
+    );
+=======
   const handleQuantityChange = (event) => {
     setQuantity(Number(event.target.value)); // Update the quantity state when the input value changes
+>>>>>>> e3629adee29838fff1e5ecb3fe7d91f261048212
   };
 
   const handleRemoveItem = (itemId) => {

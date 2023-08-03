@@ -1,11 +1,21 @@
+<<<<<<< HEAD
+
+=======
+>>>>>>> e3629adee29838fff1e5ecb3fe7d91f261048212
 // ProductsList.js
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
 import {cartContext} from '../App';
 
+<<<<<<< HEAD
+
+const ProductsList = () => {
+  const cart = useContext(cartContext);
+=======
 const ProductsList = ( ) => {
   const {cart,setCart}  = useContext(cartContext);
+>>>>>>> e3629adee29838fff1e5ecb3fe7d91f261048212
   const [likedProducts, setLikedProducts] = useState([]);
 
   // Sample product data
