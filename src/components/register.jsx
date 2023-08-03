@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../public/style/register.css';
+import '../styles/register.css';
 import RestAPI from '../server/models/restapi';
 
 const Register = () => {
