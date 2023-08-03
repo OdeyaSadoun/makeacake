@@ -26,7 +26,7 @@ export class RestAPI {
 
   static async getUserByUsernameAndPassword(username, password) {
     console.log('function getUserByUsernameAndPassword',username, password);
-    const url = `${BASE_URL}/api/users/login`;
+    const url = `${BASE_URL}/users/login`;
     const mybody = { username, password };
     const options = {
       method: "POST",

@@ -186,15 +186,14 @@ router.post("/api/users/register", (req, res) => {
 });
 
 // Route to handle user login
-router.post("/api/users/login", (req, res) => {
+router.post("/login", (req, res) => {
+  // get user by username and password
   const { username, password } = req.body;
-  console.log("before q", username, password);
   connection.query(
-    "SELECT * FROM users WHERE id = (SELECT id FROM passwords WHERE username = ? AND system_password = ?)",
+    "SELECT * FROM users WHERE username = (SELECT username FROM passwords WHERE username = ? AND system_password = ?)",
     [username, password],
     (err, results) => {
-      console.log("after q", username, password);
-
+      console.log(username, password);
       if (err) {
         console.error("Error executing MySQL query:", err);
         res.status(500).json({ error: "Failed to retrieve user" });
@@ -202,7 +201,7 @@ router.post("/api/users/login", (req, res) => {
       }
 
       if (results.length === 0) {
-        res.status(404).json({ error: "User not found" });
+        res.status(404).json({ error: "User not found" });    
         return;
       }
 
