@@ -1,14 +1,12 @@
-const express = require("express");
 const connection = require("../models/connection.js");
 const bodyParser = require("body-parser");
-const crypto = require("crypto");
+const express = require("express");
+const router = express.Router();
 
-const router = express.Router(); // Create a router object to define routes
-const app = express(); // Create an instance of the Express application
-app.use(express.json()); // Parse incoming requests with JSON payloads
-const UsersDB = require("../models/usersQueries.js");
+/*Parse request bodies as JSON*/
+router.use(bodyParser.json());
 
-router.use(bodyParser.json()); // Parse request bodies as JSON
+// const UsersDB = require("../models/usersQueries.js");
 
 /*GET all users*/
 router.get("/", (req, res) => {
@@ -69,8 +67,8 @@ router.get("/:id", (req, res) => {
   );
 });
 
-// Route to handle user registration
-router.post("/api/users/register", (req, res) => {
+/*POST add new user*/
+router.post("/register", (req, res) => {
   const {
     first_last_name,
     username,
@@ -185,7 +183,7 @@ router.post("/api/users/register", (req, res) => {
   );
 });
 
-// Route to handle user login
+/*POST user login*/
 router.post("/login", (req, res) => {
   // get user by username and password
   const { username, password } = req.body;
@@ -210,8 +208,8 @@ router.post("/login", (req, res) => {
   );
 });
 
-// Route to update user email
-router.put("/api/users/:userid/update_email", (req, res) => {
+/*PUT update user email*/
+router.put("/:userid/update_email", (req, res) => {
   const { email, userid } = req.body;
 
   // Check if the user exists by userid
@@ -249,8 +247,8 @@ router.put("/api/users/:userid/update_email", (req, res) => {
   );
 });
 
-// Route to update user phone
-router.put("/api/users/:userid/update_phone", (req, res) => {
+/*PUT update user phone*/
+router.put("/:userid/update_phone", (req, res) => {
   const { phone, userid } = req.body;
 
   // Check if the user exists by userid
@@ -288,8 +286,8 @@ router.put("/api/users/:userid/update_phone", (req, res) => {
   );
 });
 
-// Route to update user name
-router.put("/api/users/:userid/update_name", (req, res) => {
+/*PUT update user name*/
+router.put("/:userid/update_name", (req, res) => {
   const { first_last_name, userid } = req.body;
 
   // Check if the user exists by userid
@@ -327,8 +325,8 @@ router.put("/api/users/:userid/update_name", (req, res) => {
   );
 });
 
-// Route to update user password
-router.put("/api/users/:userid/update_password", (req, res) => {
+/*PUT update user password*/
+router.put("/:userid/update_password", (req, res) => {
   const { system_password, userid } = req.body;
 
   // Check if the user exists by userid
@@ -372,8 +370,8 @@ router.put("/api/users/:userid/update_password", (req, res) => {
   );
 });
 
-// Route to update user's is_admin value
-router.put("/api/users/:userid/update_is_admin", (req, res) => {
+/*PUT update user's is_admin value*/
+router.put("/:userid/update_is_admin", (req, res) => {
   const { is_admin, userid } = req.body;
 
   // Check if the user exists by userid
