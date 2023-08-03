@@ -2,11 +2,13 @@ const connection = require("../models/connection.js");
 const bodyParser = require("body-parser");
 const express = require("express");
 const router = express.Router();
-const AddressesDB = require("../models/addressQueries.js");
+
 /*Parse request bodies as JSON*/
 router.use(bodyParser.json());
 
-/*Route to get all addresses*/
+// const AddressesDB = require("../models/addressQueries.js");
+
+/*GET all addresses*/
 router.get("/", (req, res) => {
   // AddressesDB.getAllAddresses()
   //   .then((results) => {
@@ -28,7 +30,7 @@ router.get("/", (req, res) => {
   });
 });
 
-/*Route to get address by ID*/
+/*GET address by ID*/
 router.get("/:addressid", (req, res) => {
   const addressId = req.body;
   // AddressesDB.getAddressesById(addressId)
@@ -62,8 +64,8 @@ router.get("/:addressid", (req, res) => {
   );
 });
 
-/*Route to add new address*/
-router.post("/add-address", (req, res) => {
+/*POST add new address*/
+router.post("/add_address", (req, res) => {
   const { city, street, house_number } = req.body;
 
   // Check if the address already exists
@@ -142,8 +144,8 @@ router.post("/add-address", (req, res) => {
   );
 });
 
-// Route to update address
-router.put("/:addressid/update", (req, res) => {
+/*PUT update address*/
+router.put("/update_address/:addressid", (req, res) => {
   const { city, street, house_number } = req.body;
   const addressId = req.params.addressid;
 
@@ -182,8 +184,8 @@ router.put("/:addressid/update", (req, res) => {
   );
 });
 
-// Route to delete address
-router.delete("/api/addresses/:addressid", (req, res) => {
+/*DELETE address*/
+router.delete("/delete_address/:addressid", (req, res) => {
   const addressId = req.params.addressid;
 
   // Check if the address is associated with any user
