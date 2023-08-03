@@ -1,12 +1,12 @@
 const express = require("express");
 const cors = require("cors");
 
-const indexRouter = require("./server/routes/index_server");
-const addressesRouter = require("./server/routes/addresses");
-const eventsManagmentRouter = require("./server/routes/events_managment");
-const ordersRouter = require("./server/routes/orders");
-const productsRouter = require("./server/routes/products");
-const usersRouter = require("./server/routes/users");
+// const indexRouter = require("./server/routes/index_server");
+const addressesRouter = require("./src/server/routes/addresses");
+const eventsManagmentRouter = require("./src/server/routes/events_managment");
+const ordersRouter = require("./src/server/routes/orders");
+const productsRouter = require("./src/server/routes/products");
+const usersRouter = require("./src/server/routes/users");
 
 const app = express();
 
@@ -33,7 +33,7 @@ app.use(function (req, res, next) {
   next();
 });
 
-app.use("/", indexRouter);
+// app.use("/", indexRouter);
 app.use("/addresses", addressesRouter);
 app.use("/events-managment", eventsManagmentRouter);
 app.use("/orders", ordersRouter);
