@@ -6,7 +6,7 @@ const LikedProducts = () => {
   return (
     <div>
       <h2>Liked Products</h2>
-      {likedProducts.map((product) => (
+      {LikedProducts.map((product) => (
         <div key={product.id}>
           <h3>{product.name}</h3>
           <p>Price: ${product.price}</p>

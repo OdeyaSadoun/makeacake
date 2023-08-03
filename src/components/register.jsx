@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import '../css/register.css';
-import restAPI from "../../server/restAPI";
+import RestAPI from '../server/models/restapi';
 
 const Register = () => {
   const [first_last_name, setFirstLastName] = useState('');

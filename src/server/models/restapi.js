@@ -27,13 +27,13 @@ export class RestAPI {
   static async getUserByUsernameAndPassword(username, password) {
     console.log('function getUserByUsernameAndPassword',username, password);
     const url = `${BASE_URL}/api/users/login`;
-    const body = { username, password };
+    const mybody = { username, password };
     const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: JSON.stringify(mybody),
     };
     console.log("options", options);
     return await RestAPI.fetchData(url, options);

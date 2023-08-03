@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import '../public/styles/toolbar.css';
+
 
 const Toolbar = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -19,11 +19,11 @@ const Toolbar = () => {
   };
   
   const handleShopClick = () => {
-    navigate(`/${user.username}/Shop`);
+    navigate(`/${user.username}/ProductsList`);
   };
 
   const handleCartClick = () => {
-    navigate(`/${user.username}/Cart`);
+    navigate(`/${user.username}/ShoppingCart`);
   };
 
   const handleLikedProductsClick = () => {

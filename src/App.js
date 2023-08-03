@@ -1,14 +1,18 @@
-import React, { useState } from "react";
+import React, { createContext, useState } from "react";
 import { Route, Routes, useNavigate } from "react-router-dom";
 import Login from './components/login';
 import Register from './components/register';
-import Toolbar from './components/toolbar';
 import UserManagement from './components/user_management'
 import LikedProducts from './components/liked_products'
 import Shopping_cart from './components/shopping_cart';
 import Products_list from './components/products_list';
+import Toolbar from './components/toolbar';
+
+
+export const cartContext = createContext();
 
 const App = () => {
+  const [cart, setCart] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
 
@@ -21,7 +25,6 @@ const App = () => {
     setLoggedIn(false);
     navigate("/login");
   };
-
   return (
     <cartContext.Provider value={{cart, setCart }}>
     <Routes>
