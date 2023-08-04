@@ -1,15 +1,13 @@
-const express = require("express");
 const connection = require("../models/connection.js");
 const bodyParser = require("body-parser");
-const crypto = require("crypto");
+const express = require("express");
 const router = express.Router();
-const app = express();
-app.use(express.json());
 
+/*Parse request bodies as JSON*/
 router.use(bodyParser.json());
 
-router.get("/api/users/:userid/products", (req, res) => {
-  // get all products
+/*GET get all products*/
+router.get("/", (req, res) => {
   connection.query("SELECT * FROM products", (err, results) => {
     if (err) {
       console.error("Error executing MySQL query:", err);
@@ -20,11 +18,13 @@ router.get("/api/users/:userid/products", (req, res) => {
   });
 });
 
-router.get("/api/users/:userid/products", (req, res) => {
-  // get product by ID
+/*GET product by ID*/
+router.get("/:userid", (req, res) => {
   const { productid } = req.body;
   connection.query(
-    "SELECT * FROM users WHERE id = ?", [productid], (err, results) => {
+    "SELECT * FROM users WHERE id = ?",
+    [productid],
+    (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
         res.status(500).json({ error: "Failed to retrieve product" });
@@ -41,11 +41,11 @@ router.get("/api/users/:userid/products", (req, res) => {
   );
 });
 
-router.get("/api/users/:userid/products", (req, res) => {
-  // get all user's products 
+/*GET all user's products by user id*/
+router.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
   connection.query(
-    "SELECT * FROM products NATURAL JOIN product_user WHERE product_user.user_id= ?" ,
+    "SELECT * FROM products NATURAL JOIN product_user WHERE product_user.user_id= ?",
     [userid],
     (err, results) => {
       if (err) {
@@ -64,27 +64,45 @@ router.get("/api/users/:userid/products", (req, res) => {
   );
 });
 
-
-
-router.post("/api/users/:userid/products", (req, res) => {
-  // Add product
-  const { id, product_name, is_dairy, price, quantity, discount_percentage, kosher_type, comments, sensitivity } = req.body;
+/*POST add product*/
+router.post("/add_product", (req, res) => {
+  const {
+    id,
+    product_name,
+    is_dairy,
+    price,
+    quantity,
+    discount_percentage,
+    kosher_type,
+    comments,
+    sensitivity,
+  } = req.body;
 
   connection.query(
     "INSERT INTO products (id, product_name, is_dairy, price, quantity, discount_percentage, kosher_type, comments, sensitivity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [id, product_name, is_dairy, price, quantity, discount_percentage, kosher_type, comments, sensitivity],
+    [
+      id,
+      product_name,
+      is_dairy,
+      price,
+      quantity,
+      discount_percentage,
+      kosher_type,
+      comments,
+      sensitivity,
+    ],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
         res.status(500).json({ error: "Failed to create product" });
         return;
       }
-    }  
+    }
   );
 });
 
-router.put("/api/products/:productid/update_price", (req, res) => {
-  // update price of product
+/*PUT update price of product*/
+router.put("/update_price/:productid", (req, res) => {
   const id = req.params.id;
   const { price } = req.body;
   connection.query(
@@ -102,28 +120,27 @@ router.put("/api/products/:productid/update_price", (req, res) => {
   );
 });
 
-router.put("/api/products/:productid/update_quantity", (req, res) => {
-    // update quantity of product
-    const id = req.params.id;
-    const { quantity} = req.body;
-    connection.query(
-      "UPDATE products SET quantity = ? WHERE id = ?",
-      [quantity, id],
-      (err, results) => {
-        if (err) {
-          console.error("Error executing MySQL query:", err);
-          res.status(500).json({ error: "Failed to update quantity" });
-          return;
-        }
-  
-        res.json({ message: "Email updated quantity" });
+/*PUT update quantity of product*/
+router.put("/update_quantity/:productid", (req, res) => {
+  const id = req.params.id;
+  const { quantity } = req.body;
+  connection.query(
+    "UPDATE products SET quantity = ? WHERE id = ?",
+    [quantity, id],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update quantity" });
+        return;
       }
-    );
-  });
 
+      res.json({ message: "Email updated quantity" });
+    }
+  );
+});
 
-router.put("/api/products/:productid/update_sensitivity", (req, res) => {
-  // update sensitivity of product
+/*PUT update sensitivity of product*/
+router.put("/update_sensitivity/:productid", (req, res) => {
   const id = req.params.id;
   const { sensitivity } = req.body;
   connection.query(
@@ -139,74 +156,72 @@ router.put("/api/products/:productid/update_sensitivity", (req, res) => {
       res.json({ message: "sensitivity updated successfully" });
     }
   );
-});  
+});
 
-router.put("/api/products/:productid/update_kosher", (req, res) => {
-    // update kosher type of product
-    const id = req.params.id;
-    const { kosher_type } = req.body;
-    connection.query(
-      "UPDATE products SET kosher_type = ? WHERE id = ?",
-      [kosher_type, id],
-      (err, results) => {
-        if (err) {
-          console.error("Error executing MySQL query:", err);
-          res.status(500).json({ error: "Failed to update kosher_type" });
-          return;
-        }
-  
-        res.json({ message: "kosher_type updated successfully" });
+/*PUT update kosher type of product*/
+router.put("/update_kosher/:productid", (req, res) => {
+  const id = req.params.id;
+  const { kosher_type } = req.body;
+  connection.query(
+    "UPDATE products SET kosher_type = ? WHERE id = ?",
+    [kosher_type, id],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update kosher_type" });
+        return;
       }
-    );
-  });  
 
+      res.json({ message: "kosher_type updated successfully" });
+    }
+  );
+});
 
-  router.put("/api/products/:productid/update_is_dairy", (req, res) => {
-    // update is_dairy of product
-    const id = req.params.id;
-    const { is_dairy } = req.body;
-    connection.query(
-      "UPDATE products SET is_dairy = ? WHERE id = ?",
-      [is_dairy, id],
-      (err, results) => {
-        if (err) {
-          console.error("Error executing MySQL query:", err);
-          res.status(500).json({ error: "Failed to update is_dairy" });
-          return;
-        }
-  
-        res.json({ message: "is_dairy updated successfully" });
+/*PUT update "is dairy" of product*/
+router.put("/update_is_dairy/:productid", (req, res) => {
+  const id = req.params.id;
+  const { is_dairy } = req.body;
+  connection.query(
+    "UPDATE products SET is_dairy = ? WHERE id = ?",
+    [is_dairy, id],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update is_dairy" });
+        return;
       }
-    );
-  });   
-  
-  router.delete("/api/users/:userid/products", (req, res) => {
-    // delete product
-    const id = req.params.id;
-    connection.query(
-      "DELETE FROM products WHERE id = ?",
-      [id],
-      (err, results) => {
-        if (err) {
-          console.error("Error executing MySQL query:", err);
-          res.status(500).json({ error: "Failed to update is_dairy" });
-          return;
-        }
-        connection.query(
-            "DELETE FROM media_product WHERE product_id = ?",
-            [id],
-            (err, results) => {
-              if (err) {
-                console.error("Error executing MySQL query:", err);
-                res.status(500).json({ error: "Failed to update is_dairy" });
-                return;
-              }  
-        res.json({ message: "is_dairy updated successfully" });
-            }
-        );
+
+      res.json({ message: "is_dairy updated successfully" });
+    }
+  );
+});
+
+/*DELETE product*/
+router.delete("/delete_products", (req, res) => {
+  const id = req.params.id;
+  connection.query(
+    "DELETE FROM products WHERE id = ?",
+    [id],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update is_dairy" });
+        return;
       }
-    );
-  });
-  
-  
+      connection.query(
+        "DELETE FROM media_product WHERE product_id = ?",
+        [id],
+        (err, results) => {
+          if (err) {
+            console.error("Error executing MySQL query:", err);
+            res.status(500).json({ error: "Failed to update is_dairy" });
+            return;
+          }
+          res.json({ message: "is_dairy updated successfully" });
+        }
+      );
+    }
+  );
+});
+
 module.exports = router;
