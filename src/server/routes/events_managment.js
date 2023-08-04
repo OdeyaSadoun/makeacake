@@ -189,7 +189,7 @@ router.put("/update_is_dairy/:eventid", (req, res) => {
   );
 });
 
-/*PUT Update event type*/
+/*PUT update event type*/
 router.put("/update_type/:eventid", (req, res) => {
   const eventId = req.params.eventid;
   const { event_type } = req.body;
@@ -208,32 +208,104 @@ router.put("/update_type/:eventid", (req, res) => {
         return;
       }
 
-      res.json({ message: "Event updated type successfully" });    }
+      res.json({ message: "Event updated type successfully" });
+    }
   );
 });
 
-// // Update event address
-// router.put("/api/events/:eventid/address", (req, res) => {
-//   const eventId = req.params.eventid;
-//   const { event_address_id } = req.body;
-//   connection.query(
-//     "UPDATE events_management SET event_address_id = ? WHERE id = ?",
-//     [event_address_id, eventId],
-//     (err, updateResults) => {
-//       // ... (same error and response handling)
-//     }
-//   );
-// });
+/*PUT update event address*/
+//********need to fix this function!!!!********/
+router.put("/update_address/:eventid", (req, res) => {
+  const eventId = req.params.eventid;
+  const { event_address_id } = req.body;
+  connection.query(
+    "UPDATE events_management SET event_address_id = ? WHERE id = ?",
+    [event_address_id, eventId],
+    (err, updateResults) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update event's address" });
+        return;
+      }
 
-// Update discount percentage
-router.put("/update_disxount/:eventid", (req, res) => {
+      if (updateResults.affectedRows === 0) {
+        res.status(404).json({ error: "Event not found" });
+        return;
+      }
+
+      res.json({ message: "Event updated address successfully" });
+    }
+  );
+});
+
+/*PUT update discount percentage*/
+router.put("/update_discount/:eventid", (req, res) => {
   const eventId = req.params.eventid;
   const { discount_percentage } = req.body;
   connection.query(
     "UPDATE events_management SET discount_percentage = ? WHERE id = ?",
     [discount_percentage, eventId],
     (err, updateResults) => {
-      // ... (same error and response handling)
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update event's discount" });
+        return;
+      }
+
+      if (updateResults.affectedRows === 0) {
+        res.status(404).json({ error: "Event not found" });
+        return;
+      }
+
+      res.json({ message: "Event updated discount successfully" });
+    }
+  );
+});
+
+/*PUT update event comments*/
+router.put("/update_comments/:eventid", (req, res) => {
+  const eventId = req.params.eventid;
+  const { comments } = req.body;
+  connection.query(
+    "UPDATE events_management SET comments = ? WHERE id = ?",
+    [comments, eventId],
+    (err, updateResults) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update event's comments" });
+        return;
+      }
+
+      if (updateResults.affectedRows === 0) {
+        res.status(404).json({ error: "Event not found" });
+        return;
+      }
+
+      res.json({ message: "Event updated comments successfully" });
+    }
+  );
+});
+
+/*PUT update arrival status*/
+router.put("/update_is_arrival/:eventid", (req, res) => {
+  const eventId = req.params.eventid;
+  const { is_arrive } = req.body;
+  connection.query(
+    "UPDATE events_management SET is_arrive = ? WHERE id = ?",
+    [is_arrive, eventId],
+    (err, updateResults) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update event's is_arrival" });
+        return;
+      }
+
+      if (updateResults.affectedRows === 0) {
+        res.status(404).json({ error: "Event not found" });
+        return;
+      }
+
+      res.json({ message: "Event updated is_arrival successfully" });
     }
   );
 });
