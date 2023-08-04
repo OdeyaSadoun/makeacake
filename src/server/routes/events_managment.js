@@ -310,7 +310,6 @@ router.put("/update_is_arrival/:eventid", (req, res) => {
   );
 });
 
-
 /*Delete event*/
 router.delete("/api/events/:eventid", (req, res) => {
   const eventId = req.params.eventid;
