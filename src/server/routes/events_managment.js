@@ -100,7 +100,7 @@ router.post("/add_event", (req, res) => {
   );
 });
 
-// Update event
+/*PUT update event*/
 router.put("/api/events/:eventid", (req, res) => {
   const eventId = req.params.eventid;
   const {
@@ -141,7 +141,7 @@ router.put("/api/events/:eventid", (req, res) => {
   );
 });
 
-/* PUT update event date and time*/
+/*  event date and time*/
 router.put("/update_date_time/:eventid", (req, res) => {
   const eventId = req.params.eventid;
   const { event_date_time } = req.body;
