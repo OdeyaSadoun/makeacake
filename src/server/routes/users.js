@@ -31,8 +31,7 @@ router.get("/", (req, res) => {
 
 /*GET user by id*/
 router.get("/:id", (req, res) => {
-  const userId = req.body;
-
+  const userId = req.params.id;
   // UsersDB.getUserById(userId)
   //   .then((results) => {
   //     if (results.length === 0) {
