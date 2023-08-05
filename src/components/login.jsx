@@ -11,19 +11,21 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     console.log('before RestAPI', username, password);
-    const user = await RestAPI.getUserByUsernameAndPassword(username, password);
-    console.log('after RestAPI', user);
+    try {
+      const user = await RestAPI.getUserByUsernameAndPassword(username, password);
+      console.log('after RestAPI', user);
 
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-      if (user.is_admin) {
-        navigate(`/admin/${user.username}`);
+      if (user) {
+        localStorage.setItem('user', JSON.stringify(user));
+        if (user.is_admin) {
+          navigate(`/admin/${user.username}`);
+        } else {
+          navigate(`/${user.username}`);
+        }
       }
-      else {
-        navigate(`/${user.username}`);
-      }
-    } else {
-      alert('שם משתמש או סיסמא שגויים, אנא נסה שנית.');
+    }
+    catch (error) {
+      alert(error.message || "Invalid username or password");
     }
   };
 
