@@ -46,9 +46,9 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async createUser(first_last_name, username, system_password, email, phone, city, street, numhouse, date_of_birth, id_card, is_admin) { 
+  static async createUser(first_last_name, username, system_password, email, phone, city, street, house_number, date_of_birth, id_card, is_admin) { 
     const url = `${USERS_BASE_URL}/register`;
-    const body = {first_last_name, username, system_password, email, phone, city, street, numhouse, date_of_birth, id_card, is_admin };
+    const body = {first_last_name, username, email, phone, city, street, house_number, date_of_birth, id_card, system_password, is_admin };
     const options = {
       method: "POST",
       headers: {

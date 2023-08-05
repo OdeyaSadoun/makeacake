@@ -71,7 +71,6 @@ router.post("/register", (req, res) => {
   const {
     first_last_name,
     username,
-    password,
     email,
     phone,
     city,
@@ -79,107 +78,116 @@ router.post("/register", (req, res) => {
     house_number,
     date_of_birth,
     id_card,
+    system_password,
     is_admin,
   } = req.body;
 
-  // Check if the user already exists by username or id_card because they need to be unique
+  // Check if the user already exists by username or id_card
   connection.query(
-       
+    'SELECT id FROM users WHERE username = ? OR id_card = ?',
     [username, id_card],
     (err, results) => {
       if (err) {
-        console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to create user" });
+        console.error('Error executing MySQL query:', err);
+        res.status(500).json({ error: 'Failed to create user when check if user exist' });
         return;
       }
 
       if (results.length > 0) {
-        // User with the same username or id_card already exists
-        res.status(400).json({ error: "User already exists" });
+        res.status(400).json({ error: 'User already exists' });
         return;
       }
 
+      console.log('user is new one');
+
       // Check if the address already exists
       connection.query(
-        "SELECT id FROM addresses WHERE city = ? AND street = ? AND house_number = ?",
+        'SELECT id FROM addresses WHERE city = ? AND street = ? AND house_number = ?',
         [city, street, house_number],
         (err, addressResults) => {
           if (err) {
-            console.error("Error executing MySQL query:", err);
-            res.status(500).json({ error: "Failed to create address" });
+            console.error('Error executing MySQL query:', err);
+            res.status(500).json({ error: 'Failed to create address' });
             return;
           }
 
-          var addressId;
+          let addressId;
 
           if (addressResults.length === 0) {
-            // Address not exists and need to add new
             // Insert new address into the 'addresses' table
             connection.query(
-              "INSERT INTO addresses (city, street, house_number) VALUES (?, ?, ?)",
+              'INSERT INTO addresses (city, street, house_number) VALUES (?, ?, ?)',
               [city, street, house_number],
               (err, addressInsertResults) => {
                 if (err) {
-                  console.error("Error executing MySQL query:", err);
-                  res.status(500).json({ error: "Failed to create address" });
+                  console.error('Error executing MySQL query:', err);
+                  res.status(500).json({ error: 'Failed to create address' });
                   return;
                 }
 
                 // Retrieve the generated address ID
                 addressId = addressInsertResults.insertId;
+                createUserWithAddress(addressId);
               }
             );
           } else {
-            addressId = addressResults;
+            addressId = addressResults[0].id;
+            createUserWithAddress(addressId);
           }
-
-          // Insert new user into the 'users' table with the address ID
-          connection.query(
-            "INSERT INTO users (first_last_name, username, email, phone, address_id, date_of_birth, id_card, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-            [
-              first_last_name,
-              username,
-              email,
-              phone,
-              addressId,
-              date_of_birth,
-              id_card,
-              is_admin,
-            ],
-            (err, userInsertResults) => {
-              if (err) {
-                console.error("Error executing MySQL query:", err);
-                res.status(500).json({ error: "Failed to create user" });
-                return;
-              }
-
-              // Retrieve the generated user ID
-              const userId = userInsertResults.insertId;
-
-              // Insert the password into the passwords table
-              connection.query(
-                "INSERT INTO passwords (user_id, system_password) VALUES (?, ?)",
-                [userId, password],
-                (err) => {
-                  if (err) {
-                    console.error("Error executing MySQL query:", err);
-                    res.status(500).json({ error: "Failed to create password to user" });
-                    return;
-                  }
-
-                  res.status(201).json({
-                    message: "User created successfully",
-                    status: 201,
-                  });
-                }
-              );
-            }
-          );
         }
       );
     }
   );
+
+  function createUserWithAddress(addressId) {
+    // Insert new user into the 'users' table with the address ID
+    connection.query(
+      'INSERT INTO users (first_last_name, username, email, phone, address_id, date_of_birth, id_card, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+      [
+        first_last_name,
+        username,
+        email,
+        phone,
+        addressId,
+        date_of_birth,
+        id_card,
+        is_admin,
+      ],
+      (err, userInsertResults) => {
+        if (err) {
+          console.error('Error executing MySQL query:', err);
+          res.status(500).json({ error: 'Failed to create user after have the address' });
+          return;
+        }
+
+        // Retrieve the generated user ID
+        const userId = userInsertResults.insertId;
+        createPasswordForUser(username, system_password, res);
+      }
+    );
+  }
+
+  function createPasswordForUser(username, password, res) {
+    // Insert the password into the passwords table
+    connection.query(
+      'INSERT INTO passwords (username, system_password) VALUES (?, ?)',
+      [username, password],
+      err => {
+        if (err) {
+          console.error('Error executing MySQL query:', err);
+          res.status(500).json({ error: 'Failed to create password for user' });
+          return;
+        }
+  
+        res.status(201).json({
+          message: 'User created successfully',
+          status: 201,
+        });
+      }
+    );
+  }
 });
+
 
 /*POST user login*/
 router.post("/login", (req, res) => {
