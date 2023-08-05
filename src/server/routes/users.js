@@ -188,7 +188,6 @@ router.post("/register", (req, res) => {
   }
 });
 
-
 /*POST user login*/
 router.post("/login", (req, res) => {
   // get user by username and password

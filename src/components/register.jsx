@@ -92,6 +92,7 @@ const Register = () => {
         userData.system_password,
         userData.is_admin ? 1 : 0 // Convert boolean to integer
       );
+      console.log(newUser)
       if (newUser && newUser.status === 201) {
         // Registration successful, navigate to the login page
         alert('נרשמת בהצלחה!');
