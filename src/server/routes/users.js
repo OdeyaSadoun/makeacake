@@ -84,7 +84,7 @@ router.post("/register", (req, res) => {
 
   // Check if the user already exists by username or id_card because they need to be unique
   connection.query(
-    "SELECT * FROM users WHERE username = ? OR id_card = ?",
+       
     [username, id_card],
     (err, results) => {
       if (err) {
@@ -101,7 +101,7 @@ router.post("/register", (req, res) => {
 
       // Check if the address already exists
       connection.query(
-        "SELECT * FROM addresses WHERE city = ? AND street = ? AND house_number = ?",
+        "SELECT id FROM addresses WHERE city = ? AND street = ? AND house_number = ?",
         [city, street, house_number],
         (err, addressResults) => {
           if (err) {
@@ -110,68 +110,67 @@ router.post("/register", (req, res) => {
             return;
           }
 
-          if (addressResults.length > 0) {
-            // Address already exists
-            res.status(400).json({ error: "Address already exists" });
-            return;
+          var addressId;
+
+          if (addressResults.length === 0) {
+            // Address not exists and need to add new
+            // Insert new address into the 'addresses' table
+            connection.query(
+              "INSERT INTO addresses (city, street, house_number) VALUES (?, ?, ?)",
+              [city, street, house_number],
+              (err, addressInsertResults) => {
+                if (err) {
+                  console.error("Error executing MySQL query:", err);
+                  res.status(500).json({ error: "Failed to create address" });
+                  return;
+                }
+
+                // Retrieve the generated address ID
+                addressId = addressInsertResults.insertId;
+              }
+            );
+          } else {
+            addressId = addressResults;
           }
 
-          // Insert new address into the 'addresses' table
+          // Insert new user into the 'users' table with the address ID
           connection.query(
-            "INSERT INTO addresses (city, street, house_number) VALUES (?, ?, ?)",
-            [city, street, house_number],
-            (err, addressInsertResults) => {
+            "INSERT INTO users (first_last_name, username, email, phone, address_id, date_of_birth, id_card, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+            [
+              first_last_name,
+              username,
+              email,
+              phone,
+              addressId,
+              date_of_birth,
+              id_card,
+              is_admin,
+            ],
+            (err, userInsertResults) => {
               if (err) {
                 console.error("Error executing MySQL query:", err);
-                res.status(500).json({ error: "Failed to create address" });
+                res.status(500).json({ error: "Failed to create user" });
                 return;
               }
 
-              // Retrieve the generated address ID
-              const addressId = addressInsertResults.insertId;
+              // Retrieve the generated user ID
+              const userId = userInsertResults.insertId;
 
-              // Insert new user into the 'users' table with the address ID
+              // Insert the password into the passwords table
               connection.query(
-                "INSERT INTO users (first_last_name, username, email, phone, address_id, date_of_birth, id_card, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-                [
-                  first_last_name,
-                  username,
-                  email,
-                  phone,
-                  addressId,
-                  date_of_birth,
-                  id_card,
-                  is_admin,
-                ],
-                (err, userInsertResults) => {
+                "INSERT INTO passwords (user_id, system_password) VALUES (?, ?)",
+                [userId, password],
+                (err) => {
                   if (err) {
                     console.error("Error executing MySQL query:", err);
-                    res.status(500).json({ error: "Failed to create user" });
+                    res.status(500).json({ error: "Failed to create password to user" });
                     return;
                   }
 
-                  // Retrieve the generated user ID
-                  const userId = userInsertResults.insertId;
-
-                  // Insert the password into the passwords table
-                  connection.query(
-                    "INSERT INTO passwords (user_id, system_password) VALUES (?, ?)",
-                    [userId, password],
-                    (err) => {
-                      if (err) {
-                        console.error("Error executing MySQL query:", err);
-                        res
-                          .status(500)
-                          .json({ error: "Failed to create user" });
-                        return;
-                      }
-
-                      res.status(201).json({
-                        message: "User created successfully",
-                        status: 201,
-                      });
-                    }
-                  );
+                  res.status(201).json({
+                    message: "User created successfully",
+                    status: 201,
+                  });
                 }
               );
             }
@@ -198,7 +197,7 @@ router.post("/login", (req, res) => {
       }
 
       if (results.length === 0) {
-        res.status(404).json({ error: "User not found" });    
+        res.status(404).json({ error: "User not found" });
         return;
       }
 
@@ -291,7 +290,7 @@ router.put("/update_name/:userid", (req, res) => {
 
   // Check if the user exists by userid
   connection.query(
-    "SELECT * FROM users WHERE userid = ?",
+    "SELECT * FROM users WHERE id = ?",
     [userid],
     (err, results) => {
       if (err) {
@@ -308,7 +307,7 @@ router.put("/update_name/:userid", (req, res) => {
 
       // User exists, proceed with updating the name
       connection.query(
-        "UPDATE users SET first_last_name = ? WHERE userid = ?",
+        "UPDATE users SET first_last_name = ? WHERE id = ?",
         [first_last_name, userid],
         (err, updateResults) => {
           if (err) {
@@ -344,8 +343,23 @@ router.put("/update_password/:userid", (req, res) => {
         res.status(404).json({ error: "User not found" });
         return;
       }
+      connection.query(
+        "SELECT * FROM passwords WHERE userid = ?",
+        [userid],
+        (err, results) => {
+          if (err) {
+            console.error("Error executing MySQL query:", err);
+            res.status(500).json({ error: "Failed to update password" });
+            return;
+          }
+    
+          if (results.length === 0) {
+            // User not found
+            res.status(404).json({ error: "Password for this userid not found" });
+            return;
+          }});
 
-      // User exists, proceed with updating the password
+      // User and password exists, proceed with updating the password
       connection.query(
         "UPDATE passwords SET system_password = ? WHERE userid = ?",
         [system_password, userid],
