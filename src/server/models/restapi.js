@@ -337,17 +337,17 @@ export class RestAPI {
   /* Address Management */
   /**********************************************************/
   static async getAllAddresses() {
-    const url = `${ADDRESSES_BASE_URL}`;
+    const url = `${ADDRESS_BASE_URL}`;
     return await RestAPI.fetchData(url);
   }
 
   static async getAddressById(addressid) {
-    const url = `${ADDRESSES_BASE_URL}/${addressid}`;
+    const url = `${ADDRESS_BASE_URL}/${addressid}`;
     return await RestAPI.fetchData(url);
   }
 
   static async addAddress(street, city, state, postal_code, country) {
-    const url = `${ADDRESSES_BASE_URL}/add_address`;
+    const url = `${ADDRESS_BASE_URL}/add_address`;
     const body = { street, city, state, postal_code, country };
     const options = {
       method: "POST",
@@ -360,7 +360,7 @@ export class RestAPI {
   }
 
   static async updateAddress(addressid, address_data) {
-    const url = `${ADDRESSES_BASE_URL}/${addressid}`;
+    const url = `${ADDRESS_BASE_URL}/${addressid}`;
     const options = {
       method: "PUT",
       headers: {
@@ -372,7 +372,7 @@ export class RestAPI {
   }
 
   static async updateAddressStreet(addressid, street) {
-    const url = `${ADDRESSES_BASE_URL}/update_street/${addressid}`;
+    const url = `${ADDRESS_BASE_URL}/update_street/${addressid}`;
     const body = { street };
     const options = {
       method: "PUT",
@@ -385,7 +385,7 @@ export class RestAPI {
   }
 
   static async updateAddressCity(addressid, city) {
-    const url = `${ADDRESSES_BASE_URL}/update_city/${addressid}`;
+    const url = `${ADDRESS_BASE_URL}/update_city/${addressid}`;
     const body = { city };
     const options = {
       method: "PUT",
@@ -398,7 +398,7 @@ export class RestAPI {
   }
 
   static async updateAddressState(addressid, state) {
-    const url = `${ADDRESSES_BASE_URL}/update_state/${addressid}`;
+    const url = `${ADDRESS_BASE_URL}/update_state/${addressid}`;
     const body = { state };
     const options = {
       method: "PUT",
@@ -411,7 +411,7 @@ export class RestAPI {
   }
 
   static async updateAddressPostalCode(addressid, postal_code) {
-    const url = `${ADDRESSES_BASE_URL}/update_postal_code/${addressid}`;
+    const url = `${ADDRESS_BASE_URL}/update_postal_code/${addressid}`;
     const body = { postal_code };
     const options = {
       method: "PUT",
@@ -424,7 +424,7 @@ export class RestAPI {
   }
 
   static async updateAddressCountry(addressid, country) {
-    const url = `${ADDRESSES_BASE_URL}/update_country/${addressid}`;
+    const url = `${ADDRESS_BASE_URL}/update_country/${addressid}`;
     const body = { country };
     const options = {
       method: "PUT",
@@ -437,7 +437,7 @@ export class RestAPI {
   }
 
   static async deleteAddress(addressid) {
-    const url = `${ADDRESSES_BASE_URL}/${addressid}`;
+    const url = `${ADDRESS_BASE_URL}/${addressid}`;
     const options = {
       method: "DELETE",
     };
