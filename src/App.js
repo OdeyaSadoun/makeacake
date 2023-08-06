@@ -31,8 +31,8 @@ const App = () => {
       <Route path="/login" element={<Login onLogin={handleLogin} />} />
       <Route path="/register" element={<Register/>} />
       <Route path="/:username" element={<Toolbar/>} />
-      <Route path="/:username/shop" element={<Shopping_cart setCart={setCart}/>} />
-      <Route path="/:username/cart" element={<Products_list setCart={setCart}/>} />
+      <Route path="/:username/ShoppingCart" element={<Shopping_cart setCart={setCart}/>} />
+      <Route path="/:username/ProductsList" element={<Products_list setCart={setCart}/>} />
       <Route path="/:username/liked-products" element={<LikedProducts />} />
       <Route path="/admin/:username" element={<UserManagement />} />
       <Route path="/" element={<Login />} />
