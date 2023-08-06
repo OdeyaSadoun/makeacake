@@ -196,6 +196,25 @@ router.put("/update_is_dairy/:productid", (req, res) => {
   );
 });
 
+/*PUT update "is like" of product*/
+router.put("/update_is_like/:productid", (req, res) => {
+  const id = req.params.id;
+  const { is_dairy } = req.body;
+  connection.query(
+    "UPDATE products SET is_like = ? WHERE id = ?",
+    [is_dairy, id],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update is_like" });
+        return;
+      }
+
+      res.json({ message: "is_like updated successfully" });
+    }
+  );
+});
+
 /*DELETE product*/
 router.delete("/delete_products", (req, res) => {
   const id = req.params.id;
