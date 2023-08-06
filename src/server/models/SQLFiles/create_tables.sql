@@ -5,7 +5,6 @@ CREATE TABLE products (
   product_name VARCHAR(255),
   is_dairy BOOLEAN,
   price DECIMAL(10, 2),
-  quantity INT,
   discount_percentage DECIMAL(5, 2),
   kosher_type ENUM('bet_yosef', 'haeda_hacharedit', 'chatam_sofer_bnei_brak'), 
   comments VARCHAR(255), 
@@ -79,6 +78,7 @@ CREATE TABLE order_product (
   id INT AUTO_INCREMENT PRIMARY KEY,
   order_id INT,
   product_id INT,
+  quantity INT,
   FOREIGN KEY (order_id) REFERENCES orders(id),
   FOREIGN KEY (product_id) REFERENCES products(id)
 );
@@ -95,6 +95,8 @@ CREATE TABLE product_user (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
   product_id INT,
+  quantity INT,
+  is_like BOOLEAN,
   FOREIGN KEY (product_id) REFERENCES products(id),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );
