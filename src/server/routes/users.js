@@ -66,8 +66,8 @@ router.get("/:id", (req, res) => {
   );
 });
 
-/*POST add new user*/
-router.post("/register", (req, res) => {
+/* POST add new user */
+router.post("/register", async(req, res) => {
   const {
     first_last_name,
     username,
@@ -89,7 +89,7 @@ router.post("/register", (req, res) => {
     (err, results) => {
       if (err) {
         console.error('Error executing MySQL query:', err);
-        res.status(500).json({ error: 'Failed to create user when check if user exist' });
+        res.status(500).json({ error: 'Failed to create user when checking if user exists' });
         return;
       }
 
@@ -99,10 +99,11 @@ router.post("/register", (req, res) => {
       }
 
       console.log('user is new one');
+      console.log('go to address',  city, street, house_number);
 
       // Check if the address already exists
       connection.query(
-        'SELECT id FROM addresses WHERE city = ? AND street = ? AND house_number = ?',
+        'SELECT * FROM addresses WHERE city = ? AND street = ? AND house_number = ?',
         [city, street, house_number],
         (err, addressResults) => {
           if (err) {
@@ -127,66 +128,145 @@ router.post("/register", (req, res) => {
 
                 // Retrieve the generated address ID
                 addressId = addressInsertResults.insertId;
-                createUserWithAddress(addressId);
+
+                // Insert user with address
+                connection.query(
+                  'INSERT INTO users (first_last_name, username, email, phone, address_id, date_of_birth, id_card, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                  [
+                    first_last_name,
+                    username,
+                    email,
+                    phone,
+                    addressId,
+                    date_of_birth,
+                    id_card,
+                    is_admin,
+                  ],
+                  (err, userInsertResults) => {
+                    if (err) {
+                      console.error('Error executing MySQL query:', err);
+                      res.status(500).json({ error: 'Failed to create user after having the address' });
+                      return;
+                    }
+
+                    // Insert password for user
+                    connection.query(
+                      'INSERT INTO passwords (username, system_password) VALUES (?, ?)',
+                      [username, system_password],
+                      err => {
+                        if (err) {
+                          console.error('Error executing MySQL query:', err);
+                          res.status(500).json({ error: 'Failed to create password for user' });
+                          return;
+                        }
+
+                        res.status(201).json({
+                          message: 'User created successfully',
+                          status: 201,
+                        });
+                      }
+                    );
+                  }
+                );
               }
             );
           } else {
             addressId = addressResults[0].id;
-            createUserWithAddress(addressId);
+
+            // Insert user with existing address
+            connection.query(
+              'INSERT INTO users (first_last_name, username, email, phone, address_id, date_of_birth, id_card, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+              [
+                first_last_name,
+                username,
+                email,
+                phone,
+                addressId,
+                date_of_birth,
+                id_card,
+                is_admin,
+              ],
+              (err, userInsertResults) => {
+                if (err) {
+                  console.error('Error executing MySQL query:', err);
+                  res.status(500).json({ error: 'Failed to create user after having the address' });
+                  return;
+                }
+
+                // Insert password for user
+                connection.query(
+                  'INSERT INTO passwords (username, system_password) VALUES (?, ?)',
+                  [username, system_password],
+                  err => {
+                    if (err) {
+                      console.error('Error executing MySQL query:', err);
+                      res.status(500).json({ error: 'Failed to create password for user' });
+                      return;
+                    }
+
+                    res.status(201).json({
+                      message: 'User created successfully',
+                      status: 201,
+                    });
+                  }
+                );
+              }
+            );
           }
         }
       );
     }
   );
-
-  function createUserWithAddress(addressId) {
-    // Insert new user into the 'users' table with the address ID
-    connection.query(
-      'INSERT INTO users (first_last_name, username, email, phone, address_id, date_of_birth, id_card, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
-      [
-        first_last_name,
-        username,
-        email,
-        phone,
-        addressId,
-        date_of_birth,
-        id_card,
-        is_admin,
-      ],
-      (err, userInsertResults) => {
-        if (err) {
-          console.error('Error executing MySQL query:', err);
-          res.status(500).json({ error: 'Failed to create user after have the address' });
-          return;
-        }
-
-        // Retrieve the generated user ID
-        const userId = userInsertResults.insertId;
-        createPasswordForUser(username, system_password, res);
-      }
-    );
-  }
-
-  function createPasswordForUser(username, password, res) {
-    // Insert the password into the passwords table
-    connection.query(
-      'INSERT INTO passwords (username, system_password) VALUES (?, ?)',
-      [username, password],
-      err => {
-        if (err) {
-          console.error('Error executing MySQL query:', err);
-          res.status(500).json({ error: 'Failed to create password for user' });
-          return;
-        }
-  
-        res.status(201).json({
-          message: 'User created successfully',
-          status: 201,
-        });
-      }
-    );
-  }
 });
+
+  // function createUserWithAddress(addressId) {
+  //   // Insert new user into the 'users' table with the address ID
+  //   connection.query(
+  //     'INSERT INTO users (first_last_name, username, email, phone, address_id, date_of_birth, id_card, is_admin) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+  //     [
+  //       first_last_name,
+  //       username,
+  //       email,
+  //       phone,
+  //       addressId,
+  //       date_of_birth,
+  //       id_card,
+  //       is_admin,
+  //     ],
+  //     (err, userInsertResults) => {
+  //       if (err) {
+  //         console.error('Error executing MySQL query:', err);
+  //         res.status(500).json({ error: 'Failed to create user after have the address' });
+  //         return;
+  //       }
+
+  //       // Retrieve the generated user ID
+  //       const userId = userInsertResults.insertId;
+  //       createPasswordForUser(username, system_password, res);
+  //     }
+  //   );
+  // }
+
+//   function createPasswordForUser(username, password, res) {
+//     // Insert the password into the passwords table
+//     connection.query(
+//       'INSERT INTO passwords (username, system_password) VALUES (?, ?)',
+//       [username, password],
+//       err => {
+//         if (err) {
+//           console.error('Error executing MySQL query:', err);
+//           res.status(500).json({ error: 'Failed to create password for user' });
+//           return;
+//         }
+  
+//         res.status(201).json({
+//           message: 'User created successfully',
+//           status: 201,
+//         });
+//       }
+//     );
+//   }
+// });
 
 /*POST user login*/
 router.post("/login", (req, res) => {
