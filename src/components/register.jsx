@@ -18,7 +18,7 @@ const Register = () => {
   const [is_admin, setIsAdmin] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
   const [passwordMatchError, setPasswordMatchError] = useState(false);
-  const [isValidDate, setIsFutureDate] = useState(true);
+  const [isValidDate, setIsValidDate] = useState(true);
   const [isValidPhoneNumber, setIsValidPhoneNumber] = useState(true);
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isValidIDCard, setIsValidIDCard] = useState(true);
@@ -27,65 +27,15 @@ const Register = () => {
   const navigate = useNavigate();
 
   const handleRegister = async () => {
-    console.log('handleRegister');
-    // Implement your registration logic here
-    // const userData = await RestAPI.createUser(
-    //   first_last_name,
-    //   username,
-    //   system_password, // Use system_password here
-    //   email,
-    //   phone,
-    //   city,
-    //   street,
-    //   house_number,
-    //   date_of_birth,
-    //   id_card,
-    //   is_admin
-    // );
 
-    // console.log(userData, 'user');
-
-    // Password validation
-    // if (!passwordError) {
-    //   alert('הסיסמה חייבת להכיל לפחות 8 תווים, אות גדולה, אות קטנה, ומספר.');
-    //   return;
-    // }
-    // confirmPassword validation
-    // if (!passwordMatchError) {
-    //   alert('הסיסמא ואימות הסיסמא צריכים להיות זהים');
-    //   return;
-    // }
-    //Check the date
-    // if (!isValidDate) {
-    //   alert('תאריך הלידה אינו תקין');
-    //   return;
-    // }
-    // //Check the phone
-    // if (!isValidPhoneNumber) {
-    //   alert('מספר הטלפון אינו תקין, בבקשה הכנס שוב');
-    //   return;
-    // }
-    // //Check the email
-    // if (!isValidEmail) {
-    //   alert('כתובת האימייל אינה חוקית, בבקשה הכנס שוב');
-    //   return;
-    // }
-    // //Check the idCard
-    // if (!isValidIDCard) {
-    //   alert('תעודת הזהות אינה תקינה, בבקשה הכנס שוב');
-    //   return;
-    // }
-    // // Send the userData object to your server to handle registration
-
-
-    // if (isValidEmail && isValidPhoneNumber && isValidDate && isValidIDCard && passwordError && passwordMatchError) {
+    // if (isValidEmail && !passwordMatchError && !passwordError && isValidDate && isValidPhoneNumber) {
 
     console.log('after checking the inputs');
 
     const newUser = await RestAPI.createUser(
       first_last_name,
       username,
-      system_password, // Use system_password here
+      system_password,
       email,
       phone,
       city,
@@ -96,22 +46,71 @@ const Register = () => {
       is_admin
     );
 
-    console.log(newUser);
+    console.log('new user', newUser);
+
     if (newUser && newUser.status === 201) {
       // Registration successful, navigate to the login page
       alert('נרשמת בהצלחה!');
-      navigate('/login');
+      localStorage.setItem('user', JSON.stringify(newUser));
+      if (newUser.is_admin) {
+        console.log('Navigating to admin page');
+        navigate(`/admin/${newUser.username}`);
+      } else {
+        console.log('Navigating to user page');
+        navigate(`/${newUser.username}`);
+      }
+      return;
     } else {
       // Registration failed, set the registration error message
       console.log('faild to create user');
     }
-
   }
+  // }
 
+  const validatePassword = (password) => {
+    const regex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
+    return regex.test(password);
+  };
 
+  const handlePasswordChange = (password) => {
+    const isValid = validatePassword(password);
+    setPasswordError(!isValid);
+    setPassword(password);
+  };
 
-  const handleLogin = () => {
-    navigate('/login');
+  const validateDate = (date) => {
+    const currentDate = new Date();
+    const inputDate = new Date(date);
+    return inputDate <= currentDate;
+  };
+
+  const handleDateOfBirthChange = (date) => {
+    const isValid = validateDate(date);
+    setIsValidDate(isValid);
+    setDateOfBirth(date);
+  };
+
+  const validatePhoneNumber = (phone) => {
+    // Regular expression to check for Israeli phone number format
+    const phoneNumberRegex = /^(\+972|0)(5\d)(\d{7})$/;
+    return phoneNumberRegex.test(phone);
+  };
+
+  const handlePhoneChange = (phoneNumber) => {
+    const isValid = validatePhoneNumber(phoneNumber);
+    setIsValidPhoneNumber(isValid);
+    setPhone(phoneNumber);
+  };
+
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleEmailChange = (email) => {
+    const isValid = validateEmail(email);
+    setIsValidEmail(isValid);
+    setEmail(email);
   };
 
   // Function to check if the confirm password like a password
@@ -120,6 +119,9 @@ const Register = () => {
     setConfirmPassword(confirmPassword);
   };
 
+  const handleLogin = () => {
+    navigate('/login');
+  };
 
   return (
     <div className="registercontainer" dir="rtl">
@@ -155,7 +157,7 @@ const Register = () => {
         <div className="form-group">
           <label htmlFor="phone">טלפון:</label>
           <input
-            type="text"
+            type="phone"
             id="phone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
@@ -184,7 +186,7 @@ const Register = () => {
         <div className="form-group">
           <label htmlFor="numhouse">מספר בית:</label>
           <input
-            type="text"
+            type="number"
             id="numhouse"
             value={house_number}
             onChange={(e) => setNumhouse(e.target.value)}
@@ -223,12 +225,14 @@ const Register = () => {
             type="password"
             id="confirmPassword"
             value={confirmPassword}
-            onChange={(e) => checkConfirmPassword(e.target.value)}
+            onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
         {passwordError && <p className="error-message">{passwordError}</p>}
-        {passwordMatchError && <p className="error-message">{passwordMatchError}</p>}
-        <button onClick={handleRegister} disabled={isFormValid}>הרשם</button>
+        {passwordMatchError && (
+          <p className="error-message">סיסמאות לא תואמות</p>
+        )}
+        <button onClick={handleRegister}>הרשם</button>
         <button onClick={handleLogin}>חזרה להתחברות</button>
       </form>
     </div>
