@@ -64,7 +64,7 @@ const Register = () => {
       // Registration failed, set the registration error message
       console.log('faild to create user');
     }
-  }
+  };
   // }
 
   const validatePassword = (password) => {
