@@ -22,15 +22,21 @@ const UserManagement = () => {
   }, []);
 
   const handleAddUser = () => {
-    // Implement logic to add a new user
+    navigator('/register');
   };
 
-  const handleEditUser = (userId) => {
-    // Implement logic to edit the user details
-  };
-
-  const handleDeleteUser = (userId) => {
-    // Implement logic to delete the user
+  const handleToggleAdmin = (userId) => {
+    const updatedAdminUser = users.map((user) => {
+      if (user.id === userId) {
+        const admin = !user.is_admin;
+        const numericValueAdmin = admin ? 1 : 0;
+        console.log('admin', admin)
+        RestAPI.updateIsAdminByUserId(user.id, numericValueAdmin);
+        return { ...user, admin};
+      }
+      return user;
+    });
+    setUsers(updatedAdminUser);
   };
 
   return (
@@ -40,8 +46,10 @@ const UserManagement = () => {
         <div key={user.id}>
           <p>Name: {user.first_last_name}</p>
           <p>Email: {user.email}</p>
-          <button onClick={() => handleEditUser(user.id)}>Edit</button>
-          <button onClick={() => handleDeleteUser(user.id)}>Delete</button>
+          <p>Admin: {user.is_admin ? 'Yes' : 'No'}</p>
+          <button onClick={() => handleToggleAdmin(user.id)}>
+            {user.is_admin ? 'Remove Admin' : 'Make Admin'}
+          </button>
         </div>
       ))}
     </div>

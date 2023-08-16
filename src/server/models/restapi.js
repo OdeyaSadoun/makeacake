@@ -113,9 +113,9 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async updateIsAdminByUserId(userid, isAdmin) {
+  static async updateIsAdminByUserId(userid,is_admin) {
     const url = `${USERS_BASE_URL}/update_is_admin/${userid}`;
-    const body = { isAdmin };
+    const body = { userid, is_admin };
     const options = {
       method: "PUT",
       headers: {
