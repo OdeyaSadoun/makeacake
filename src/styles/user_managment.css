@@ -1,0 +1,23 @@
+/* UserManagement.css */
+
+.user-table {
+    margin: auto;
+    width: 80%; /* Adjust as needed */
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid #ccc;
+  }
+  
+  th, td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  th {
+    background-color: #f2f2f2;
+  }
+  

@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import RestAPI from '../server/models/restapi';
+import { useNavigate } from 'react-router-dom';
+import '../styles/user_managment.css';
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
 
   const fetchUsers = async () => {
     try {
@@ -21,10 +24,6 @@ const UserManagement = () => {
     fetchUsers();
   }, []);
 
-  const handleAddUser = () => {
-    navigator('/register');
-  };
-
   const handleToggleAdmin = (userId) => {
     const updatedAdminUser = users.map((user) => {
       if (user.id === userId) {
@@ -40,18 +39,35 @@ const UserManagement = () => {
   };
 
   return (
-    <div>
-      <button onClick={handleAddUser}>Add User</button>
-      {users.map((user) => (
-        <div key={user.id}>
-          <p>Name: {user.first_last_name}</p>
-          <p>Email: {user.email}</p>
-          <p>Admin: {user.is_admin ? 'Yes' : 'No'}</p>
-          <button onClick={() => handleToggleAdmin(user.id)}>
-            {user.is_admin ? 'Remove Admin' : 'Make Admin'}
-          </button>
-        </div>
-      ))}
+    <div className="user-table">
+      <table>
+        <thead>
+          <tr>
+            <th>שם</th>
+            <th>שם משתמש</th>
+            <th>אימייל</th>
+            <th>טלפון</th>
+            <th>הרשאות מנהל?</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          {users.map((user) => (
+            <tr key={user.id}>
+              <td>{user.first_last_name}</td>
+              <td>{user.username}</td>
+              <td>{user.email}</td>
+              <td>{user.phone}</td>
+              <td>{user.is_admin ? 'V' : 'X'}</td>
+              <td>
+                <button onClick={() => handleToggleAdmin(user.id)}>
+                  {user.is_admin ? 'הסר הרשאות ניהול' : 'עדכן כמנהל'}
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
