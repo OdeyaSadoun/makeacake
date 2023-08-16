@@ -8,11 +8,7 @@ const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    // Remove the user from local storage
-    localStorage.removeItem('user');
-    navigate('/Login', { replace: true });
-  };
+
 
   const fetchUsers = async () => {
     try {
@@ -45,13 +41,6 @@ const UserManagement = () => {
 
   return (
     <div className="user-management-container" >
-      <div className="header">
-        <p>שלום {user.first_last_name}</p>
-        <button className="logoutButton" onClick={handleLogout}>
-        יציאה
-      </button>
-      </div>
-
       <div className="user-table">
         <table>
           <thead>
