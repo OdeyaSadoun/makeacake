@@ -1,5 +1,3 @@
-// UserManagement.js
-
 import React, { useState, useEffect } from 'react';
 import RestAPI from '../server/models/restapi';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +6,6 @@ import '../styles/user_management.css'; // Update the CSS file name
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
   const user = JSON.parse(localStorage.getItem('user'));
-  const navigate = useNavigate();
 
   const fetchUsers = async () => {
     try {
