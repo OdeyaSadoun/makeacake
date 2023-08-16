@@ -23,25 +23,25 @@ function uploadImageToMediaProduct(imagePath, productid) {
 }
 
 // Example usage
-uploadImageToMediaProduct("path_to_image.jpg", 123); // Replace with your image path and product ID
+uploadImageToMediaProduct("../../media/products/trickolad.jpg", 1); // Replace with your image path and product ID
 
-// Retrieve an image from the database
-function retrieveImage(imageId, outputPath) {
-  const query = "SELECT image_data FROM images WHERE id = ?";
+// // Retrieve an image from the database
+// function retrieveImage(imageId, outputPath) {
+//   const query = "SELECT image_data FROM images WHERE id = ?";
 
-  connection.query(query, [imageId], (error, results) => {
-    if (error) throw error;
+//   connection.query(query, [imageId], (error, results) => {
+//     if (error) throw error;
 
-    if (results.length > 0) {
-      const imageData = results[0].image_data;
-      fs.writeFileSync(outputPath, imageData); // Write binary data to a file
-      console.log("Image retrieved and saved successfully");
-    } else {
-      console.log("Image not found");
-    }
-  });
-}
+//     if (results.length > 0) {
+//       const imageData = results[0].image_data;
+//       fs.writeFileSync(outputPath, imageData); // Write binary data to a file
+//       console.log("Image retrieved and saved successfully");
+//     } else {
+//       console.log("Image not found");
+//     }
+//   });
+// }
 
-// Example usage
-uploadImage("path_to_image.jpg"); // Replace with your image path
-retrieveImage(1, "retrieved_image.jpg"); // Replace with your image ID and desired output path
+// // Example usage
+// uploadImage("path_to_image.jpg"); // Replace with your image path
+// retrieveImage(1, "retrieved_image.jpg"); // Replace with your image ID and desired output path
