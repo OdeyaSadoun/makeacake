@@ -28,17 +28,15 @@ const UserManagement = () => {
   }, []);
 
   const handleToggleAdmin = (userId) => {
-    const updatedAdminUser = users.map((user) => {
+    const updatedUsers = users.map((user) => {
       if (user.id === userId) {
-        const admin = !user.is_admin;
-        const numericValueAdmin = admin ? 1 : 0;
-        console.log('admin', admin);
-        RestAPI.updateIsAdminByUserId(user.id, numericValueAdmin);
-        return { ...user, admin };
+        const updatedUser = { ...user, is_admin: !user.is_admin };
+        RestAPI.updateIsAdminByUserId(userId, updatedUser.is_admin ? 1 : 0);
+        return updatedUser;
       }
       return user;
     });
-    setUsers(updatedAdminUser);
+    setUsers(updatedUsers);
   };
 
   return (
