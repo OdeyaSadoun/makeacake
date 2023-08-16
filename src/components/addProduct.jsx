@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import '../styles/addProduct.css';
+
 
 const AddProduct = () => {
   const [product, setProduct] = useState({
