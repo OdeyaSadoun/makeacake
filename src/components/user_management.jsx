@@ -42,9 +42,9 @@ const UserManagement = () => {
   };
 
   return (
-    <div className="user-management-container">
+    <div className="user-management-container" >
       <div className="header">
-        <p>Hello, {user.username}</p> {/* Add your username variable here */}
+        <p>שלום {user.first_last_name}</p>
       </div>
       <div className="user-table">
         <table>
