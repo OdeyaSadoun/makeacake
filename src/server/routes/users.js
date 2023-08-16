@@ -443,7 +443,7 @@ router.put("/update_password/:userid", (req, res) => {
 
   // Check if the user exists by userid
   connection.query(
-    "SELECT * FROM users WHERE userid = ?",
+    "SELECT * FROM users WHERE id = ?",
     [userid],
     (err, results) => {
       if (err) {
@@ -458,7 +458,7 @@ router.put("/update_password/:userid", (req, res) => {
         return;
       }
       connection.query(
-        "SELECT * FROM passwords WHERE userid = ?",
+        "SELECT * FROM passwords WHERE id = ?",
         [userid],
         (err, results) => {
           if (err) {
@@ -479,7 +479,7 @@ router.put("/update_password/:userid", (req, res) => {
 
       // User and password exists, proceed with updating the password
       connection.query(
-        "UPDATE passwords SET system_password = ? WHERE userid = ?",
+        "UPDATE passwords SET system_password = ? WHERE id = ?",
         [system_password, userid],
         (err, updateResults) => {
           if (err) {
@@ -507,7 +507,7 @@ router.put("/update_is_admin/:userid", (req, res) => {
 
   // Check if the user exists by userid
   connection.query(
-    "SELECT * FROM users WHERE userid = ?",
+    "SELECT * FROM users WHERE id = ?",
     [userid],
     (err, results) => {
       if (err) {
@@ -518,13 +518,14 @@ router.put("/update_is_admin/:userid", (req, res) => {
 
       if (results.length === 0) {
         // User not found
+        console.log('user id not found: ', userid);
         res.status(404).json({ error: "User not found" });
         return;
       }
 
       // User exists, proceed with updating the is_admin value
       connection.query(
-        "UPDATE users SET is_admin = ? WHERE userid = ?",
+        "UPDATE users SET is_admin = ? WHERE id = ?",
         [is_admin, userid],
         (err, updateResults) => {
           if (err) {
