@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import RestAPI from '../server/models/restapi';
 import { useNavigate } from 'react-router-dom';
-import '../styles/user_management.css'; // Update the CSS file name
+import '../styles/user_management.css';
 
 const UserManagement = () => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -11,9 +11,6 @@ const UserManagement = () => {
   const handleLogout = () => {
     // Remove the user from local storage
     localStorage.removeItem('user');
-    // Perform any other logout actions, such as clearing other data or redirecting
-
-    // Redirect to the login page without rendering the Toolbar component
     navigate('/Login', { replace: true });
   };
 
