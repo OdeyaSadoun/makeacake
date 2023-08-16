@@ -38,6 +38,7 @@ const App = () => {
       <Route path="/:username/ProductsList" element={<Products_list setCart={setCart}/>} />
       <Route path="/:username/liked-products" element={<LikedProducts />} />
       <Route path="/admin/:username" element={<AdminPage />} />
+      <Route path="/products/admin/:username" element={<Products_list />} />
       <Route path="/" element={<Login />} />
       <Route path="/admin/:username/add-product" element={<AddProduct/>} />
     </Routes>
