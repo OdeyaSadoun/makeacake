@@ -133,6 +133,7 @@ const Register = () => {
             type="text"
             id="firstLastName"
             value={first_last_name}
+            required
             onChange={(e) => setFirstLastName(e.target.value)}
           />
         </div>
@@ -142,6 +143,7 @@ const Register = () => {
             type="text"
             id="username"
             value={username}
+            required
             onChange={(e) => setUsername(e.target.value)}
           />
         </div>
@@ -151,6 +153,7 @@ const Register = () => {
             type="email"
             id="email"
             value={email}
+            required
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
@@ -160,6 +163,7 @@ const Register = () => {
             type="phone"
             id="phone"
             value={phone}
+            required
             onChange={(e) => setPhone(e.target.value)}
           />
         </div>
@@ -170,6 +174,7 @@ const Register = () => {
               type="text"
               id="city"
               value={city}
+              required
               onChange={(e) => setCity(e.target.value)}
             />
           </div>
@@ -179,6 +184,7 @@ const Register = () => {
               type="text"
               id="street"
               value={street}
+              required
               onChange={(e) => setStreet(e.target.value)}
             />
           </div>
@@ -189,6 +195,7 @@ const Register = () => {
             type="number"
             id="numhouse"
             value={house_number}
+            required
             onChange={(e) => setNumhouse(e.target.value)}
           />
         </div>
@@ -198,6 +205,7 @@ const Register = () => {
             type="date"
             id="dateOfBirth"
             value={date_of_birth}
+            required
             onChange={(e) => setDateOfBirth(e.target.value)}
           />
         </div>
@@ -216,6 +224,7 @@ const Register = () => {
             type="password"
             id="password"
             value={system_password}
+            required
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
@@ -225,6 +234,7 @@ const Register = () => {
             type="password"
             id="confirmPassword"
             value={confirmPassword}
+            required
             onChange={(e) => setConfirmPassword(e.target.value)}
           />
         </div>
