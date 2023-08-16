@@ -4,8 +4,18 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/user_management.css'; // Update the CSS file name
 
 const UserManagement = () => {
-  const [users, setUsers] = useState([]);
   const user = JSON.parse(localStorage.getItem('user'));
+  const [users, setUsers] = useState([]);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    // Remove the user from local storage
+    localStorage.removeItem('user');
+    // Perform any other logout actions, such as clearing other data or redirecting
+
+    // Redirect to the login page without rendering the Toolbar component
+    navigate('/Login', { replace: true });
+  };
 
   const fetchUsers = async () => {
     try {
@@ -40,7 +50,11 @@ const UserManagement = () => {
     <div className="user-management-container" >
       <div className="header">
         <p>שלום {user.first_last_name}</p>
+        <button className="logoutButton" onClick={handleLogout}>
+        יציאה
+      </button>
       </div>
+
       <div className="user-table">
         <table>
           <thead>
