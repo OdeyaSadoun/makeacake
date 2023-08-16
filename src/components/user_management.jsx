@@ -1,10 +1,13 @@
+// UserManagement.js
+
 import React, { useState, useEffect } from 'react';
 import RestAPI from '../server/models/restapi';
 import { useNavigate } from 'react-router-dom';
-import '../styles/user_managment.css';
+import '../styles/user_management.css'; // Update the CSS file name
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
+  const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
 
   const fetchUsers = async () => {
@@ -29,9 +32,9 @@ const UserManagement = () => {
       if (user.id === userId) {
         const admin = !user.is_admin;
         const numericValueAdmin = admin ? 1 : 0;
-        console.log('admin', admin)
+        console.log('admin', admin);
         RestAPI.updateIsAdminByUserId(user.id, numericValueAdmin);
-        return { ...user, admin};
+        return { ...user, admin };
       }
       return user;
     });
@@ -39,9 +42,13 @@ const UserManagement = () => {
   };
 
   return (
-    <div className="user-table">
-      <table>
-        <thead>
+    <div className="user-management-container">
+      <div className="header">
+        <p>Hello, {user.username}</p> {/* Add your username variable here */}
+      </div>
+      <div className="user-table">
+        <table>
+          <thead>
           <tr>
             <th>שם</th>
             <th>שם משתמש</th>
@@ -50,8 +57,8 @@ const UserManagement = () => {
             <th>הרשאות מנהל?</th>
             <th>פעולות</th>
           </tr>
-        </thead>
-        <tbody>
+          </thead>
+          <tbody>
           {users.map((user) => (
             <tr key={user.id}>
               <td>{user.first_last_name}</td>
@@ -67,7 +74,8 @@ const UserManagement = () => {
             </tr>
           ))}
         </tbody>
-      </table>
+        </table>
+      </div>
     </div>
   );
 };
