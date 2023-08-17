@@ -462,6 +462,11 @@ export class RestAPI {
     return await RestAPI.fetchData(url);
   }
 
+  static async getAllLikeUserProducts(userid) {
+    const url = `${PRODUCTS_BASE_URL}/user/like/${userid}`;
+    return await RestAPI.fetchData(url);
+  }
+
   static async addProduct(productData) {
     const url = `${PRODUCTS_BASE_URL}/add_product`;
     const options = {
@@ -473,6 +478,20 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
+
+  static async addProductUser(user_id, product_id, quantity, is_like) {
+    const url = `${PRODUCTS_BASE_URL}/add_product_user`;
+    const body={user_id, product_id, quantity, is_like}
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
 
   static async updateProductPrice(productid, price) {
     const url = `${PRODUCTS_BASE_URL}/update_price/${productid}`;
@@ -487,9 +506,9 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async updateProductQuantity(productid, quantity) {
+  static async updateProductQuantity(productid, quantity, userid) {
     const url = `${PRODUCTS_BASE_URL}/update_quantity/${productid}`;
-    const body = { quantity };
+    const body = { quantity, userid };
     const options = {
       method: "PUT",
       headers: {
@@ -539,10 +558,34 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
+
+  static async updateProductUserIsLike(userid,productid, is_like) {
+    const url = `${PRODUCTS_BASE_URL}/update_is_like/${productid}`;
+    const body = { userid, is_like };
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
   static async deleteProduct(productid) {
-    const url = `${PRODUCTS_BASE_URL}/${productid}`;
+    const url = `${PRODUCTS_BASE_URL}/delete_products/${productid}`;
     const options = {
       method: "DELETE",
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
+  static async deleteUserProduct(productid, userid) {
+    const url = `${PRODUCTS_BASE_URL}/delete_user_product/${productid}`;
+    const body = { userid};
+    const options = {
+      method: "DELETE",
+      body: JSON.stringify(body),
     };
     return await RestAPI.fetchData(url, options);
   }

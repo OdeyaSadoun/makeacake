@@ -1,22 +1,12 @@
 const connection = require("./connection.js");
 
-module.exports.getAllAddresses = () => {
-  return new Promise((resolve, reject) => {
-    connection.query("SELECT * FROM addresses", (error, results) => {
-      if (error) {
-        reject(error);
-      } else {
-        resolve(results);
-      }
-    });
-  });
-};
 
-module.exports.getAddressesById = (addressId) => {
+
+module.exports.getAllUserProducts = (userid) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM addresses WHERE addressid = ?",
-      [addressId],
+      "SELECT * FROM product_user WHERE user_id= ?",
+      [userid],
       (error, results) => {
         if (error) {
           reject(error);
@@ -27,6 +17,26 @@ module.exports.getAddressesById = (addressId) => {
     );
   });
 };
+
+module.exports.getAllProducts = () => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "SELECT * FROM products",
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      }
+    );
+  });
+};
+
+
+
+
+
 
 module.exports.getAddressByCityAndStreetAndNumberHouse = (city, street, house_number) => {
     return new Promise((resolve, reject) => {
@@ -44,11 +54,14 @@ module.exports.getAddressByCityAndStreetAndNumberHouse = (city, street, house_nu
     });
   };
 
-module.exports.addAddress = (city, street, house_number) => {
+
+
+
+  module.exports.addProductUser = ( user_id, product_id, quantity, is_like) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        "INSERT INTO addresses (city, street, house_number) VALUES (?, ?, ?)",
-        [city, street, house_number],
+        "INSERT INTO product_user (user_id, product_id, quantity, is_like) VALUES (?, ?, ?,?)",
+        [user_id, product_id, quantity, is_like],
         (error, results) => {
           if (error) {
             reject(error);

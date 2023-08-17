@@ -1,21 +1,50 @@
 // LikedProducts.js
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import restApi from '../server/models/restapi';
 
-const LikedProducts = () => {
+
+
+const LikedProducts = async ( ) => {
+  const user = JSON.parse(localStorage.getItem("user"));
+  const [like, setLike] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const likePr = await restApi.getAllLikeUserProducts(user.id);
+      setLike(likePr);
+    };
+    fetchData();
+  }, []);
+
+
+  const handleEdit = async (productId) => {
+    const updatedItems = like.map((pr) => {
+      if (pr.id === productId) {
+        const like = !pr.like;
+        restApi.updateProductUserIsLike(user.id,productId, like );
+        return { ...pr, like };
+      }
+      return pr;
+    });
+    setLike(updatedItems);
+  };
+
+
+
   return (
+
     <div>
-      <h2>Liked Products</h2>
-      {LikedProducts.map((product) => (
-        <div key={product.id}>
-          <h3>{product.name}</h3>
-          <p>Price: ${product.price}</p>
+      <h2>Like Products</h2>
+      {like.map((item) => (
+        <div key={item.id}>      
+          <p>Quantity: {item.quantity}</p>
+          <button onClick={()=> handleEdit(item.id)}>Remove</button> 
         </div>
       ))}
-      <Link to="/">Go Back to Products</Link>
-      <Link to="/cart">Go to Cart</Link>
     </div>
+
   );
 };
-
 export default LikedProducts;
+

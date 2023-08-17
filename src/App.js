@@ -9,10 +9,8 @@ import Products_list from './components/products_list';
 import Toolbar from './components/toolbar';
 
 
-export const cartContext = createContext();
 
 const App = () => {
-  const [cart, setCart] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const navigate = useNavigate();
 
@@ -26,18 +24,18 @@ const App = () => {
     navigate("/login");
   };
   return (
-    <cartContext.Provider value={{cart, setCart }}>
+
     <Routes>
       <Route path="/login" element={<Login onLogin={handleLogin} />} />
       <Route path="/register" element={<Register/>} />
       <Route path="/:username" element={<Toolbar/>} />
-      <Route path="/:username/ShoppingCart" element={<Shopping_cart setCart={setCart}/>} />
-      <Route path="/:username/ProductsList" element={<Products_list setCart={setCart}/>} />
+      <Route path="/:username/ShoppingCart" element={<Shopping_cart />} />
+      <Route path="/:username/ProductsList" element={<Products_list />} />
       <Route path="/:username/liked-products" element={<LikedProducts />} />
       <Route path="/admin/:username" element={<UserManagement />} />
       <Route path="/" element={<Login />} />
     </Routes>
-  </cartContext.Provider>    
+
 
   );
 };

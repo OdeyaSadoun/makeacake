@@ -1,50 +1,88 @@
-// ProductsList.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useContext } from 'react';
-import {cartContext} from '../App';
+import restApi from '../server/models/restapi';
 
-const ProductsList = ( ) => {
-  const {cart,setCart}  = useContext(cartContext);
-  const [likedProducts, setLikedProducts] = useState([]);
+const ProductsList = () => {
+  const [products, setProducts] = useState([]);
+  const [userProducts, setUserProducts] = useState([]);
+  const [userProductsUpdate, setUserProductsUpdate] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user"));
 
-  // Sample product data
-  const products = [
-    { id: 1, name: 'Product 1', price: 10 },
-    { id: 2, name: 'Product 2', price: 20 },
-    { id: 3, name: 'Product 3', price: 30 },
-    // ... more products
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      const pr = await restApi.getAllProducts();
+      setProducts(pr);
+    };
+    fetchData();
+  }, []);
 
-  const handleAddToCart = (product) => {
-    setCart([...cart, { ...product, }]);
-    console.log(cart, 'cart');
+  useEffect(() => {
+    const fetchData = async () => {
+      const pr = await restApi.getAllUserProducts(user.id);
+      setUserProductsUpdate(pr);
+      setUserProducts(pr);
+    };
+    fetchData();
+  }, [user.id]);
+
+  const handleLike = async (productId) => {
+    const updatedItems = userProducts.map((pr) => {
+      if (pr.id === productId) {
+        const like = !pr.like;
+        restApi.updateProductUserIsLike(user.id, productId, like);
+        return { ...pr, like };
+      }
+      return pr;
+    });
+    setUserProductsUpdate(updatedItems);
   };
 
-  const handleLike = (product, isLiked) => {
-    if (isLiked) {
-      setLikedProducts([...likedProducts, product]);
-    } else {
-      setLikedProducts(likedProducts.filter((likedProduct) => likedProduct.id !== product.id));
-    }
+  const handleAddToCart = async (productid, quantity) => {
+    const updatePr = userProductsUpdate.map((pr) => {
+      if (pr.id === productid) {
+        const q = pr.quantity;
+        if (q) {
+          restApi.updateProductQuantity(user.id, productid, quantity);
+          return { ...pr, quantity: quantity };
+        } else {
+          restApi.addProductUser(user.id, productid, quantity, false);
+          refreshPr();
+        }
+      }
+      return pr;
+    });
+    setUserProducts(updatePr);
+    setUserProductsUpdate(updatePr);
+  };
+
+  const refreshPr = async () => {
+    const pr = await restApi.getAllUserProducts(user.id);
+    setUserProductsUpdate(pr);
+    setUserProducts(pr);
   };
 
   return (
-
     <div>
       <h2>Product List</h2>
       {products.map((product) => (
         <div key={product.id}>
           <h3>{product.name}</h3>
           <p>Price: ${product.price}</p>
-          <button onClick={() => handleAddToCart(product)}>Add to Cart</button>
-          <button onClick={() => handleLike(product, true)}>Like</button>
+          <p>Quantity: {product.quantity}</p>
+          <input
+            type="number"
+            value={product.quantity}
+            onChange={(e) => {
+              const newQuantity = parseInt(e.target.value, 10);
+              handleAddToCart(product.id, newQuantity);
+            }}
+          />
+          <button onClick={() => handleLike(product.id)}>Like</button>
         </div>
       ))}
       <Link to="/cart">Go to Cart</Link>
       <Link to="/liked">Go to Liked Products</Link>
     </div>
-
   );
 };
 
