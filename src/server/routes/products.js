@@ -1,4 +1,4 @@
-const connection = require("../models/connection.js");
+const connection = require("../models/connection.js")
 const bodyParser = require("body-parser");
 const express = require("express");
 const router = express.Router();
@@ -7,6 +7,7 @@ router.use(bodyParser.json());
 
 /*GET get all products*/
 router.get("/", (req, res) => {
+  console.log('router.get');
   connection.query("SELECT * FROM products", (err, results) => {
     if (err) {
       console.error("Error executing MySQL query:", err);
@@ -14,6 +15,7 @@ router.get("/", (req, res) => {
       return;
     }
     res.json(results);
+    console.log('results', results);
   });
 });
 

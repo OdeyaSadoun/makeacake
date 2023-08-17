@@ -448,6 +448,7 @@ export class RestAPI {
   /* Products */
   /**********************************************************/
   static async getAllProducts() {
+    console.log('getAllProducts');
     const url = `${PRODUCTS_BASE_URL}`;
     return await RestAPI.fetchData(url);
   }

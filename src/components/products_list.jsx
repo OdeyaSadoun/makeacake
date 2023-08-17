@@ -11,6 +11,7 @@ const ProductsList = () => {
   useEffect(() => {
     const fetchData = async () => {
       const pr = await restApi.getAllProducts();
+      console.log(pr, 'pr');
       setProducts(pr);
     };
     fetchData();
@@ -38,7 +39,7 @@ const ProductsList = () => {
   };
 
   const handleAddToCart = async (productid, quantity) => {
-    const updatePr = userProductsUpdate.map((pr) => {
+    const updatePr = userProducts.map((pr) => {
       if (pr.id === productid) {
         const q = pr.quantity;
         if (q) {
@@ -71,12 +72,13 @@ const ProductsList = () => {
           <p>Quantity: {product.quantity}</p>
           <input
             type="number"
-            value={product.quantity}
+            value={product.quantity||1}
             onChange={(e) => {
               const newQuantity = parseInt(e.target.value, 10);
-              handleAddToCart(product.id, newQuantity);
+              <button onClick={() => handleAddToCart(product.id, newQuantity)}>Add to Cart</button>
             }}
           />
+           
           <button onClick={() => handleLike(product.id)}>Like</button>
         </div>
       ))}

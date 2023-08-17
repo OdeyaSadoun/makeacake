@@ -29,3 +29,4 @@ VALUES
 
 INSERT INTO products (product_name, is_dairy, price, discount_percentage, kosher_type, comments, sensitivity)
 VALUES ('טריפל שוקולד- מוס', true, 49.99, 0, 'bet_yosef', 'ניתן להזמין בצורת לב או בצורת עיגול', 'מכיל חלב');
+VALUES ('טריפל חלווה- מוס', true, 59.99, 0, 'bet_yosef', 'ניתן להזמין בצורת לב או בצורת עיגול', 'מכיל ביצים');
