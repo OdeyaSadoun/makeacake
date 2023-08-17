@@ -7,6 +7,9 @@ import LikedProducts from './components/liked_products'
 import Shopping_cart from './components/shopping_cart';
 import Products_list from './components/products_list';
 import Toolbar from './components/toolbar';
+import AdminPage from "./components/admin_page";
+import AddProduct from './components/addProduct';
+
 
 
 
@@ -32,8 +35,10 @@ const App = () => {
       <Route path="/:username/ShoppingCart" element={<Shopping_cart />} />
       <Route path="/:username/ProductsList" element={<Products_list />} />
       <Route path="/:username/liked-products" element={<LikedProducts />} />
-      <Route path="/admin/:username" element={<UserManagement />} />
+      <Route path="/admin/:username" element={<AdminPage />} />
+      <Route path="/products/admin/:username" element={<Products_list />} />
       <Route path="/" element={<Login />} />
+      <Route path="/admin/:username/add-product" element={<AddProduct/>} />
     </Routes>
 
 

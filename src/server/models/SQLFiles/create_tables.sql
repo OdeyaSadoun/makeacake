@@ -51,8 +51,8 @@ CREATE TABLE events_management (
 
 CREATE TABLE media_product (
   id INT AUTO_INCREMENT PRIMARY KEY,
+  media LONGBLOB, -- or BLOB, depending on your needs
   product_id INT,
-  media BLOB,
   FOREIGN KEY (product_id) REFERENCES products(id)
 );
 
