@@ -54,22 +54,32 @@ const ProductListAdmin = () => {
       <table>
         <thead>
           <tr>
-            <th>Product Name</th>
-            <th>Actions</th>
+            <th>שם</th>
+            <th>מחיר</th>
+            <th>כשרות</th>
+            <th>חלבי</th>
+            <th>אחוזי הנחה</th>
+            <th>רגישויות</th>
+            <th>הערות</th>
+            <th>פעולות</th>
           </tr>
         </thead>
         <tbody>
           {products.map(product => (
             <tr key={product.id}>
               <td>{product.product_name}</td>
+              <td>{product.price}</td>
+              <td>{product.kosher_type}</td>
+              <td>{product.is_dairy}</td>
+              <td>{product.discount_percentage}</td>
+              <td>{product.sensitivity}</td>
+              <td>{product.comments}</td>
               <td>
                 <button onClick={() => handleDelete(product.id)}>Delete</button>
                 <button onClick={() => handleUpdatePrice(product.id)}>Update Price</button>
                 <button onClick={() => handleUpdateName(product.id)}>Update Name</button>
                 <button onClick={() => handleUpdateDiscount(product.id)}>Update Discount</button>
                 <button onClick={() => handleUpdateDairy(product.id)}>Update Dairy</button>
-                <button onClick={() => handleUpdateKosher(product.id)}>Update Kosher</button>
-                <button onClick={() => handleUpdateSensitivities(product.id)}>Update Sensitivities</button>
               </td>
             </tr>
           ))}
