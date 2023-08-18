@@ -16,7 +16,8 @@ const ProductListAdmin = () => {
   const handleDelete = async (productId) => {
     try {
       await RestAPI.deleteProduct(productId);
-
+      const updatedProducts = products.filter((product) => product.id !== productId);
+      setProducts(updatedProducts);
     } catch (error) {
       console.error('Error deleting product:', error);
     }
