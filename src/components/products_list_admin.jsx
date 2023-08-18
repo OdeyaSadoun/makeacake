@@ -14,39 +14,53 @@ const ProductListAdmin = () => {
   }, []);
 
   const handleDelete = async (productId) => {
-    // Call RestAPI function to delete the product
-    // After deletion, refresh the product list
+    try {
+      await RestAPI.deleteProduct(productId);
+
+    } catch (error) {
+      console.error('Error deleting product:', error);
+    }
   };
 
-  const handleUpdatePrice = async (productId) => {
-    // Call RestAPI function to update the price of the product
-    // After update, refresh the product list
+  const handleUpdatePrice = async (productId, newPrice) => {
+    try {
+      await RestAPI.updateProductPrice(productId, newPrice);
+
+    } catch (error) {
+      console.error('Error updating price:', error);
+    }
   };
 
-  const handleUpdateName = async (productId) => {
-    // Call RestAPI function to update the name of the product
-    // After update, refresh the product list
+  
+    const handleUpdateName = async (productId, newName) => {
+      try {
+        await RestAPI.updateProductName(productId, newName);
+
+      } catch (error) {
+        console.error('Error updating product name:', error);
+      }
+    };
+  
+    const handleUpdateDiscount = async (productId, newDiscount) => {
+      try {
+        await RestAPI.updateProductDiscount(productId, newDiscount);
+
+      } catch (error) {
+        console.error('Error updating discount:', error);
+      }
+    };
+
+  const handleUpdateIsDairy = async (productId, newIsDairy) => {
+    try {
+      await RestAPI.updateProductIsDairy(productId, newIsDairy);
+
+    } catch (error) {
+      console.error('Error updating dairy status:', error);
+    }
   };
 
-  const handleUpdateDiscount = async (productId) => {
-    // Call RestAPI function to update the discount percentage of the product
-    // After update, refresh the product list
-  };
 
-  const handleUpdateDairy = async (productId) => {
-    // Call RestAPI function to update the dairy status of the product
-    // After update, refresh the product list
-  };
 
-  const handleUpdateKosher = async (productId) => {
-    // Call RestAPI function to update the kosher type of the product
-    // After update, refresh the product list
-  };
-
-  const handleUpdateSensitivities = async (productId) => {
-    // Call RestAPI function to update the sensitivities of the product
-    // After update, refresh the product list
-  };
 
   return (
     <div>
@@ -79,7 +93,7 @@ const ProductListAdmin = () => {
                 <button onClick={() => handleUpdatePrice(product.id)}>Update Price</button>
                 <button onClick={() => handleUpdateName(product.id)}>Update Name</button>
                 <button onClick={() => handleUpdateDiscount(product.id)}>Update Discount</button>
-                <button onClick={() => handleUpdateDairy(product.id)}>Update Dairy</button>
+                <button onClick={() => handleUpdateIsDairy(product.id)}>Update Dairy</button>
               </td>
             </tr>
           ))}
