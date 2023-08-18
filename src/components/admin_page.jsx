@@ -13,6 +13,11 @@ const AdminPage = () => {
     navigate(`/admin/${user.username}/add-product`);
   };
 
+  const handleViewProducts = () => {
+    navigate(`/admin/${user.username}/products-list`);
+
+  };
+
   const handleLogout = () => {
     // Remove the user from local storage
     localStorage.removeItem('user');
@@ -24,9 +29,12 @@ const AdminPage = () => {
       <div className="header">
         <p>שלום {user.first_last_name}</p>
         <button className="logoutButton" onClick={handleLogout}>
-        יציאה
-      </button>
+          יציאה
+        </button>
       </div>
+      <button className="addProductButton" onClick={handleViewProducts}>
+        רשימת המוצרים
+      </button>
       <button className="addProductButton" onClick={handleAddProduct}>
         הוסף מוצר
       </button>
@@ -36,4 +44,3 @@ const AdminPage = () => {
 };
 
 export default AdminPage;
-  

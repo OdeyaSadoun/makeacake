@@ -9,6 +9,7 @@ import Products_list from './components/products_list';
 import Toolbar from './components/toolbar';
 import AdminPage from "./components/admin_page";
 import AddProduct from './components/addProduct';
+import ProductListAdmin from './components/products_list_admin'
 
 
 
@@ -39,6 +40,7 @@ const App = () => {
       <Route path="/products/admin/:username" element={<Products_list />} />
       <Route path="/" element={<Login />} />
       <Route path="/admin/:username/add-product" element={<AddProduct/>} />
+      <Route path="/admin/:username/products-list" element={<ProductListAdmin/>} />
     </Routes>
 
 
