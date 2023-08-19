@@ -91,9 +91,8 @@ router.get("/user/like/:userid", (req, res) => {
 
 
 /*POST add product*/
-router.post("/add_product", (req, res) => {
+router.post("/add_product",(req, res) => {
   const {
-    id,
     product_name,
     is_dairy,
     price,
@@ -103,27 +102,55 @@ router.post("/add_product", (req, res) => {
     sensitivity,
   } = req.body;
 
+  // Check if the product with the same name already exists
   connection.query(
-    "INSERT INTO products (id, product_name, is_dairy, price, discount_percentage, kosher_type, comments, sensitivity) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-    [
-      id,
-      product_name,
-      is_dairy,
-      price,
-      discount_percentage,
-      kosher_type,
-      comments,
-      sensitivity,
-    ],
+    "SELECT * FROM products WHERE product_name = ?",
+    [product_name],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to create product" });
-        return;
+        return res.status(500).json({ error: "Failed to create product" });
       }
+
+      if (results.length > 0) {
+        // Product with the same name already exists
+        return res.status(400).json({ error: "Product already exists" });
+      }
+
+      // If the product doesn't exist, proceed with insertion
+      connection.query(
+        "INSERT INTO products (product_name, is_dairy, price, discount_percentage, kosher_type, comments, sensitivity) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        [
+          product_name,
+          is_dairy,
+          price,
+          discount_percentage,
+          kosher_type,
+          comments,
+          sensitivity,
+        ],
+        (err, results) => {
+          if (err) {
+            console.error("Error executing MySQL query:", err);
+            return res.status(500).json({ error: "Failed to create product" });
+          }
+
+          // Product insertion successful
+          return res.status(201).json({
+             message: "Product created successfully",
+             product_name,
+             is_dairy,
+             price,
+             discount_percentage,
+             kosher_type,
+             comments,
+             sensitivity });
+        }
+      );
     }
   );
 });
+
 
 /*POST add productUser*/
 router.post("/add_product_user", (req, res) => {
