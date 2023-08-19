@@ -5,8 +5,19 @@ import restApi from '../server/models/restapi';
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
   const [userProducts, setUserProducts] = useState([]);
-  const [userProductsUpdate, setUserProductsUpdate] = useState([]);
+  const [quantityToAdd, setQuantityToAdd] = useState(1);
   const user = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const pr = await restApi.getAllUserProducts(user.id);
+      console.log(pr, 'userProduct');     
+      setUserProducts((prev)=> [...prev, pr]);
+      console.log(userProducts, 'getAllUserProducts');
+    };
+    fetchData();
+  }, [user.id]);
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -17,49 +28,68 @@ const ProductsList = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const pr = await restApi.getAllUserProducts(user.id);
-      setUserProductsUpdate(pr);
-      setUserProducts(pr);
-    };
-    fetchData();
-  }, [user.id]);
 
-  const handleLike = async (productId) => {
+
+  const handleQuantityChange = (event) => {
+    setQuantityToAdd(parseInt(event.target.value, 10));
+  };
+
+
+
+  const handleLike = async (product) => {
     const updatedItems = userProducts.map((pr) => {
-      if (pr.id === productId) {
-        const like = !pr.like;
-        restApi.updateProductUserIsLike(user.id, productId, like);
-        return { ...pr, like };
+      if (pr.product_id === product.id) {
+        const relike = !pr.like;
+        restApi.updateProductUserIsLike(user.id, product.id, relike);
+        return { ...pr, like: relike};
       }
-      return pr;
     });
-    setUserProductsUpdate(updatedItems);
+    setUserProducts((prev)=> [...prev, updatedItems]);
   };
 
-  const handleAddToCart = async (productid, quantity) => {
-    const updatePr = userProducts.map((pr) => {
-      if (pr.id === productid) {
-        const q = pr.quantity;
-        if (q) {
-          restApi.updateProductQuantity(user.id, productid, quantity);
-          return { ...pr, quantity: quantity };
-        } else {
-          restApi.addProductUser(user.id, productid, quantity, false);
-          refreshPr();
-        }
-      }
-      return pr;
-    });
-    setUserProducts(updatePr);
-    setUserProductsUpdate(updatePr);
+  const handleAddProduct = async (product) => {
+      try {
+        console.log(userProducts, 'userProductsTry')
+        const updatePr = userProducts.map((pr) => {
+          if (pr.product_id === product.id) {
+            console.log(pr.product_id, 'pr.product_id', product.id, 'product.id' );
+            const q = quantityToAdd + pr.quantity;
+            console.log(q);
+            if (q) {
+              restApi.updateProductQuantity(user.id, product.id, q);
+              console.log(userProducts, 'userProductsAfterUpdate');
+            } 
+          }
+          else {
+            console.log(userProducts, 'userProducts')
+            const productToAdd = { ...product, quantity: quantityToAdd };
+            console.log(productToAdd, 'productToAdd');
+            console.log(user.id, product.id, quantityToAdd, 'ser.id, product.id, quantityToAdd');
+            restApi.addProductUser(user.id, product.id, quantityToAdd, false);
+            setQuantityToAdd(1);
+            setUserProducts((prev)=> [...prev, updatePr]);;
+            refreshPr();
+            console.log(userProducts, 'userProductsAfter');
+          }
+        });
+        setQuantityToAdd(1);
+
+
+      } catch (error) {
+        console.log("Error adding pr", error);
+      }   
   };
+
+
+
+
+
+
+
 
   const refreshPr = async () => {
     const pr = await restApi.getAllUserProducts(user.id);
-    setUserProductsUpdate(pr);
-    setUserProducts(pr);
+    setUserProducts((prev)=> [...prev, pr]);
   };
 
   return (
@@ -70,16 +100,17 @@ const ProductsList = () => {
           <h3>{product.name}</h3>
           <p>Price: ${product.price}</p>
           <p>Quantity: {product.quantity}</p>
-          <input
-            type="number"
-            value={product.quantity||1}
-            onChange={(e) => {
-              const newQuantity = parseInt(e.target.value, 10);
-              <button onClick={() => handleAddToCart(product.id, newQuantity)}>Add to Cart</button>
-            }}
-          />
-           
-          <button onClick={() => handleLike(product.id)}>Like</button>
+          <label>
+            Add Quantity:
+            <input
+              type="number"
+              value={quantityToAdd}
+              onChange={handleQuantityChange}
+              min="1"
+            />
+          </label>
+          <button onClick={() => handleAddProduct(product)}>Add to Cart</button>
+          <button onClick={() => handleLike(product)}>Like</button>
         </div>
       ))}
       <Link to="/cart">Go to Cart</Link>

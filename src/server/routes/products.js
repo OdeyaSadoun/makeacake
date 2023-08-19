@@ -134,8 +134,11 @@ router.post("/add_product_user", (req, res) => {
     is_like,
   } = req.body;
 
+
+  console.log(user_id, product_id, quantity, is_like,'serveraddproductuser');
+  
   connection.query(
-    "INSERT INTO products ( user_id, product_id, quantity, is_like) VALUES (?, ?, ?, ?, ?)",
+    "INSERT INTO product_user ( user_id, product_id, quantity, is_like) VALUES (?, ?, ?, ?)",
     [
       user_id,
       product_id,
@@ -174,7 +177,7 @@ router.put("/update_price/:productid", (req, res) => {
 /*PUT update quantity of product*/
 router.put("/update_quantity/:productid", (req, res) => {
   const productid = req.params.productid;
-  const { quantity, userid } = req.body;
+  const {userid, quantity } = req.body;
   connection.query(
     "UPDATE product_user SET quantity = ? WHERE user_id = ? AND product_id = ?",
     [quantity ,userid, productid],

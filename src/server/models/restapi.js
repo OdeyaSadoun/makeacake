@@ -481,6 +481,7 @@ export class RestAPI {
   }
 
   static async addProductUser(user_id, product_id, quantity, is_like) {
+    console.log(user_id, product_id, quantity, is_like, 'user_id, product_id, quantity, is_like restapi')
     const url = `${PRODUCTS_BASE_URL}/add_product_user`;
     const body={user_id, product_id, quantity, is_like}
     const options = {
@@ -507,7 +508,7 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async updateProductQuantity(productid, quantity, userid) {
+  static async updateProductQuantity( userid, productid, quantity) {
     const url = `${PRODUCTS_BASE_URL}/update_quantity/${productid}`;
     const body = { quantity, userid };
     const options = {
