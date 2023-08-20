@@ -10,20 +10,14 @@ const ProductsList = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const pr = await restApi.getAllUserProducts(user.id);
-      console.log(pr, 'userProduct');     
-      setUserProducts((prev)=> [...prev, pr]);
-      console.log(userProducts, 'getAllUserProducts');
-    };
-    fetchData();
-  }, [user.id]);
-
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const pr = await restApi.getAllProducts();
-      console.log(pr, 'pr');
-      setProducts(pr);
+      console.log(userProducts, 'start-userProducts');
+      console.log(products, 'start-products');
+      const allProducts = await restApi.getAllProducts();
+      setProducts(allProducts);
+      const allUserProducts = await restApi.getAllUserProducts(user.id);
+      setUserProducts((prev)=>[prev,allUserProducts ]);
+      console.log(userProducts, 'userProducts');
+      console.log(products, 'products');
     };
     fetchData();
   }, []);
@@ -34,17 +28,32 @@ const ProductsList = () => {
     setQuantityToAdd(parseInt(event.target.value, 10));
   };
 
+  // const handleLike = async (product) => {
+  //   console.log(userProducts, 'userProducts in like');
+  //   setUserProducts((prev) =>
+  //     prev.map((pr) =>
+  //       pr.product_id !== product.id ? pr : { ...pr, like: !pr.like }
+  //     )
+  //   );
+  // };
+  
 
 
   const handleLike = async (product) => {
+    console.log(userProducts, 'userProducts in like');
     const updatedItems = userProducts.map((pr) => {
+      console.log(pr.product_id, 'pr.product_id');
+      console.log(product.id, 'product.id');
       if (pr.product_id === product.id) {
-        const relike = !pr.like;
+        const relike =Number(!pr.is_like);
+        console.log(relike, 'relike', pr.is_like, 'pr.is_like');
         restApi.updateProductUserIsLike(user.id, product.id, relike);
-        return { ...pr, like: relike};
+        return { ...pr, is_like: relike};
       }
     });
-    setUserProducts((prev)=> [...prev, updatedItems]);
+    console.log(updatedItems, 'updatedItems in like');
+      setUserProducts( updatedItems);
+      console.log(userProducts, 'userProducts in end like');
   };
 
   const handleAddProduct = async (product) => {
@@ -67,7 +76,6 @@ const ProductsList = () => {
             console.log(user.id, product.id, quantityToAdd, 'ser.id, product.id, quantityToAdd');
             restApi.addProductUser(user.id, product.id, quantityToAdd, false);
             setQuantityToAdd(1);
-            setUserProducts((prev)=> [...prev, updatePr]);;
             refreshPr();
             console.log(userProducts, 'userProductsAfter');
           }
@@ -84,12 +92,9 @@ const ProductsList = () => {
 
 
 
-
-
-
   const refreshPr = async () => {
     const pr = await restApi.getAllUserProducts(user.id);
-    setUserProducts((prev)=> [...prev, pr]);
+    setUserProducts((prev)=>[prev, pr]);
   };
 
   return (
