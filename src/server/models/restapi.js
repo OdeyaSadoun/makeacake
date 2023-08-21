@@ -508,6 +508,19 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
+  static async updateProductDiscount(productid, discount_percentage) {
+    const url = `${PRODUCTS_BASE_URL}/update_discount/${productid}`;
+    const body = { discount_percentage };
+    const options = {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
   static async updateProductQuantity( userid, productid, quantity) {
     const url = `${PRODUCTS_BASE_URL}/update_quantity/${productid}`;
     const body = { quantity, userid };

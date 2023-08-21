@@ -23,15 +23,14 @@ const ProductListAdmin = () => {
     }
   };
 
-  const handleUpdatePrice = async (productId, newPrice) => {
-    try {
-      await RestAPI.updateProductPrice(productId, newPrice);
-
-    } catch (error) {
-      console.error('Error updating price:', error);
+  const updatePrice = (product) => {
+    const newPrice = window.prompt("מה המחיר החדש שאותו רוצים לעדכן?", product.price);
+    if (newPrice && newPrice.trim() !== "") {
+      handleUpdatePrice(product.id, newPrice);
     }
   };
 
+<<<<<<< HEAD
   
     const handleUpdateName = async (productId, newName) => {
       try {
@@ -50,6 +49,44 @@ const ProductListAdmin = () => {
         console.error('Error updating discount:', error);
       }
     };
+=======
+  const handleUpdatePrice = async (productId, newPrice) => {
+    try {
+      await RestAPI.updateProductPrice(productId, newPrice);
+      const updatedPrice = products.map((product) => {
+        if (product.id === productId) {
+          return { ...product, price: newPrice };
+        }
+        return product;
+      });
+      setProducts(updatedPrice);
+    } catch (error) {
+      console.log("Error updating price:", error);
+    }
+  };
+
+  const updateDiscount = (product) => {
+    const newDiscount = window.prompt("מהו אחוז ההנחה לעדכון?", product.discount_percentage);
+    if (newDiscount && newDiscount.trim() !== "") {
+      handleUpdateDiscount(product.id, newDiscount);
+    }
+  };
+
+  const handleUpdateDiscount = async (productId, newDiscount) => {
+    try {
+      await RestAPI.updateProductDiscount(productId, newDiscount);
+      const updatedDiscount = products.map((product) => {
+        if (product.id === productId) {
+          return { ...product, discount_percentage: newDiscount };
+        }
+        return product;
+      });
+      setProducts(updatedDiscount);
+    } catch (error) {
+      console.log("Error updating name:", error);
+    }
+  };
+>>>>>>> 5d313ed663e301d8c6a1848c03c5af4e36c03e99
 
   const handleUpdateIsDairy = async (productId, newIsDairy) => {
     try {
@@ -90,11 +127,18 @@ const ProductListAdmin = () => {
               <td>{product.sensitivity}</td>
               <td>{product.comments}</td>
               <td>
+<<<<<<< HEAD
                 <button onClick={() => handleDelete(product.id)}>Delete</button>
                 <button onClick={() => handleUpdatePrice(product.id)}>Update Price</button>
                 <button onClick={() => handleUpdateName(product.id)}>Update Name</button>
                 <button onClick={() => handleUpdateDiscount(product.id)}>Update Discount</button>
                 <button onClick={() => handleUpdateIsDairy(product.id)}>Update Dairy</button>
+=======
+                <button onClick={() => handleDelete(product.id)}>מחיקה</button>
+                <button onClick={() => updatePrice(product)}>עדכון מחיר</button>
+                <button onClick={() => updateDiscount(product)}>עדכון הנחה</button>
+                <button onClick={() => handleUpdateIsDairy(product)}>עדכון חלבי</button>
+>>>>>>> 5d313ed663e301d8c6a1848c03c5af4e36c03e99
               </td>
             </tr>
           ))}

@@ -41,3 +41,4 @@ INSERT INTO shopping_cart (user_id, product_id, quantity)
 VALUES
   (2, 5, 5),
   (1, 2, 6);  
+VALUES ('טריקולד', true, 49.99, 0, 'bet_yosef', 'ניתן להזמין בצורת לב או בצורת עיגול', 'מכיל חלב');
