@@ -480,10 +480,10 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async addProductUser(user_id, product_id, quantity, is_like) {
-    console.log(user_id, product_id, quantity, is_like, 'user_id, product_id, quantity, is_like restapi')
+  static async addProductUser(user_id, product_id, quantity) {
+    console.log(user_id, product_id, quantity, 'user_id, product_id, quantity')
     const url = `${PRODUCTS_BASE_URL}/add_product_user`;
-    const body={user_id, product_id, quantity, is_like}
+    const body={user_id, product_id, quantity}
     const options = {
       method: "POST",
       headers: {

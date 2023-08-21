@@ -5,7 +5,7 @@ const connection = require("./connection.js");
 module.exports.getAllUserProducts = (userid) => {
   return new Promise((resolve, reject) => {
     connection.query(
-      "SELECT * FROM product_user WHERE user_id= ?",
+      "SELECT * FROM shopping_cart WHERE user_id= ?",
       [userid],
       (error, results) => {
         if (error) {
@@ -57,11 +57,11 @@ module.exports.getAddressByCityAndStreetAndNumberHouse = (city, street, house_nu
 
 
 
-  module.exports.addProductUser = ( user_id, product_id, quantity, is_like) => {
+  module.exports.addProductUser = ( user_id, product_id, quantity) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        "INSERT INTO product_user (user_id, product_id, quantity, is_like) VALUES (?, ?, ?,?)",
-        [user_id, product_id, quantity, is_like],
+        "INSERT INTO shopping_cart (user_id, product_id, quantity) VALUES (?, ?, ?)",
+        [user_id, product_id, quantity],
         (error, results) => {
           if (error) {
             reject(error);
@@ -78,7 +78,7 @@ module.exports.getAddressByCityAndStreetAndNumberHouse = (city, street, house_nu
   module.exports. updateProductQuantity= ( userid, productid, quantity) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        "UPDATE product_user SET quantity = ? WHERE user_id = ? AND id = ?",
+        "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND id = ?",
         [quantity ,userid, productid],
         (error, results) => {
           if (error) {

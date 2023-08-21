@@ -26,19 +26,19 @@ VALUES
   ('2023-09-10 12:00:00', true, 'shabat_event', 5, 0, 'Traditional lunch', true),
   ('2023-10-05 19:45:00', false, 'engagement', 3, 0, 'Announcing the engagement', false),
   ('2023-11-20 15:30:00', true, 'bat_mitzva', 5, 0, 'Celebrating a special day', true);
-
+use makeacake;
 INSERT INTO products (product_name, is_dairy, price, discount_percentage, kosher_type, comments, sensitivity)
 VALUES ('טריפל שוקולד- מוס', true, 49.99, 0, 'bet_yosef', 'ניתן להזמין בצורת לב או בצורת עיגול', 'מכיל חלב'),
-VALUES ('טריפל חלווה- מוס', true, 59.99, 0, 'bet_yosef', 'ניתן להזמין בצורת לב או בצורת עיגול', 'מכיל ביצים');
-
+ ('טריפל חלווה- מוס', true, 59.99, 0, 'bet_yosef', 'ניתן להזמין בצורת לב או בצורת עיגול', 'מכיל ביצים'),
+ ('טריקולד', true, 49.99, 0, 'bet_yosef', 'ניתן להזמין בצורת לב או בצורת עיגול', 'מכיל חלב');
 
 INSERT INTO like_product_user (user_id, product_id, is_like)
 VALUES
-  (2, 5, 1),
+  (2, 1, 1),
   (1, 2, 0);
 
 INSERT INTO shopping_cart (user_id, product_id, quantity)
 VALUES
-  (2, 5, 5),
-  (1, 2, 6);  
-VALUES ('טריקולד', true, 49.99, 0, 'bet_yosef', 'ניתן להזמין בצורת לב או בצורת עיגול', 'מכיל חלב');
+  (2, 1, 5),
+  (1, 2, 6);
+
