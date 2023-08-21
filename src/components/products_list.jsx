@@ -33,23 +33,55 @@ const ProductsList = () => {
     setQuantityToAdd(parseInt(event.target.value, 10));
   };
   
+  // const handleLike = async (product) => {
+  //     console.log(likeProducts, 'likeProducts in like');
+  //     const updatedItems = likeProducts.map((pr) => {
+  //     console.log(pr.product_id, 'pr.product_id');
+  //     console.log(product.id, 'product.id');
+  //     if (pr.id === product.id) {
+  //       const updatedItem = { ...pr, is_like: Number(!(pr.is_like ? 1 : 0)) };
+  //       console.log(updatedItem, 'updatedItem', pr, 'pr');
+  //       restApi.updateProductUserIsLike(user.id, product.id, updatedItem.is_like ? 1 : 0);
+  //       return updatedItem;
+  //     }
+  //     return pr;
+  //   });
+  //     console.log(updatedItems, 'updatedItems in like');
+  //     setLikeProducts( updatedItems);
+  //     console.log(likeProducts, 'likeProducts in end like');
+  // };
+
   const handleLike = async (product) => {
+    try {
       console.log(likeProducts, 'likeProducts in like');
       const updatedItems = likeProducts.map((pr) => {
-      console.log(pr.product_id, 'pr.product_id');
-      console.log(product.id, 'product.id');
-      if (pr.id === product.id) {
-        const updatedItem = { ...pr, is_like: Number(!(pr.is_like ? 1 : 0)) };
-        console.log(updatedItem, 'updatedItem', pr, 'pr');
-        restApi.updateProductUserIsLike(user.id, product.id, updatedItem.is_like ? 1 : 0);
-        return updatedItem;
-      }
-      return pr;
-    });
-      console.log(updatedItems, 'updatedItems in like');
-      setLikeProducts( updatedItems);
-      console.log(likeProducts, 'likeProducts in end like');
-  };
+        if (pr.id === product.id) {
+          console.log(pr.id, 'pr.id', product.id, 'product.id' );
+          const updatedItem = { ...pr, is_like: Number(!(pr.is_like ? 1 : 0)) };
+          console.log(updatedItem, 'updatedItem', pr, 'pr');
+          restApi.updateProductUserIsLike(user.id, product.id, updatedItem.is_like ? 1 : 0);
+          return updatedItem;
+          
+        }
+        else {           
+          console.log(cartProducts, 'cartProducts')
+          const productToAdd = { ...product, is_like: 1 };
+          console.log(productToAdd, 'productToAdd');
+          console.log(user.id, product.id, 'user.id, product.id');
+          restApi.addLikeProductUser(user.id, product.id, 1);
+          console.log(cartProducts, 'cartProductsAfter');
+        }
+      });
+      console.log(updatePr, 'updatePr' );
+      refreshPr();
+      console.log(cartProducts,'ufter-setUserProducts(pr)');
+    } catch (error) {
+      console.log("Error adding pr", error);
+    }   
+};
+
+
+
 
 
   const handleAddProduct = async (product) => {

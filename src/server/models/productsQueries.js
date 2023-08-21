@@ -73,7 +73,21 @@ module.exports.getAddressByCityAndStreetAndNumberHouse = (city, street, house_nu
     });
   };
 
-
+  module.exports.addLikeProductUser = ( user_id, product_id, is_like) => {
+    return new Promise((resolve, reject) => {
+      connection.query(
+        "INSERT INTO like_product_user (user_id, product_id, is_like) VALUES (?, ?, ?)",
+        [user_id, product_id, is_like],
+        (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        }
+      );
+    });
+  };
 
   module.exports. updateProductQuantity= ( userid, productid, quantity) => {
     return new Promise((resolve, reject) => {
