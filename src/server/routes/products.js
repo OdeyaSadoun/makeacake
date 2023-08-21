@@ -189,6 +189,25 @@ router.put("/update_price/:productid", (req, res) => {
   );
 });
 
+/*PUT update discount_percentage of product*/
+router.put("/update_discount/:productid", (req, res) => {
+  const id = req.params.id;
+  const { discount_percentage } = req.body;
+  connection.query(
+    "UPDATE products SET discount_percentage = ? WHERE id = ?",
+    [discount_percentage, id],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update discount_percentage" });
+        return;
+      }
+
+      res.json({ message: "discount_percentage updated successfully" });
+    }
+  );
+});
+
 /*PUT update quantity of product*/
 router.put("/update_quantity/:productid", (req, res) => {
   const productid = req.params.productid;

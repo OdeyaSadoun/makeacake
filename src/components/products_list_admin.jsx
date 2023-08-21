@@ -45,21 +45,25 @@ const ProductListAdmin = () => {
     }
   };
 
-  const handleUpdateName = async (productId, newName) => {
-    try {
-      await RestAPI.updateProductName(productId, newName);
-
-    } catch (error) {
-      console.error('Error updating product name:', error);
+  const updateDiscount = (product) => {
+    const newDiscount = window.prompt("מהו אחוז ההנחה לעדכון?", product.discount_percentage);
+    if (newDiscount && newDiscount.trim() !== "") {
+      handleUpdateDiscount(product.id, newDiscount);
     }
   };
 
   const handleUpdateDiscount = async (productId, newDiscount) => {
     try {
       await RestAPI.updateProductDiscount(productId, newDiscount);
-
+      const updatedDiscount = products.map((product) => {
+        if (product.id === productId) {
+          return { ...product, discount_percentage: newDiscount };
+        }
+        return product;
+      });
+      setProducts(updatedDiscount);
     } catch (error) {
-      console.error('Error updating discount:', error);
+      console.log("Error updating name:", error);
     }
   };
 
@@ -102,9 +106,8 @@ const ProductListAdmin = () => {
               <td>
                 <button onClick={() => handleDelete(product.id)}>מחיקה</button>
                 <button onClick={() => updatePrice(product)}>עדכון מחיר</button>
-                <button onClick={() => handleUpdateName(product.id)}>עדכון שם</button>
-                <button onClick={() => handleUpdateDiscount(product.id)}>עדכון הנחה</button>
-                <button onClick={() => handleUpdateIsDairy(product.id)}>עדכון חלבי</button>
+                <button onClick={() => updateDiscount(product)}>עדכון הנחה</button>
+                <button onClick={() => handleUpdateIsDairy(product)}>עדכון חלבי</button>
               </td>
             </tr>
           ))}
