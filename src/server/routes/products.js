@@ -213,13 +213,8 @@ router.put("/update_quantity/:productid", (req, res) => {
   const productid = req.params.productid;
   const { userid, quantity } = req.body;
   connection.query(
-<<<<<<< HEAD
     "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND id = ?",
     [quantity ,userid, productid],
-=======
-    "UPDATE product_user SET quantity = ? WHERE user_id = ? AND id = ?",
-    [quantity, userid, productid],
->>>>>>> 6da305eaa4b6ff382d6f6a0345ecf05a4ff494ae
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
