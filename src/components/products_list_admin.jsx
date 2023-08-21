@@ -63,7 +63,7 @@ const ProductListAdmin = () => {
       });
       setProducts(updatedDiscount);
     } catch (error) {
-      console.log("Error updating name:", error);
+      console.log("Error updating discount:", error);
     }
   };
 
@@ -73,21 +73,22 @@ const ProductListAdmin = () => {
 
   };
 
-  const handleUpdateIsDairy = async (productId, dairy) => {
+  const handleUpdateIsDairy = async (productId) => {
     try {
-      await RestAPI.updateProductIsDairy(productId, dairy);
-      const updatedIsDairyProduct = products.map((product) => {
+      const updatedProducts = products.map((product) => {
         if (product.id === productId) {
-          return { ...product, dairy };
+          const updatedProduct = { ...product, is_dairy: !product.is_dairy };
+          RestAPI.updateIsAdminByUserId(productId, updatedProduct.is_dairy ? 1 : 0);
+          return updatedProduct;
         }
         return product;
       });
-      setProducts(updatedIsDairyProduct)
-
+      setProducts(updatedProducts);
     } catch (error) {
-      console.error('Error updating dairy status:', error);
+      console.log("Error updating is dairy:", error);
     }
   };
+  
 
 
   return (
@@ -120,11 +121,6 @@ const ProductListAdmin = () => {
                 <button onClick={() => handleDelete(product.id)}>מחיקה</button>
                 <button onClick={() => updatePrice(product)}>עדכון מחיר</button>
                 <button onClick={() => updateDiscount(product)}>עדכון אחוז הנחה</button>
-                <input
-                  type="checkbox"
-                  checked={product.is_dairy}
-                  onChange={() => updateIsDairy(product)}
-                />
               </td>
             </tr>
           ))}
