@@ -27,31 +27,21 @@ const ProductsList = () => {
   const handleQuantityChange = (event) => {
     setQuantityToAdd(parseInt(event.target.value, 10));
   };
-
-  // const handleLike = async (product) => {
-  //   console.log(userProducts, 'userProducts in like');
-  //   setUserProducts((prev) =>
-  //     prev.map((pr) =>
-  //       pr.product_id !== product.id ? pr : { ...pr, like: !pr.like }
-  //     )
-  //   );
-  // };
   
-
-
   const handleLike = async (product) => {
-    console.log(userProducts, 'userProducts in like');
-    const updatedItems = userProducts.map((pr) => {
+      console.log(userProducts, 'userProducts in like');
+      const updatedItems = userProducts.map((pr) => {
       console.log(pr.product_id, 'pr.product_id');
       console.log(product.id, 'product.id');
-      if (pr.product_id === product.id) {
-        const relike =Number(!pr.is_like);
-        console.log(relike, 'relike', pr.is_like, 'pr.is_like');
-        restApi.updateProductUserIsLike(user.id, product.id, relike);
-        return { ...pr, is_like: relike};
+      if (pr.id === product.id) {
+        const updatedItem = { ...pr, is_like: Number(!(pr.is_like ? 1 : 0)) };
+        console.log(updatedItem, 'updatedItem', pr, 'pr');
+        restApi.updateProductUserIsLike(user.id, product.id, updatedItem.is_like ? 1 : 0);
+        return updatedItem;
       }
+      return pr;
     });
-    console.log(updatedItems, 'updatedItems in like');
+      console.log(updatedItems, 'updatedItems in like');
       setUserProducts( updatedItems);
       console.log(userProducts, 'userProducts in end like');
   };
@@ -60,29 +50,30 @@ const ProductsList = () => {
       try {
         console.log(userProducts, 'userProductsTry')
         const updatePr = userProducts.map((pr) => {
-          if (pr.product_id === product.id) {
-            console.log(pr.product_id, 'pr.product_id', product.id, 'product.id' );
+          if (pr.id === product.id) {
+            console.log(pr.id, 'pr.id', product.id, 'product.id' );
+            console.log(pr.quantity, 'pr.quantity',quantityToAdd, 'quantityToAdd' );
             const q = quantityToAdd + pr.quantity;
-            console.log(q);
+            console.log(q, 'q');
             if (q) {
               restApi.updateProductQuantity(user.id, product.id, q);
               console.log(userProducts, 'userProductsAfterUpdate');
             } 
           }
-          else {
+          else {           
             console.log(userProducts, 'userProducts')
             const productToAdd = { ...product, quantity: quantityToAdd };
             console.log(productToAdd, 'productToAdd');
             console.log(user.id, product.id, quantityToAdd, 'ser.id, product.id, quantityToAdd');
             restApi.addProductUser(user.id, product.id, quantityToAdd, false);
             setQuantityToAdd(1);
-            refreshPr();
             console.log(userProducts, 'userProductsAfter');
           }
         });
+        console.log(updatePr, 'updatePr' );
+        refreshPr();
         setQuantityToAdd(1);
-
-
+        console.log(userProducts,'ufter-setUserProducts(pr)');
       } catch (error) {
         console.log("Error adding pr", error);
       }   
@@ -94,7 +85,8 @@ const ProductsList = () => {
 
   const refreshPr = async () => {
     const pr = await restApi.getAllUserProducts(user.id);
-    setUserProducts((prev)=>[prev, pr]);
+    setUserProducts(pr);
+    console.log(userProducts,'setUserProducts(pr)');
   };
 
   return (

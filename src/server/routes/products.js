@@ -206,7 +206,7 @@ router.put("/update_quantity/:productid", (req, res) => {
   const productid = req.params.productid;
   const {userid, quantity } = req.body;
   connection.query(
-    "UPDATE product_user SET quantity = ? WHERE user_id = ? AND product_id = ?",
+    "UPDATE product_user SET quantity = ? WHERE user_id = ? AND id = ?",
     [quantity ,userid, productid],
     (err, results) => {
       if (err) {

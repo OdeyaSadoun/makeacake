@@ -91,12 +91,21 @@ CREATE TABLE order_event (
   FOREIGN KEY (event_id) REFERENCES events_management(id)
 );
 
-CREATE TABLE product_user (
+CREATE TABLE like_product_user (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  product_id INT,
+  is_like BOOLEAN,
+  FOREIGN KEY (product_id) REFERENCES products(id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+);
+
+
+CREATE TABLE shopping_cart (
   id INT AUTO_INCREMENT PRIMARY KEY,
   user_id INT,
   product_id INT,
   quantity INT,
-  is_like BOOLEAN,
   FOREIGN KEY (product_id) REFERENCES products(id),
   FOREIGN KEY (user_id) REFERENCES users(id)
 );

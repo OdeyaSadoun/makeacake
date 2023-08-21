@@ -1,5 +1,6 @@
 use makeacake;
-
+DROP TABLE IF EXISTS shopping_cart;
+DROP TABLE IF EXISTS like_product_user;
 DROP TABLE IF EXISTS product_user;
 DROP TABLE IF EXISTS order_event;
 DROP TABLE IF EXISTS order_product;

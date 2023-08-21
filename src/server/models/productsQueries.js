@@ -78,7 +78,7 @@ module.exports.getAddressByCityAndStreetAndNumberHouse = (city, street, house_nu
   module.exports. updateProductQuantity= ( userid, productid, quantity) => {
     return new Promise((resolve, reject) => {
       connection.query(
-        "UPDATE product_user SET quantity = ? WHERE user_id = ? AND product_id = ?",
+        "UPDATE product_user SET quantity = ? WHERE user_id = ? AND id = ?",
         [quantity ,userid, productid],
         (error, results) => {
           if (error) {
