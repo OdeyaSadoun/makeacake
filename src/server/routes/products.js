@@ -1,4 +1,4 @@
-const connection = require("../models/connection.js")
+const connection = require("../models/connection.js");
 const bodyParser = require("body-parser");
 const express = require("express");
 const router = express.Router();
@@ -7,7 +7,7 @@ router.use(bodyParser.json());
 
 /*GET get all products*/
 router.get("/", (req, res) => {
-  console.log('router.get');
+  console.log("router.get");
   connection.query("SELECT * FROM products", (err, results) => {
     if (err) {
       console.error("Error executing MySQL query:", err);
@@ -15,7 +15,7 @@ router.get("/", (req, res) => {
       return;
     }
     res.json(results);
-    console.log('results', results);
+    console.log("results", results);
   });
 });
 
@@ -68,7 +68,7 @@ router.get("/user/:userid", (req, res) => {
 /*GET all like user's products by user id*/
 router.get("/user/like/:userid", (req, res) => {
   const userid = req.params.userid;
-  const like=true;
+  const like = true;
   connection.query(
     "SELECT * FROM product_user WHERE user_id= ? AND is_like= ? ",
     [userid, like],
@@ -89,9 +89,8 @@ router.get("/user/like/:userid", (req, res) => {
   );
 });
 
-
 /*POST add product*/
-router.post("/add_product",(req, res) => {
+router.post("/add_product", (req, res) => {
   const {
     product_name,
     is_dairy,
@@ -137,41 +136,30 @@ router.post("/add_product",(req, res) => {
 
           // Product insertion successful
           return res.status(201).json({
-             message: "Product created successfully",
-             product_name,
-             is_dairy,
-             price,
-             discount_percentage,
-             kosher_type,
-             comments,
-             sensitivity });
+            message: "Product created successfully",
+            product_name,
+            is_dairy,
+            price,
+            discount_percentage,
+            kosher_type,
+            comments,
+            sensitivity,
+          });
         }
       );
     }
   );
 });
 
-
 /*POST add productUser*/
 router.post("/add_product_user", (req, res) => {
-  const {
-    user_id,
-    product_id,
-    quantity,
-    is_like,
-  } = req.body;
+  const { user_id, product_id, quantity, is_like } = req.body;
 
+  console.log(user_id, product_id, quantity, is_like, "serveraddproductuser");
 
-  console.log(user_id, product_id, quantity, is_like,'serveraddproductuser');
-  
   connection.query(
     "INSERT INTO product_user ( user_id, product_id, quantity, is_like) VALUES (?, ?, ?, ?)",
-    [
-      user_id,
-      product_id,
-      quantity,
-      is_like,
-    ],
+    [user_id, product_id, quantity, is_like],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -204,10 +192,15 @@ router.put("/update_price/:productid", (req, res) => {
 /*PUT update quantity of product*/
 router.put("/update_quantity/:productid", (req, res) => {
   const productid = req.params.productid;
-  const {userid, quantity } = req.body;
+  const { userid, quantity } = req.body;
   connection.query(
+<<<<<<< HEAD
     "UPDATE product_user SET quantity = ? WHERE user_id = ? AND id = ?",
     [quantity ,userid, productid],
+=======
+    "UPDATE product_user SET quantity = ? WHERE user_id = ? AND product_id = ?",
+    [quantity, userid, productid],
+>>>>>>> 8dfbdec942ce9d8a6979484026154175fd7b3b2b
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -280,10 +273,10 @@ router.put("/update_is_dairy/:productid", (req, res) => {
 /*PUT update "is like" of product*/
 router.put("/update_is_like/:productid", (req, res) => {
   const productid = req.params.productid;
-  const {userid, is_like } = req.body;
+  const { userid, is_like } = req.body;
   connection.query(
     "UPDATE product_user SET is_like = ? WHERE user_id = ? AND product_id = ?",
-    [is_like, userid,productid],
+    [is_like, userid, productid],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -296,28 +289,48 @@ router.put("/update_is_like/:productid", (req, res) => {
   );
 });
 
-/*DELETE product*/
+/* DELETE product */
 router.delete("/delete_products/:productid", (req, res) => {
-  const id = req.params.id;
+  const id = req.params.productid; // Use req.params to get the productid from the URL
+
   connection.query(
-    "DELETE FROM products WHERE id = ?",
+    "SELECT * FROM products WHERE id = ?",
     [id],
-    (err, results) => {
-      if (err) {
-        console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to update is_dairy" });
+    (selectErr, selectResults) => {
+      if (selectErr) {
+        console.log(id);
+        console.error("Error executing MySQL query:", selectErr);
+        res.status(500).json({ error: "Failed to find the product" });
         return;
       }
+      if (selectResults.length === 0) { // Use selectResults.length to check for results
+        console.error("Product not found");
+        res.status(404).json({ error: "Product not found" });
+        return;
+      }
+
       connection.query(
         "DELETE FROM media_product WHERE product_id = ?",
         [id],
-        (err, results) => {
+        (err, mediaDeleteResults) => {
           if (err) {
             console.error("Error executing MySQL query:", err);
-            res.status(500).json({ error: "Failed to update is_dairy" });
+            res.status(500).json({ error: "Failed to delete product media" });
             return;
           }
-          res.json({ message: "is_dairy updated successfully" });
+
+          connection.query(
+            "DELETE FROM products WHERE id = ?",
+            [id],
+            (err, productDeleteResults) => {
+              if (err) {
+                console.error("Error executing MySQL query:", err);
+                res.status(500).json({ error: "Failed to delete product" });
+                return;
+              }
+              res.json({ message: "Deleted successfully" });
+            }
+          );
         }
       );
     }
@@ -325,14 +338,13 @@ router.delete("/delete_products/:productid", (req, res) => {
 });
 
 
-
 /*DELETE productUser*/
 router.delete("/delete_user_product/:productid", (req, res) => {
   const id = req.params.productid;
-  const {userid } = req.body;
+  const { userid } = req.body;
   connection.query(
     "DELETE FROM product_user WHERE user_id = ? AND product_id = ?",
-    [userid ,id],
+    [userid, id],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -342,8 +354,5 @@ router.delete("/delete_user_product/:productid", (req, res) => {
     }
   );
 });
-
-
-
 
 module.exports = router;
