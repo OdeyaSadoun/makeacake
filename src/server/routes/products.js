@@ -213,8 +213,13 @@ router.put("/update_quantity/:productid", (req, res) => {
   const productid = req.params.productid;
   const { userid, quantity } = req.body;
   connection.query(
+<<<<<<< HEAD
     "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND id = ?",
     [quantity ,userid, productid],
+=======
+    "UPDATE product_user SET quantity = ? WHERE user_id = ? AND id = ?",
+    [quantity, userid, productid],
+>>>>>>> 6da305eaa4b6ff382d6f6a0345ecf05a4ff494ae
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -270,16 +275,32 @@ router.put("/update_is_dairy/:productid", (req, res) => {
   const id = req.params.id;
   const { is_dairy } = req.body;
   connection.query(
-    "UPDATE products SET is_dairy = ? WHERE id = ?",
-    [is_dairy, id],
+    "SELECT * FROM products WHERE id = ?",
+    [id],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to update is_dairy" });
+        res.status(500).json({ error: "Failed to find the product to update" });
         return;
       }
+      if (results.length === 0) {
+        console.error("Error executing MySQL query:", err);
+        res.status(404).json({ error: "product not found" });
+        return;
+      }
+      connection.query(
+        "UPDATE products SET is_dairy = ? WHERE id = ?",
+        [is_dairy, id],
+        (err, results) => {
+          if (err) {
+            console.error("Error executing MySQL query:", err);
+            res.status(500).json({ error: "Failed to update is_dairy" });
+            return;
+          }
 
-      res.json({ message: "is_dairy updated successfully" });
+          res.json({ message: "is_dairy updated successfully" });
+        }
+      );
     }
   );
 });
@@ -317,7 +338,8 @@ router.delete("/delete_products/:productid", (req, res) => {
         res.status(500).json({ error: "Failed to find the product" });
         return;
       }
-      if (selectResults.length === 0) { // Use selectResults.length to check for results
+      if (selectResults.length === 0) {
+        // Use selectResults.length to check for results
         console.error("Product not found");
         res.status(404).json({ error: "Product not found" });
         return;
@@ -350,7 +372,6 @@ router.delete("/delete_products/:productid", (req, res) => {
     }
   );
 });
-
 
 /*DELETE productUser*/
 router.delete("/delete_user_product/:productid", (req, res) => {
