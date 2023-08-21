@@ -468,14 +468,15 @@ export class RestAPI {
     return await RestAPI.fetchData(url);
   }
 
-  static async addProduct(productData) {
+  static async addProduct(product_name, is_dairy, price, discount_percentage,kosher_type, comments, sensitivity) {
     const url = `${PRODUCTS_BASE_URL}/add_product`;
+    const body = { product_name, is_dairy, price, discount_percentage,kosher_type, comments, sensitivity};
     const options = {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(productData),
+      body: JSON.stringify(body),
     };
     return await RestAPI.fetchData(url, options);
   }

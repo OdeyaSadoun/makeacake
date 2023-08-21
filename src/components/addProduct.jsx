@@ -40,10 +40,16 @@ const AddProduct = () => {
             console.log('faild to create product');
         }
     };
+    const handleBackToAdminHome = () => {
+        navigate(`/admin/${user.username}`);
+      }; 
 
     return (
         <div>
             <h2>הוספת מוצר חדש</h2>
+            <button className="logoutButton" onClick={handleBackToAdminHome}>
+          חזרה לעמוד הראשי
+        </button>
             <form>
                 <div>
                     <label>שם:</label>

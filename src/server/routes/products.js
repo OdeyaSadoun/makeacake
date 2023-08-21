@@ -108,12 +108,14 @@ router.post("/add_product", (req, res) => {
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        return res.status(500).json({ error: "Failed to create product" });
+        res.status(500).json({ error: "Failed to create product" });
+        return;
       }
 
       if (results.length > 0) {
         // Product with the same name already exists
-        return res.status(400).json({ error: "Product already exists" });
+        res.status(400).json({ error: "Product already exists" });
+        return;
       }
 
       // If the product doesn't exist, proceed with insertion
@@ -131,11 +133,12 @@ router.post("/add_product", (req, res) => {
         (err, results) => {
           if (err) {
             console.error("Error executing MySQL query:", err);
-            return res.status(500).json({ error: "Failed to create product" });
+            res.status(500).json({ error: "Failed to create product" });
+            return;
           }
 
           // Product insertion successful
-          return res.status(201).json({
+          res.status(201).json({
             message: "Product created successfully",
             product_name,
             is_dairy,
