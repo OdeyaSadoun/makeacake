@@ -23,12 +23,25 @@ const ProductListAdmin = () => {
     }
   };
 
+  const updatePrice = (product) => {
+    const newPrice = window.prompt("מה המחיר החדש שאותו רוצים לעדכן?", product.price);
+    if (newPrice && newPrice.trim() !== "") {
+      handleUpdatePrice(product.id, newPrice);
+    }
+  };
+
   const handleUpdatePrice = async (productId, newPrice) => {
     try {
       await RestAPI.updateProductPrice(productId, newPrice);
-
+      const updatedPrice = products.map((product) => {
+        if (product.id === productId) {
+          return { ...product, price: newPrice };
+        }
+        return product;
+      });
+      setProducts(updatedPrice);
     } catch (error) {
-      console.error('Error updating price:', error);
+      console.log("Error updating price:", error);
     }
   };
 
@@ -88,7 +101,7 @@ const ProductListAdmin = () => {
               <td>{product.comments}</td>
               <td>
                 <button onClick={() => handleDelete(product.id)}>מחיקה</button>
-                <button onClick={() => handleUpdatePrice(product.id)}>עדכון מחיר</button>
+                <button onClick={() => updatePrice(product)}>עדכון מחיר</button>
                 <button onClick={() => handleUpdateName(product.id)}>עדכון שם</button>
                 <button onClick={() => handleUpdateDiscount(product.id)}>עדכון הנחה</button>
                 <button onClick={() => handleUpdateIsDairy(product.id)}>עדכון חלבי</button>
