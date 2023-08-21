@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import RestAPI from '../server/models/restapi';
 
 const ProductListAdmin = () => {
@@ -16,6 +15,7 @@ const ProductListAdmin = () => {
   const handleDelete = async (productId) => {
     try {
       await RestAPI.deleteProduct(productId);
+      console.log('after delete product from db');
       const updatedProducts = products.filter((product) => product.id !== productId);
       setProducts(updatedProducts);
     } catch (error) {
@@ -32,24 +32,23 @@ const ProductListAdmin = () => {
     }
   };
 
-  
-    const handleUpdateName = async (productId, newName) => {
-      try {
-        await RestAPI.updateProductName(productId, newName);
+  const handleUpdateName = async (productId, newName) => {
+    try {
+      await RestAPI.updateProductName(productId, newName);
 
-      } catch (error) {
-        console.error('Error updating product name:', error);
-      }
-    };
-  
-    const handleUpdateDiscount = async (productId, newDiscount) => {
-      try {
-        await RestAPI.updateProductDiscount(productId, newDiscount);
+    } catch (error) {
+      console.error('Error updating product name:', error);
+    }
+  };
 
-      } catch (error) {
-        console.error('Error updating discount:', error);
-      }
-    };
+  const handleUpdateDiscount = async (productId, newDiscount) => {
+    try {
+      await RestAPI.updateProductDiscount(productId, newDiscount);
+
+    } catch (error) {
+      console.error('Error updating discount:', error);
+    }
+  };
 
   const handleUpdateIsDairy = async (productId, newIsDairy) => {
     try {
@@ -59,8 +58,6 @@ const ProductListAdmin = () => {
       console.error('Error updating dairy status:', error);
     }
   };
-
-
 
 
   return (
@@ -90,11 +87,11 @@ const ProductListAdmin = () => {
               <td>{product.sensitivity}</td>
               <td>{product.comments}</td>
               <td>
-                <button onClick={() => handleDelete(product.id)}>Delete</button>
-                <button onClick={() => handleUpdatePrice(product.id)}>Update Price</button>
-                <button onClick={() => handleUpdateName(product.id)}>Update Name</button>
-                <button onClick={() => handleUpdateDiscount(product.id)}>Update Discount</button>
-                <button onClick={() => handleUpdateIsDairy(product.id)}>Update Dairy</button>
+                <button onClick={() => handleDelete(product.id)}>מחיקה</button>
+                <button onClick={() => handleUpdatePrice(product.id)}>עדכון מחיר</button>
+                <button onClick={() => handleUpdateName(product.id)}>עדכון שם</button>
+                <button onClick={() => handleUpdateDiscount(product.id)}>עדכון הנחה</button>
+                <button onClick={() => handleUpdateIsDairy(product.id)}>עדכון חלבי</button>
               </td>
             </tr>
           ))}
