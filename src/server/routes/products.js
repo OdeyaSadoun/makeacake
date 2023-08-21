@@ -172,7 +172,7 @@ router.post("/add_product_user", (req, res) => {
 
 /*PUT update price of product*/
 router.put("/update_price/:productid", (req, res) => {
-  const id = req.params.id;
+  const id = req.params.productid;
   const { price } = req.body;
   connection.query(
     "UPDATE products SET price = ? WHERE id = ?",
@@ -191,7 +191,7 @@ router.put("/update_price/:productid", (req, res) => {
 
 /*PUT update discount_percentage of product*/
 router.put("/update_discount/:productid", (req, res) => {
-  const id = req.params.id;
+  const id = req.params.productid;
   const { discount_percentage } = req.body;
   connection.query(
     "UPDATE products SET discount_percentage = ? WHERE id = ?",
@@ -214,7 +214,7 @@ router.put("/update_quantity/:productid", (req, res) => {
   const { userid, quantity } = req.body;
   connection.query(
     "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND id = ?",
-    [quantity ,userid, productid],
+    [quantity, userid, productid],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -267,7 +267,7 @@ router.put("/update_kosher/:productid", (req, res) => {
 
 /*PUT update "is dairy" of product*/
 router.put("/update_is_dairy/:productid", (req, res) => {
-  const id = req.params.id;
+  const id = req.params.productid;
   const { is_dairy } = req.body;
   connection.query(
     "SELECT * FROM products WHERE id = ?",

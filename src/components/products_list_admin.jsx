@@ -67,25 +67,26 @@ const ProductListAdmin = () => {
     }
   };
 
-  const handleUpdateIsDairy = async (productId, newIsDairy) => {
+  const updateIsDairy = (product) => {
+    const dairy = !product.is_dairy;
+    handleUpdateIsDairy(product.id, dairy);
+
+  };
+
+  const handleUpdateIsDairy = async (productId, dairy) => {
     try {
-      await RestAPI.updateProductIsDairy(productId, newIsDairy);
+      await RestAPI.updateProductIsDairy(productId, dairy);
+      const updatedIsDairyProduct = products.map((product) => {
+        if (product.id === productId) {
+          return { ...product, dairy };
+        }
+        return product;
+      });
+      setProducts(updatedIsDairyProduct)
 
     } catch (error) {
       console.error('Error updating dairy status:', error);
     }
-  };
-
-  const updateIsDairy = async (productId) => {
-    const updatedIsDairyProduct = products.map((product) => {
-      if (product.id === productId) {
-        const dairy = !product.is_dairy;
-        RestAPI.updateProductIsDairy(productId, dairy);
-        return { ...product, dairy };
-      }
-      return product;
-    });
-    setProducts(updatedIsDairyProduct);
   };
 
 
