@@ -46,7 +46,7 @@ router.get("/:userid", (req, res) => {
 router.get("/user/:userid", (req, res) => {
   const userid = req.params.userid;
   connection.query(
-    "SELECT * FROM product_user WHERE user_id= ?",
+    "SELECT * FROM shopping_cart WHERE user_id= ?",
     [userid],
     (err, results) => {
       if (err) {
@@ -68,9 +68,9 @@ router.get("/user/:userid", (req, res) => {
 /*GET all like user's products by user id*/
 router.get("/user/like/:userid", (req, res) => {
   const userid = req.params.userid;
-  const like = true;
+  const like = 1;
   connection.query(
-    "SELECT * FROM product_user WHERE user_id= ? AND is_like= ? ",
+    "SELECT * FROM like_product_user WHERE user_id= ? AND is_like= ? ",
     [userid, like],
     (err, results) => {
       if (err) {
@@ -153,13 +153,13 @@ router.post("/add_product", (req, res) => {
 
 /*POST add productUser*/
 router.post("/add_product_user", (req, res) => {
-  const { user_id, product_id, quantity, is_like } = req.body;
+  const { user_id, product_id, quantity } = req.body;
 
-  console.log(user_id, product_id, quantity, is_like, "serveraddproductuser");
+  console.log(user_id, product_id, quantity, "serveraddproductuser");
 
   connection.query(
-    "INSERT INTO product_user ( user_id, product_id, quantity, is_like) VALUES (?, ?, ?, ?)",
-    [user_id, product_id, quantity, is_like],
+    "INSERT INTO shopping_cart ( user_id, product_id, quantity) VALUES (?, ?, ?)",
+    [user_id, product_id, quantity],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
@@ -213,7 +213,7 @@ router.put("/update_quantity/:productid", (req, res) => {
   const productid = req.params.productid;
   const { userid, quantity } = req.body;
   connection.query(
-    "UPDATE product_user SET quantity = ? WHERE user_id = ? AND id = ?",
+    "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND id = ?",
     [quantity ,userid, productid],
     (err, results) => {
       if (err) {
@@ -289,7 +289,7 @@ router.put("/update_is_like/:productid", (req, res) => {
   const productid = req.params.productid;
   const { userid, is_like } = req.body;
   connection.query(
-    "UPDATE product_user SET is_like = ? WHERE user_id = ? AND product_id = ?",
+    "UPDATE like_product_user SET is_like = ? WHERE user_id = ? AND product_id = ?",
     [is_like, userid, productid],
     (err, results) => {
       if (err) {
@@ -357,7 +357,7 @@ router.delete("/delete_user_product/:productid", (req, res) => {
   const id = req.params.productid;
   const { userid } = req.body;
   connection.query(
-    "DELETE FROM product_user WHERE user_id = ? AND product_id = ?",
+    "DELETE FROM shoppind_cart WHERE user_id = ? AND product_id = ?",
     [userid, id],
     (err, results) => {
       if (err) {

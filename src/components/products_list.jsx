@@ -4,20 +4,25 @@ import restApi from '../server/models/restapi';
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
-  const [userProducts, setUserProducts] = useState([]);
+  const [cartProducts, setCartProducts] = useState([]);
+  const [likeProducts, setLikeProducts] = useState([]);
   const [quantityToAdd, setQuantityToAdd] = useState(1);
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
     const fetchData = async () => {
-      console.log(userProducts, 'start-userProducts');
+      console.log(cartProducts, 'start-cartProducts');
       console.log(products, 'start-products');
+      console.log(likeProducts, 'start-likeProducts');
       const allProducts = await restApi.getAllProducts();
       setProducts(allProducts);
-      const allUserProducts = await restApi.getAllUserProducts(user.id);
-      setUserProducts((prev)=>[prev,allUserProducts ]);
-      console.log(userProducts, 'userProducts');
+      const allCartProducts = await restApi.getAllUserProducts(user.id);
+      setCartProducts((prev)=>[prev,allCartProducts ]);
+      const allLikeProducts = await restApi.getAllLikeUserProducts(user.id);//
+      setLikeProducts((prev)=>[prev,allLikeProducts ]);
+      console.log(cartProducts, 'cartProducts');
       console.log(products, 'products');
+      console.log(likeProducts, 'likeProducts');
     };
     fetchData();
   }, []);
@@ -29,8 +34,8 @@ const ProductsList = () => {
   };
   
   const handleLike = async (product) => {
-      console.log(userProducts, 'userProducts in like');
-      const updatedItems = userProducts.map((pr) => {
+      console.log(likeProducts, 'likeProducts in like');
+      const updatedItems = likeProducts.map((pr) => {
       console.log(pr.product_id, 'pr.product_id');
       console.log(product.id, 'product.id');
       if (pr.id === product.id) {
@@ -42,14 +47,15 @@ const ProductsList = () => {
       return pr;
     });
       console.log(updatedItems, 'updatedItems in like');
-      setUserProducts( updatedItems);
-      console.log(userProducts, 'userProducts in end like');
+      setLikeProducts( updatedItems);
+      console.log(likeProducts, 'likeProducts in end like');
   };
+
 
   const handleAddProduct = async (product) => {
       try {
-        console.log(userProducts, 'userProductsTry')
-        const updatePr = userProducts.map((pr) => {
+        console.log(cartProducts, 'cartProductsTry')
+        const updatePr = cartProducts.map((pr) => {
           if (pr.id === product.id) {
             console.log(pr.id, 'pr.id', product.id, 'product.id' );
             console.log(pr.quantity, 'pr.quantity',quantityToAdd, 'quantityToAdd' );
@@ -57,23 +63,23 @@ const ProductsList = () => {
             console.log(q, 'q');
             if (q) {
               restApi.updateProductQuantity(user.id, product.id, q);
-              console.log(userProducts, 'userProductsAfterUpdate');
+              console.log(cartProducts, 'cartProductsAfterUpdate');
             } 
           }
           else {           
-            console.log(userProducts, 'userProducts')
+            console.log(cartProducts, 'cartProducts')
             const productToAdd = { ...product, quantity: quantityToAdd };
             console.log(productToAdd, 'productToAdd');
-            console.log(user.id, product.id, quantityToAdd, 'ser.id, product.id, quantityToAdd');
+            console.log(user.id, product.id, quantityToAdd, 'user.id, product.id, quantityToAdd');
             restApi.addProductUser(user.id, product.id, quantityToAdd, false);
             setQuantityToAdd(1);
-            console.log(userProducts, 'userProductsAfter');
+            console.log(cartProducts, 'cartProductsAfter');
           }
         });
         console.log(updatePr, 'updatePr' );
         refreshPr();
         setQuantityToAdd(1);
-        console.log(userProducts,'ufter-setUserProducts(pr)');
+        console.log(cartProducts,'ufter-setUserProducts(pr)');
       } catch (error) {
         console.log("Error adding pr", error);
       }   
@@ -85,8 +91,8 @@ const ProductsList = () => {
 
   const refreshPr = async () => {
     const pr = await restApi.getAllUserProducts(user.id);
-    setUserProducts(pr);
-    console.log(userProducts,'setUserProducts(pr)');
+    setCartProducts(pr);
+    console.log(cartProducts,'setCartProducts(pr)');
   };
 
   return (
