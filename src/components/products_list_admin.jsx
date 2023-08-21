@@ -81,7 +81,7 @@ const ProductListAdmin = () => {
 
   return (
     <div>
-      <h2>Products List</h2>
+      <h2>המוצרים שלנו</h2>
       <table>
         <thead>
           <tr>
