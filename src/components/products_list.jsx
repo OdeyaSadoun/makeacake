@@ -72,7 +72,7 @@ const ProductsList = () => {
           console.log(cartProducts, 'cartProductsAfter');
         }
       });
-      console.log(updatePr, 'updatePr' );
+      // console.log(updatePr, 'updatePr' );
       refreshPr();
       console.log(cartProducts,'ufter-setUserProducts(pr)');
     } catch (error) {
