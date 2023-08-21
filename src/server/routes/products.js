@@ -170,6 +170,26 @@ router.post("/add_product_user", (req, res) => {
   );
 });
 
+/*POST add like productUser*/
+router.post("/add_like_product_user", (req, res) => {
+  const { user_id, product_id, is_like } = req.body;
+
+  console.log(user_id, product_id, is_like, "serveradd like productuser");
+
+  connection.query(
+    "INSERT INTO like_product_user ( user_id, product_id, is_like) VALUES (?, ?, ?)",
+    [user_id, product_id, is_like],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to create product_user" });
+        return;
+      }
+    }
+  );
+});
+
+
 /*PUT update price of product*/
 router.put("/update_price/:productid", (req, res) => {
   const id = req.params.productid;

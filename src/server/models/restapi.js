@@ -495,6 +495,21 @@ export class RestAPI {
   }
 
 
+  static async addLikeProductUser(user_id, product_id, is_like) {
+    console.log(user_id, product_id, is_like, 'user_id, product_id, is_like')
+    const url = `${PRODUCTS_BASE_URL}/add_like_product_user`;
+    const body={user_id, product_id, is_like}
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
+
   static async updateProductPrice(productid, price) {
     const url = `${PRODUCTS_BASE_URL}/update_price/${productid}`;
     const body = { price };
