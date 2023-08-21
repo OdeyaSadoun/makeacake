@@ -29,27 +29,7 @@ const ProductListAdmin = () => {
       handleUpdatePrice(product.id, newPrice);
     }
   };
-
-<<<<<<< HEAD
   
-    const handleUpdateName = async (productId, newName) => {
-      try {
-        await RestAPI.updateProductName(productId, newName);
-
-      } catch (error) {
-        console.error('Error updating product name:', error);
-      }
-    };
-  
-    const handleUpdateDiscount = async (productId, newDiscount) => {
-      try {
-        await RestAPI.updateProductDiscount(productId, newDiscount);
-
-      } catch (error) {
-        console.error('Error updating discount:', error);
-      }
-    };
-=======
   const handleUpdatePrice = async (productId, newPrice) => {
     try {
       await RestAPI.updateProductPrice(productId, newPrice);
@@ -86,7 +66,6 @@ const ProductListAdmin = () => {
       console.log("Error updating name:", error);
     }
   };
->>>>>>> 5d313ed663e301d8c6a1848c03c5af4e36c03e99
 
   const handleUpdateIsDairy = async (productId, newIsDairy) => {
     try {
@@ -127,18 +106,10 @@ const ProductListAdmin = () => {
               <td>{product.sensitivity}</td>
               <td>{product.comments}</td>
               <td>
-<<<<<<< HEAD
-                <button onClick={() => handleDelete(product.id)}>Delete</button>
-                <button onClick={() => handleUpdatePrice(product.id)}>Update Price</button>
-                <button onClick={() => handleUpdateName(product.id)}>Update Name</button>
-                <button onClick={() => handleUpdateDiscount(product.id)}>Update Discount</button>
-                <button onClick={() => handleUpdateIsDairy(product.id)}>Update Dairy</button>
-=======
                 <button onClick={() => handleDelete(product.id)}>מחיקה</button>
                 <button onClick={() => updatePrice(product)}>עדכון מחיר</button>
-                <button onClick={() => updateDiscount(product)}>עדכון הנחה</button>
+                <button onClick={() => updateDiscount(product)}>עדכון אחוז הנחה</button>
                 <button onClick={() => handleUpdateIsDairy(product)}>עדכון חלבי</button>
->>>>>>> 5d313ed663e301d8c6a1848c03c5af4e36c03e99
               </td>
             </tr>
           ))}
