@@ -29,7 +29,7 @@ const ProductListAdmin = () => {
       handleUpdatePrice(product.id, newPrice);
     }
   };
-  
+
   const handleUpdatePrice = async (productId, newPrice) => {
     try {
       await RestAPI.updateProductPrice(productId, newPrice);
@@ -76,7 +76,17 @@ const ProductListAdmin = () => {
     }
   };
 
-
+  const updateIsDairy = async (productId) => {
+    const updatedIsDairyProduct = products.map((product) => {
+      if (product.id === productId) {
+        const dairy = !product.is_dairy;
+        RestAPI.updateProductIsDairy(productId, dairy);
+        return { ...product, dairy };
+      }
+      return product;
+    });
+    setProducts(updatedIsDairyProduct);
+  };
 
 
   return (
@@ -109,7 +119,11 @@ const ProductListAdmin = () => {
                 <button onClick={() => handleDelete(product.id)}>מחיקה</button>
                 <button onClick={() => updatePrice(product)}>עדכון מחיר</button>
                 <button onClick={() => updateDiscount(product)}>עדכון אחוז הנחה</button>
-                <button onClick={() => handleUpdateIsDairy(product)}>עדכון חלבי</button>
+                <input
+                  type="checkbox"
+                  checked={product.is_dairy}
+                  onChange={() => updateIsDairy(product)}
+                />
               </td>
             </tr>
           ))}
