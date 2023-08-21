@@ -1,9 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import RestAPI from '../server/models/restapi';
+import '../styles/productList.css';
+
 
 const ProductListAdmin = () => {
   const [products, setProducts] = useState([]);
+  const user = JSON.parse(localStorage.getItem('user'));
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     async function fetchProducts() {
@@ -89,11 +94,17 @@ const ProductListAdmin = () => {
     }
   };
   
+  const handleBackToAdminHome = () => {
+    navigate(`/admin/${user.username}`);
+  };
 
 
   return (
-    <div>
+    <div className='container'>
       <h2>המוצרים שלנו</h2>
+      <button className="logoutButton" onClick={handleBackToAdminHome}>
+          חזרה לעמוד הראשי
+        </button>
       <table>
         <thead>
           <tr>

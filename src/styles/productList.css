@@ -29,4 +29,43 @@
     border-radius: 5px;
     cursor: pointer;
   }
-  
+  th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ccc;
+}
+
+th {
+  background-color: #f2f2f2;
+}
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  direction: rtl; /* Align text from right to left */
+}
+
+.header {
+  text-align: center;
+  padding: 10px;
+  margin: 20px;
+  background-color: #f2f2f2;
+  border-bottom: 1px solid #ccc;
+}
+
+.user-table {
+  width: 100%;
+  max-width: 100%; /* Set a maximum width if needed */
+  margin: 50px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid #ccc;
+}
