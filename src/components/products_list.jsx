@@ -17,9 +17,9 @@ const ProductsList = () => {
       const allProducts = await restApi.getAllProducts();
       setProducts(allProducts);
       const allCartProducts = await restApi.getAllUserProducts(user.id);
-      setCartProducts((prev)=>[prev,allCartProducts ]);
+      setCartProducts(allCartProducts);
       const allLikeProducts = await restApi.getAllLikeUserProducts(user.id);//
-      setLikeProducts((prev)=>[prev,allLikeProducts ]);
+      setLikeProducts(allLikeProducts);
       console.log(cartProducts, 'cartProducts');
       console.log(products, 'products');
       console.log(likeProducts, 'likeProducts');
@@ -132,7 +132,7 @@ const ProductsList = () => {
       <h2>Product List</h2>
       {products.map((product) => (
         <div key={product.id}>
-          <h3>{product.name}</h3>
+          <p>{product.product_name}</p>
           <p>Price: ${product.price}</p>
           <p>Quantity: {product.quantity}</p>
           <label>

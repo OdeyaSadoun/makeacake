@@ -1,62 +1,64 @@
-// ShoppingCart.js
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import restApi from '../server/models/restapi';
 
-
-const ShoppingCart = async ( ) => {
+const ShoppingCart = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const [cart, setCart] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
-      const pr = await restApi.getAllUserProducts(user.id);
-      setCart(pr);
+      try {
+        const pr = await restApi.getAllUserProducts(user.id);
+        setCart((prev)=>[...prev, pr]);
+      } catch (error) {
+        console.log("Error fetching data", error);
+      }
     };
     fetchData();
   }, []);
 
-
-  const getProductQuantityValue = async (productId, e) => {
+  const getProductQuantityValue = async (productId, newQ) => {
     try {
-      const newQ = parseInt(e.target.value);
-      await restApi.updateProductUserQuantity(user.id, productId, newQ );
-      const updatePr = cart.map((pr) => {
-        if (pr.id === productId) {
-          return { ...pr, quantity: newQ };
-        }
-        return pr;
+      await restApi.updateProductUserQuantity(user.id, productId, newQ);
+      setCart(prevCart => {
+        const updatePr = prevCart.map((pr) =>
+          pr.id === productId ? { ...pr, quantity: newQ } : pr
+        );
+        return updatePr;
       });
-      setCart(updatePr);
     } catch (error) {
       console.log("Error updating", error);
     }
   };
-
+  
   const handleDelete = async (itemId) => {
-    await restApi.deleteUserProduct(itemId, user.id);
-    const updatePr = cart.filter((item) => item.id !== itemId);
-    setCart(updatePr);
+    try {
+      await restApi.deleteUserProduct(itemId, user.id);
+      setCart(prevCart => prevCart.filter((item) => item.id !== itemId));
+    } catch (error) {
+      console.log("Error deleting", error);
+    }
   };
 
   return (
-
     <div>
       <h2>Shopping Cart</h2>
       {cart.map((item) => (
-        <div key={item.id}>      
+        <div key={item.id}>
           <p>Quantity: {item.quantity}</p>
-          <button onClick={()=> handleDelete(item.id)}>Remove</button> 
+          <button onClick={() => handleDelete(item.id)}>Remove</button>
           <input
-          type="number"
-          id="quantity"
-          value={item.quantity} // Set the input value to the quantity state
-          onChange={(e)=> getProductQuantityValue(e)} // Handle changes to the input value
-        />
+            type="number"
+            id="quantity"
+            value={item.quantity}
+            onChange={(e) =>
+              getProductQuantityValue(item.id, parseInt(e.target.value))
+            }
+          />
         </div>
       ))}
     </div>
-
   );
 };
+
 export default ShoppingCart;
