@@ -15,7 +15,10 @@ const Login = () => {
       const user = await RestAPI.getUserByUsernameAndPassword(username, password);
       console.log('after RestAPI', user);
 
-      if (user) {
+      if (user.status === 404) {
+        alert( "שם משתמש או סיסמא שגויים");
+      }
+      else {
         localStorage.setItem('user', JSON.stringify(user));
         if (user.is_admin) {
           navigate(`/admin/${user.username}`);
@@ -25,7 +28,7 @@ const Login = () => {
       }
     }
     catch (error) {
-      alert(error.message || "Invalid username or password");
+      alert(error.message || "שם משתמש או סיסמא שגויים");
     }
   };
 

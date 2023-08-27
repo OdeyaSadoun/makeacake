@@ -89,11 +89,9 @@ router.post("/register", (req, res) => {
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res
-          .status(500)
-          .json({
-            error: "Failed to create user when checking if user exists",
-          });
+        res.status(500).json({
+          error: "Failed to create user when checking if user exists",
+        });
         return;
       }
 
@@ -149,12 +147,9 @@ router.post("/register", (req, res) => {
                   (err, userInsertResults) => {
                     if (err) {
                       console.error("Error executing MySQL query:", err);
-                      res
-                        .status(500)
-                        .json({
-                          error:
-                            "Failed to create user after having the address",
-                        });
+                      res.status(500).json({
+                        error: "Failed to create user after having the address",
+                      });
                       return;
                     }
 
@@ -165,11 +160,9 @@ router.post("/register", (req, res) => {
                       (err) => {
                         if (err) {
                           console.error("Error executing MySQL query:", err);
-                          res
-                            .status(500)
-                            .json({
-                              error: "Failed to create password for user",
-                            });
+                          res.status(500).json({
+                            error: "Failed to create password for user",
+                          });
                           return;
                         }
 
@@ -202,11 +195,9 @@ router.post("/register", (req, res) => {
               (err, userInsertResults) => {
                 if (err) {
                   console.error("Error executing MySQL query:", err);
-                  res
-                    .status(500)
-                    .json({
-                      error: "Failed to create user after having the address",
-                    });
+                  res.status(500).json({
+                    error: "Failed to create user after having the address",
+                  });
                   return;
                 }
 
@@ -311,7 +302,7 @@ router.post("/login", (req, res) => {
       }
 
       if (results.length === 0) {
-        res.status(404).json({ error: "User not found" });
+        res.status(404).json({ error: "User not found", status: 404 });
         return;
       }
 
@@ -518,7 +509,7 @@ router.put("/update_is_admin/:userid", (req, res) => {
 
       if (results.length === 0) {
         // User not found
-        console.log('user id not found: ', userid);
+        console.log("user id not found: ", userid);
         res.status(404).json({ error: "User not found" });
         return;
       }
