@@ -130,9 +130,9 @@ router.post("/add_product", (req, res) => {
         "INSERT INTO products (product_name, is_dairy, price, discount_percentage, kosher_type, comments, sensitivity) VALUES (?, ?, ?, ?, ?, ?, ?)",
         [
           product_name,
-          is_dairy,
+          is_dairy === "" ? 0 : 1,
           price,
-          discount_percentage === ""? 0 : discount_percentage,
+          discount_percentage === "" ? 0 : discount_percentage,
           kosher_type,
           comments,
           sensitivity,
