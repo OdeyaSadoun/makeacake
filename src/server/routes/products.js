@@ -101,8 +101,9 @@ router.post("/add_product", (req, res) => {
     sensitivity,
   } = req.body;
 
+  let discount_percentage_number;
   if(discount_percentage === ""){
-    discount_percentage = 0;
+    discount_percentage_number = 0;
   }
 
   // Check if the product with the same name already exists
@@ -131,7 +132,7 @@ router.post("/add_product", (req, res) => {
           product_name,
           is_dairy,
           price,
-          discount_percentage,
+          discount_percentage === ""? 0 : discount_percentage,
           kosher_type,
           comments,
           sensitivity,
