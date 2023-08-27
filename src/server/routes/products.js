@@ -101,6 +101,10 @@ router.post("/add_product", (req, res) => {
     sensitivity,
   } = req.body;
 
+  if(discount_percentage === ""){
+    discount_percentage = 0;
+  }
+
   // Check if the product with the same name already exists
   connection.query(
     "SELECT * FROM products WHERE product_name = ?",
@@ -108,7 +112,9 @@ router.post("/add_product", (req, res) => {
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to create product" });
+        res.status(500).
+        json({
+           error: "Failed to create product" });
         return;
       }
 
@@ -117,7 +123,7 @@ router.post("/add_product", (req, res) => {
         res.status(400).json({ error: "Product already exists" });
         return;
       }
-
+      console.log("product is new one");
       // If the product doesn't exist, proceed with insertion
       connection.query(
         "INSERT INTO products (product_name, is_dairy, price, discount_percentage, kosher_type, comments, sensitivity) VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -133,13 +139,18 @@ router.post("/add_product", (req, res) => {
         (err, results) => {
           if (err) {
             console.error("Error executing MySQL query:", err);
-            res.status(500).json({ error: "Failed to create product" });
+            res
+            .status(500)
+            .json({ error:
+               "Failed to create product" 
+              });
             return;
           }
 
           // Product insertion successful
           res.status(201).json({
             message: "Product created successfully",
+            status: 201,
             product_name,
             is_dairy,
             price,

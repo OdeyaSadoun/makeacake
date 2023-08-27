@@ -17,8 +17,9 @@ const AddProduct = () => {
 
     const navigate = useNavigate();
 
-    const handleAddProduct = async (e) => {
-        e.preventDefault(); // Prevent default form submission
+    const handleAddProduct = async () => {
+       // e.preventDefault(); // Prevent default form submission
+       console.log('click on the button');
 
         const newProduct = await RestAPI.addProduct(
             product_name,
