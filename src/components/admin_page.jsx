@@ -28,16 +28,18 @@ const AdminPage = () => {
     <div>
       <div className="header">
         <p>שלום {user.first_last_name}</p>
-        <button className="logoutButton" onClick={handleLogout}>
-          יציאה
-        </button>
-      </div>
+
       <button className="addProductButton" onClick={handleViewProducts}>
         רשימת המוצרים
       </button>
       <button className="addProductButton" onClick={handleAddProduct}>
         הוסף מוצר
       </button>
+      <button className="logoutButton" onClick={handleLogout}>
+          יציאה
+        </button>
+
+      </div>
       <UserManagement />
     </div>
   );

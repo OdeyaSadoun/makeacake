@@ -93,18 +93,36 @@ const ProductListAdmin = () => {
       console.log("Error updating is dairy:", error);
     }
   };
-  
+
   const handleBackToAdminHome = () => {
     navigate(`/admin/${user.username}`);
   };
 
+  const handleAddProduct = () => {
+    navigate(`/admin/${user.username}/add-product`);
+  };
+
+  const handleLogout = () => {
+    // Remove the user from local storage
+    localStorage.removeItem('user');
+    navigate('/Login', { replace: true });
+  };
 
   return (
     <div className='container'>
       <h2>המוצרים שלנו</h2>
+      <div>
       <button className="logoutButton" onClick={handleBackToAdminHome}>
-          חזרה לעמוד הראשי
-        </button>
+        חזרה לעמוד הראשי
+      </button>
+
+      <button className="addProductButton" onClick={handleAddProduct}>
+        הוסף מוצר
+      </button>
+      <button className="logoutButton" onClick={handleLogout}>
+        יציאה
+      </button>
+      </div>
       <table>
         <thead>
           <tr>
