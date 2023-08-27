@@ -11,7 +11,7 @@ const AddProduct = () => {
     const [is_dairy, setIsDairy] = useState('');
     const [price, setPrice] = useState('');
     const [discount_percentage, setDiscountPercentage] = useState('');
-    const [kosher_type, setKosherType] = useState('');
+    const [kosher_type, setKosherType] = useState('bet_yosef');
     const [comments, setComments] = useState('');
     const [sensitivity, setSensitivity] = useState('');
 
@@ -33,7 +33,7 @@ const AddProduct = () => {
         if (newProduct && newProduct.status === 201) {
             // Registration successful, navigate to the login page
             alert('הוספת מוצר בהצלחה!');
-            navigate(`/products/admin/${user.username}`);
+            navigate(`/admin/${user.username}/products-list`);
 
             return;
         } else {
