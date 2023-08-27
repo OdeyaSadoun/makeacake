@@ -100,12 +100,7 @@ router.post("/add_product", (req, res) => {
     comments,
     sensitivity,
   } = req.body;
-
-  let discount_percentage_number;
-  if(discount_percentage === ""){
-    discount_percentage_number = 0;
-  }
-
+  
   // Check if the product with the same name already exists
   connection.query(
     "SELECT * FROM products WHERE product_name = ?",
