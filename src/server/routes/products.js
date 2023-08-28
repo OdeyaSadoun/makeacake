@@ -177,9 +177,10 @@ router.post("/add_product", (req, res) => {
 });
 
 router.post("/upload_image", (req, res) => {
-  const fileName = req.body.fileName;
-  const fileData = req.body.fileData; // This is already the base64-encoded image data
-
+  const {fileName,fileData} = req.body;
+  // const fileData = req.body.fileData; // This is already the base64-encoded image data
+  console.log(fileName,fileData);
+  console.log("body", req.body);
   // Save the base64-encoded data to the file system
   const filePath = `/path/to/uploads/${fileName}`;
   console.log(filePath);
@@ -190,7 +191,7 @@ router.post("/upload_image", (req, res) => {
     }
 
     // The file was uploaded successfully
-    res.status(200).json({ fileName });
+    res.status(200).json({ fileName: fileName, status: 200 });
   });
 });
 

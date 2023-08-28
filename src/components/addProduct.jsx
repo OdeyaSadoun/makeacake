@@ -26,12 +26,14 @@ const AddProduct = () => {
                 const imageData = event.target.result; // This is the base64-encoded image data
                 
                 // Create a FormData object
-                const formData = new FormData();
-                formData.append("fileName", file.name);
-                formData.append("fileData", imageData);
-    
+                // const formData = new FormData();
+                // formData.append("fileName", file.name);
+                // formData.append("fileData", imageData);
+                console.log("fileName", file.name);
+                console.log("fileData", imageData);
+                // console.log("formData", formData);
                 // Upload the image data to the server
-                RestAPI.uploadImage(formData)
+                RestAPI.uploadImage(file.name, imageData)
                     .then(response => {
                         console.log(response);
                     })

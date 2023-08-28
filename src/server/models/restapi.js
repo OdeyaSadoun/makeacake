@@ -7,12 +7,17 @@ const EVENTS_BASE_URL = `${BASE_URL}/events-managment`;
 
 export class RestAPI {
   static async fetchData(url, options) {
+
+    console.log(options)
     //general function to fetch
     var response;
-    if (options) {
-      response = await fetch(url, options);
-    } else {
+    console.log(options=== undefined);
+    if (options === undefined) {
+      console.log("!option");
       response = await fetch(url);
+    } else {
+      console.log("option ok");
+      response = await fetch(url, options);
     }
     const jsonData = await response.json(); // Parse response body as JSON
     return jsonData; // Return the parsed JSON data
@@ -527,24 +532,34 @@ export class RestAPI {
   }
 
   static async uploadImage(fileName, fileData) {
+    console.log("uploadImage", fileName, fileData);
+  
     const url = `${PRODUCTS_BASE_URL}/upload_image`;
     const formData = new FormData();
     formData.append("fileName", fileName);
-    formData.append("fileData", fileData);
+    formData.append("fileData", fileData); // No need to pass fileData here
   
-    const response = await fetch(url, {
+    console.log("before response");
+    const body = {fileName, fileData }
+    console.log(body);
+
+    const options = {
       method: "POST",
       body: formData,
-    });
+    };
+
+    const response = await RestAPI.fetchData(url, options);
   
+    console.log(response, "response");
     if (response.status === 200) {
       const data = await response.json();
+      console.log(data, "data");
       return data.fileName;
     } else {
       throw new Error(`Failed to upload image: ${response.status}`);
     }
   }
-
+  
 
   static async addProductUser(user_id, product_id, quantity) {
     console.log(user_id, product_id, quantity, "user_id, product_id, quantity");

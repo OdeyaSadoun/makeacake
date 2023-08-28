@@ -2,7 +2,7 @@ const fs = require("fs");
 const connection = require("../models/connection.js");
 
 // Upload an image to the database
-function uploadImageToMediaProduct(imagePath, productid) {
+export function uploadImageToMediaProduct(imagePath, productid) {
   // Read the image as binary data
   fs.readFile(imagePath, (error, imageData) => {
     if (error) {
