@@ -181,8 +181,16 @@ router.post("/upload_image", (req, res) => {
   // const fileData = req.body.fileData; // This is already the base64-encoded image data
   console.log(fileName,fileData);
   console.log("body", req.body);
+
+  // Check if the directory exists
+  const uploadsDir = `/path/to/uploads`;
+  if (!fs.existsSync(uploadsDir)) {
+    // The directory does not exist, so create it
+    fs.mkdirSync(uploadsDir);
+  }
+
   // Save the base64-encoded data to the file system
-  const filePath = `/path/to/uploads/${fileName}`;
+  const filePath = `${uploadsDir}/${fileName}`;
   console.log(filePath);
   fs.writeFile(filePath, fileData, 'base64', (err) => {
     if (err) {
@@ -194,7 +202,6 @@ router.post("/upload_image", (req, res) => {
     res.status(200).json({ fileName: fileName, status: 200 });
   });
 });
-
 /*POST add like productUser*/
 router.post("/add_like_product_user", (req, res) => {
   const { user_id, product_id, is_like } = req.body;
