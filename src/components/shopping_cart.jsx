@@ -7,11 +7,12 @@ const ShoppingCart = () => {
   const [productNames, setProductNames] = useState({});
   const [productprices, setProductPrices] = useState({});
 
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         const pr = await restApi.getAllUserProducts(user.id);
-        setCart((prev)=>[...prev, pr]);
+        setCart([pr]);
       } catch (error) {
         console.log("Error fetching data", error);
       }
@@ -26,6 +27,7 @@ const ShoppingCart = () => {
     const fetchProductNames = async () => {
       const names = {};
       const prices = {};
+      console.log(cart, 'cartconsole');
       for (const item of cart) {
         const name = await handleNameProduct(item.product_id);
         names[item.id] = name;
@@ -41,7 +43,7 @@ const ShoppingCart = () => {
 
   const getProductQuantityValue = async (productId, newQ) => {
     try {
-      await restApi.updateProductUserQuantity(user.id, productId, newQ);
+      await restApi.updateProductQuantity(user.id, productId, newQ);
       setCart(prevCart => {
         const updatePr = prevCart.map((pr) =>
           pr.id === productId ? { ...pr, quantity: newQ } : pr
@@ -55,12 +57,13 @@ const ShoppingCart = () => {
   
   const handleDelete = async (itemId) => {
     try {
-      await restApi.deleteUserProduct(itemId, user.id);
+      await restApi.deleteUserProduct(itemId);
       setCart(prevCart => prevCart.filter((item) => item.id !== itemId));
+      // const updatedProducts = products.filter((product) => product.id !== productId);
+      // setProducts(updatedProducts);
     } catch (error) {
       console.log("Error deleting", error);
-    }
-    
+    }   
   };
 
   const handleNameProduct = async (productId) => {
@@ -77,6 +80,7 @@ const ShoppingCart = () => {
 
   const handlePriceProduct = async (productId) => {
     try {
+      console.log(productprices, 'productpriceconsole');
       const product =await restApi.getProductById(productId);
       console.log(product,'handleNameProduct product' );
       console.log(product.product_name,'product.product_name' );
@@ -87,13 +91,18 @@ const ShoppingCart = () => {
     }  
   };
 
-  // const getTotalPrice = () => {
-  //   const totalPrice = 0;
-  //   for (const product of cartProducts) {
-  //     totalPrice += product.price * product.quantity;
-  //   }
-  //   return totalPrice;
-  // };
+  const getTotalPrice = () => {
+    let totalPrice = 0;
+    console.log(cart, 'cart-97');
+    for (const product of cart) {
+      console.log(product, 'product199');
+      console.log(product.quantity, 'product.quantity');
+      console.log(productprices[product.id], 'productprices[product.id]');
+      totalPrice += Number(productprices[product.id] * product.quantity);
+    }
+    return totalPrice;
+  };
+
 
 
   
@@ -114,6 +123,9 @@ const ShoppingCart = () => {
           />
         </div>
       ))}
+      <div>
+        <h3>Total Price: ${getTotalPrice().toFixed(2)}</h3>
+      </div>
     </div>
   );
 };

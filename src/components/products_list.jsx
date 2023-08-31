@@ -17,9 +17,9 @@ const ProductsList = () => {
       const allProducts = await restApi.getAllProducts();
       setProducts(allProducts);
       const allCartProducts = await restApi.getAllUserProducts(user.id);
-      setCartProducts(allCartProducts);
+      setCartProducts([allCartProducts]);
       const allLikeProducts = await restApi.getAllLikeUserProducts(user.id);//
-      setLikeProducts(allLikeProducts);
+      setLikeProducts([allLikeProducts]);
       console.log(cartProducts, 'cartProducts');
       console.log(products, 'products');
       console.log(likeProducts, 'likeProducts');
@@ -123,7 +123,7 @@ const ProductsList = () => {
 
   const refreshPr = async () => {
     const pr = await restApi.getAllUserProducts(user.id);
-    setCartProducts(pr);
+    setCartProducts([pr]);
     console.log(cartProducts,'setCartProducts(pr)');
   };
 

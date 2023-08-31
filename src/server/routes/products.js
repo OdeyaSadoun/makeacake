@@ -20,6 +20,9 @@ router.get("/", (req, res) => {
 });
 
 /*GET product by productid*/
+
+
+
 router.get("/:productid", (req, res) => {
   const productid = req.params.productid;
   connection.query(
@@ -54,13 +57,7 @@ router.get("/user/:userid", (req, res) => {
         res.status(500).json({ error: "Failed to retrieve product" });
         return;
       }
-
-      if (results.length === 0) {
-        res.status(404).json({ error: "product not found" });
-        return;
-      }
-
-      res.json(results[0]);
+      res.json(results);
     }
   );
 });
@@ -69,6 +66,7 @@ router.get("/user/:userid", (req, res) => {
 router.get("/user/like/:userid", (req, res) => {
   const userid = req.params.userid;
   const like = 1;
+
   connection.query(
     "SELECT * FROM like_product_user WHERE user_id= ? AND is_like= ? ",
     [userid, like],
@@ -83,7 +81,7 @@ router.get("/user/like/:userid", (req, res) => {
         res.status(404).json({ error: "product not found" });
         return;
       }
-
+      console.log(results, 'results');
       res.json(results[0]);
     }
   );
@@ -401,18 +399,38 @@ router.delete("/delete_products/:productid", (req, res) => {
 /*DELETE productUser*/
 router.delete("/delete_user_product/:productid", (req, res) => {
   const id = req.params.productid;
-  const { userid } = req.body;
   connection.query(
-    "DELETE FROM shoppind_cart WHERE user_id = ? AND product_id = ?",
-    [userid, id],
+    "DELETE FROM shoppind_cart WHERE id = ?",
+    [id],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to update is_dairy" });
+        res.status(500).json({ error: "Failed" });
         return;
       }
+      res.json({ message: "Deleted successfully" });
     }
   );
 });
+
+/*DELETE productLike*/
+router.delete("/delete_like_product/:productid", (req, res) => {
+  const id = req.params.productid;
+  connection.query(
+    "DELETE FROM like_product_user WHERE id = ?",
+    [id],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed" });
+        return;
+      }
+      res.json({ message: "Deleted successfully" });
+    }
+  );
+});
+
+
+
 
 module.exports = router;

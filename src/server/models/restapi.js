@@ -611,14 +611,25 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async deleteUserProduct(productid, userid) {
+  static async deleteUserProduct(productid) {
     const url = `${PRODUCTS_BASE_URL}/delete_user_product/${productid}`;
-    const body = { userid};
     const options = {
       method: "DELETE",
-      body: JSON.stringify(body),
     };
     return await RestAPI.fetchData(url, options);
   }
+
+
+  static async deleteLikeProduct(productid) {
+    const url = `${PRODUCTS_BASE_URL}/delete_like_product/${productid}`;
+    const options = {
+      method: "DELETE",
+    };
+    return await RestAPI.fetchData(url, options);
+  }
+
+
+
+
 }
 export default RestAPI;

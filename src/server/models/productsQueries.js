@@ -2,6 +2,24 @@ const connection = require("./connection.js");
 
 
 
+module.exports.getAllLikeUserProducts = (userid) => {
+  return new Promise((resolve, reject) => {
+    const like = 1;
+    connection.query(
+      "SELECT * FROM like_product_user WHERE user_id= ? AND is_like= ? ",
+       [userid, like],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      }
+    );
+  });
+};
+
+
 module.exports.getAllUserProducts = (userid) => {
   return new Promise((resolve, reject) => {
     connection.query(
@@ -87,7 +105,7 @@ module.exports.getProductById = (productid) => {
     });
   };
 
-  module.exports. updateProductQuantity= ( userid, productid, quantity) => {
+  module.exports.updateProductQuantity= ( userid, productid, quantity) => {
     return new Promise((resolve, reject) => {
       connection.query(
         "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND id = ?",
@@ -102,4 +120,22 @@ module.exports.getProductById = (productid) => {
       );
     });
   };
+  
+
+
+  // module.exports.deleteUserProduct ( productid, userid) => {
+  //   return new Promise((resolve, reject) => {
+  //     connection.query(
+  //       "DELETE FROM shoppind_cart WHERE user_id = ? AND id = ?",
+  //       [productid, userid],
+  //       (error, results) => {
+  //         if (error) {
+  //           reject(error);
+  //         } else {
+  //           resolve(results);
+  //         }
+  //       }
+  //     );
+  //   });
+  // };
   
