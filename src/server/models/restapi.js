@@ -4,7 +4,7 @@ const ORDERS_BASE_URL = `${BASE_URL}/orders`;
 const PRODUCTS_BASE_URL = `${BASE_URL}/products`;
 const ADDRESS_BASE_URL = `${BASE_URL}/addresses`;
 const EVENTS_BASE_URL = `${BASE_URL}/events-managment`;
-
+////
 export class RestAPI {
   static async fetchData(url, options) {
 
@@ -690,6 +690,10 @@ export class RestAPI {
 
   static async deleteUserProduct(productid) {
     const url = `${PRODUCTS_BASE_URL}/delete_user_product/${productid}`;
+<<<<<<< HEAD
+=======
+    // const body = { userid };
+>>>>>>> 04c25f5dc0459b91a963cffad2f296e0e6140954
     const options = {
       method: "DELETE",
     };
