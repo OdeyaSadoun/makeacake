@@ -34,25 +34,23 @@ module.exports.getAllProducts = () => {
 };
 
 
-
-
-
-
-module.exports.getAddressByCityAndStreetAndNumberHouse = (city, street, house_number) => {
-    return new Promise((resolve, reject) => {
-      connection.query(
-        "SELECT * FROM addresses WHERE city = ? AND street = ? AND house_number = ?",
-        [city, street, house_number],
-        (error, results) => {
-          if (error) {
-            reject(error);
-          } else {
-            resolve(results);
-          }
+module.exports.getProductById = (productid) => {
+  return new Promise((resolve, reject) => {
+    connection.query(
+      "SELECT * FROM products WHERE id = ?",[productid],
+      (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
         }
-      );
-    });
-  };
+      }
+    );
+  });
+};
+
+
+
 
 
 

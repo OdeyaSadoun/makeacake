@@ -19,11 +19,11 @@ router.get("/", (req, res) => {
   });
 });
 
-/*GET product by ID*/
-router.get("/:userid", (req, res) => {
-  const { productid } = req.body;
+/*GET product by productid*/
+router.get("/:productid", (req, res) => {
+  const productid = req.params.productid;
   connection.query(
-    "SELECT * FROM users WHERE id = ?",
+    "SELECT * FROM products WHERE id = ?",
     [productid],
     (err, results) => {
       if (err) {
