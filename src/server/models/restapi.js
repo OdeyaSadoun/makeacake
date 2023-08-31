@@ -690,10 +690,6 @@ export class RestAPI {
 
   static async deleteUserProduct(productid) {
     const url = `${PRODUCTS_BASE_URL}/delete_user_product/${productid}`;
-<<<<<<< HEAD
-=======
-    const body = { userid };
->>>>>>> 91f0fd30eb62a7bb7bb72cd77d33d97a23f97b93
     const options = {
       method: "DELETE",
     };
