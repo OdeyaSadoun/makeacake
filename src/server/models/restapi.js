@@ -5,16 +5,19 @@ const PRODUCTS_BASE_URL = `${BASE_URL}/products`;
 const ADDRESS_BASE_URL = `${BASE_URL}/addresses`;
 const EVENTS_BASE_URL = `${BASE_URL}/events-managment`;
 
-
 export class RestAPI {
-
   static async fetchData(url, options) {
+
+    console.log(options)
     //general function to fetch
     var response;
-    if (options) {
-      response = await fetch(url, options);
-    } else {
+    console.log(options=== undefined);
+    if (options === undefined) {
+      console.log("!option");
       response = await fetch(url);
+    } else {
+      console.log("option ok");
+      response = await fetch(url, options);
     }
     const jsonData = await response.json(); // Parse response body as JSON
     return jsonData; // Return the parsed JSON data
@@ -46,9 +49,33 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async createUser(first_last_name, username, system_password, email, phone, city, street, house_number, date_of_birth, id_card, is_admin) { 
+  static async createUser(
+    first_last_name,
+    username,
+    system_password,
+    email,
+    phone,
+    city,
+    street,
+    house_number,
+    date_of_birth,
+    id_card,
+    is_admin
+  ) {
     const url = `${USERS_BASE_URL}/register`;
-    const body = {first_last_name, username, email, phone, city, street, house_number, date_of_birth, id_card, system_password, is_admin };
+    const body = {
+      first_last_name,
+      username,
+      email,
+      phone,
+      city,
+      street,
+      house_number,
+      date_of_birth,
+      id_card,
+      system_password,
+      is_admin,
+    };
     const options = {
       method: "POST",
       headers: {
@@ -113,7 +140,7 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async updateIsAdminByUserId(userid,is_admin) {
+  static async updateIsAdminByUserId(userid, is_admin) {
     const url = `${USERS_BASE_URL}/update_is_admin/${userid}`;
     const body = { userid, is_admin };
     const options = {
@@ -125,7 +152,6 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
-
 
   /* Orders */
   /**********************************************************/
@@ -144,9 +170,23 @@ export class RestAPI {
     return await RestAPI.fetchData(url);
   }
 
-  static async addOrder(id, user_id, payment_type, is_paid, is_shipping, order_address_id) {
+  static async addOrder(
+    id,
+    user_id,
+    payment_type,
+    is_paid,
+    is_shipping,
+    order_address_id
+  ) {
     const url = `${ORDERS_BASE_URL}/add_order`;
-    const body = { id, user_id, payment_type, is_paid, is_shipping, order_address_id };
+    const body = {
+      id,
+      user_id,
+      payment_type,
+      is_paid,
+      is_shipping,
+      order_address_id,
+    };
     const options = {
       method: "POST",
       headers: {
@@ -196,7 +236,6 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-
   /* Event Management */
   /**********************************************************/
   static async getAllEvents() {
@@ -209,9 +248,25 @@ export class RestAPI {
     return await RestAPI.fetchData(url);
   }
 
-  static async addEvent(event_date_time, is_dairy, event_type, event_address_id, discount_percentage, comments, is_arrive) {
+  static async addEvent(
+    event_date_time,
+    is_dairy,
+    event_type,
+    event_address_id,
+    discount_percentage,
+    comments,
+    is_arrive
+  ) {
     const url = `${EVENTS_BASE_URL}/add_event`;
-    const body = { event_date_time, is_dairy, event_type, event_address_id, discount_percentage, comments, is_arrive };
+    const body = {
+      event_date_time,
+      is_dairy,
+      event_type,
+      event_address_id,
+      discount_percentage,
+      comments,
+      is_arrive,
+    };
     const options = {
       method: "POST",
       headers: {
@@ -333,7 +388,6 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-
   /* Address Management */
   /**********************************************************/
   static async getAllAddresses() {
@@ -444,11 +498,10 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  
   /* Products */
   /**********************************************************/
   static async getAllProducts() {
-    console.log('getAllProducts');
+    console.log("getAllProducts");
     const url = `${PRODUCTS_BASE_URL}`;
     return await RestAPI.fetchData(url);
   }
@@ -468,23 +521,50 @@ export class RestAPI {
     return await RestAPI.fetchData(url);
   }
 
-  static async addProduct(product_name, is_dairy, price, discount_percentage,kosher_type, comments, sensitivity) {
+  static async addProduct(formData) {
     const url = `${PRODUCTS_BASE_URL}/add_product`;
-    const body = { product_name, is_dairy, price, discount_percentage,kosher_type, comments, sensitivity};
     const options = {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(body),
+      body: formData,
     };
+
     return await RestAPI.fetchData(url, options);
   }
+
+  static async uploadImage(fileName, fileData) {
+    console.log("uploadImage", fileName, fileData);
+  
+    const url = `${PRODUCTS_BASE_URL}/upload_image`;
+    const formData = new FormData();
+    formData.append("fileName", fileName);
+    formData.append("fileData", fileData); // No need to pass fileData here
+  
+    console.log("before response");
+    const body = {fileName, fileData }
+    console.log(body);
+
+    const options = {
+      method: "POST",
+      body: formData,
+    };
+
+    const response = await RestAPI.fetchData(url, options);
+  
+    console.log(response, "response");
+    if (response.status === 200) {
+      const data = await response.json();
+      console.log(data, "data");
+      return data.fileName;
+    } else {
+      throw new Error(`Failed to upload image: ${response.status}`);
+    }
+  }
+  
 
   static async addProductUser(user_id, product_id, quantity) {
-    console.log(user_id, product_id, quantity, 'user_id, product_id, quantity')
+    console.log(user_id, product_id, quantity, "user_id, product_id, quantity");
     const url = `${PRODUCTS_BASE_URL}/add_product_user`;
-    const body={user_id, product_id, quantity}
+    const body = { user_id, product_id, quantity };
     const options = {
       method: "POST",
       headers: {
@@ -494,12 +574,11 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
-
 
   static async addLikeProductUser(user_id, product_id, is_like) {
-    console.log(user_id, product_id, is_like, 'user_id, product_id, is_like')
+    console.log(user_id, product_id, is_like, "user_id, product_id, is_like");
     const url = `${PRODUCTS_BASE_URL}/add_like_product_user`;
-    const body={user_id, product_id, is_like}
+    const body = { user_id, product_id, is_like };
     const options = {
       method: "POST",
       headers: {
@@ -509,7 +588,6 @@ export class RestAPI {
     };
     return await RestAPI.fetchData(url, options);
   }
-
 
   static async updateProductPrice(productid, price) {
     const url = `${PRODUCTS_BASE_URL}/update_price/${productid}`;
@@ -537,7 +615,7 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async updateProductQuantity( userid, productid, quantity) {
+  static async updateProductQuantity(userid, productid, quantity) {
     const url = `${PRODUCTS_BASE_URL}/update_quantity/${productid}`;
     const body = { quantity, userid };
     const options = {
@@ -589,8 +667,7 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-
-  static async updateProductUserIsLike(userid,productid, is_like) {
+  static async updateProductUserIsLike(userid, productid, is_like) {
     const url = `${PRODUCTS_BASE_URL}/update_is_like/${productid}`;
     const body = { userid, is_like };
     const options = {
@@ -613,6 +690,10 @@ export class RestAPI {
 
   static async deleteUserProduct(productid) {
     const url = `${PRODUCTS_BASE_URL}/delete_user_product/${productid}`;
+<<<<<<< HEAD
+=======
+    const body = { userid };
+>>>>>>> 91f0fd30eb62a7bb7bb72cd77d33d97a23f97b93
     const options = {
       method: "DELETE",
     };

@@ -13,13 +13,52 @@ const AddProduct = () => {
     const [discount_percentage, setDiscountPercentage] = useState('');
     const [kosher_type, setKosherType] = useState('bet_yosef');
     const [comments, setComments] = useState('');
+    const [image, setImage] = useState('');
     const [sensitivity, setSensitivity] = useState('');
 
+    const handleUploadImage = (e) => {
+        const file = e.target.files[0];
+        
+        if (file) {
+            const reader = new FileReader();
+          
+            reader.onload = (event) => {
+                const imageData = event.target.result; // This is the base64-encoded image data
+                
+                // Create a FormData object
+                // const formData = new FormData();
+                // formData.append("fileName", file.name);
+                // formData.append("fileData", imageData);
+                console.log("fileName", file.name);
+                console.log("fileData", imageData);
+                // console.log("formData", formData);
+                // Upload the image data to the server
+                RestAPI.uploadImage(file.name, imageData)
+                    .then(response => {
+                        console.log(response);
+                    })
+                    .catch(error => {
+                        console.error("Error uploading image:", error);
+                    });
+    
+                // Set the image variable to the file name
+                setImage(file.name);
+    
+                console.log(file.type);
+            };
+          
+            reader.readAsDataURL(file);
+        } else {
+            console.log("File has not been selected.");
+        }
+    };
+    
+    
     const navigate = useNavigate();
 
     const handleAddProduct = async (e) => {
         e.preventDefault(); // Prevent default form submission
-       console.log('click on the button');
+        console.log('click on the button');
 
         const newProduct = await RestAPI.addProduct(
             product_name,
@@ -43,14 +82,14 @@ const AddProduct = () => {
     };
     const handleBackToAdminHome = () => {
         navigate(`/admin/${user.username}`);
-      }; 
+    };
 
     return (
         <div>
             <h2>הוספת מוצר חדש</h2>
             <button className="logoutButton" onClick={handleBackToAdminHome}>
-          חזרה לעמוד הראשי
-        </button>
+                חזרה לעמוד הראשי
+            </button>
             <form>
                 <div>
                     <label>שם:</label>
@@ -70,7 +109,7 @@ const AddProduct = () => {
                         checked={is_dairy}
                         required
                         onChange={(e) => setIsDairy(e.target.checked)}
-                        />
+                    />
                 </div>
                 <div>
                     <label>מחיר:</label>
@@ -120,6 +159,14 @@ const AddProduct = () => {
                         name="sensitivity"
                         value={sensitivity}
                         onChange={(e) => setSensitivity(e.target.value)}
+                    />
+                </div>
+                <div>
+                    <label>תמונה:</label>
+                    <input
+                        type="file"
+                        name="image"
+                        onChange={handleUploadImage}
                     />
                 </div>
                 <button type="submit" onClick={handleAddProduct}>הוספה</button>

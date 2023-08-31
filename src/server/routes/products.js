@@ -1,6 +1,7 @@
 const connection = require("../models/connection.js");
 const bodyParser = require("body-parser");
 const express = require("express");
+const fs = require("fs");
 const router = express.Router();
 /*Parse request bodies as JSON*/
 router.use(bodyParser.json());
@@ -97,8 +98,9 @@ router.post("/add_product", (req, res) => {
     kosher_type,
     comments,
     sensitivity,
+    image,
   } = req.body;
-  
+
   // Check if the product with the same name already exists
   connection.query(
     "SELECT * FROM products WHERE product_name = ?",
@@ -106,9 +108,9 @@ router.post("/add_product", (req, res) => {
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res.status(500).
-        json({
-           error: "Failed to create product" });
+        res.status(500).json({
+          error: "Failed to create product",
+        });
         return;
       }
 
@@ -133,51 +135,71 @@ router.post("/add_product", (req, res) => {
         (err, results) => {
           if (err) {
             console.error("Error executing MySQL query:", err);
-            res
-            .status(500)
-            .json({ error:
-               "Failed to create product" 
-              });
+            res.status(500).json({ error: "Failed to create product" });
             return;
-          }
+          } else {
+            //Get the product ID
+            const productId = results.insertId;
 
-          // Product insertion successful
-          res.status(201).json({
-            message: "Product created successfully",
-            status: 201,
-            product_name,
-            is_dairy,
-            price,
-            discount_percentage,
-            kosher_type,
-            comments,
-            sensitivity,
-          });
+            connection.query(
+              "INSERT INTO media_product (media, product_id) VALUES (?, ?)",
+              [image, productId],
+              (err, results) => {
+                if (err) {
+                  console.error("Error executing MySQL query:", err);
+                  res.status(500).json({ error: "Failed to add image" });
+                  return;
+                }
+
+                // Product insertion successful
+                res.status(201).json({
+                  message: "Product created successfully",
+                  status: 201,
+                  product_name,
+                  productId,
+                  is_dairy,
+                  price,
+                  discount_percentage,
+                  kosher_type,
+                  comments,
+                  sensitivity,
+                  image,
+                });
+              }
+            );
+          }
         }
       );
     }
   );
 });
 
-/*POST add productUser*/
-router.post("/add_product_user", (req, res) => {
-  const { user_id, product_id, quantity } = req.body;
+router.post("/upload_image", (req, res) => {
+  const {fileName,fileData} = req.body;
+  // const fileData = req.body.fileData; // This is already the base64-encoded image data
+  console.log(fileName,fileData);
+  console.log("body", req.body);
 
-  console.log(user_id, product_id, quantity, "serveraddproductuser");
+  // Check if the directory exists
+  const uploadsDir = `/path/to/uploads`;
+  if (!fs.existsSync(uploadsDir)) {
+    // The directory does not exist, so create it
+    fs.mkdirSync(uploadsDir);
+  }
 
-  connection.query(
-    "INSERT INTO shopping_cart ( user_id, product_id, quantity) VALUES (?, ?, ?)",
-    [user_id, product_id, quantity],
-    (err, results) => {
-      if (err) {
-        console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to create product_user" });
-        return;
-      }
+  // Save the base64-encoded data to the file system
+  const filePath = `${uploadsDir}/${fileName}`;
+  console.log(filePath);
+  fs.writeFile(filePath, fileData, 'base64', (err) => {
+    if (err) {
+      res.status(500).json({ error: err });
+      return;
     }
-  );
-});
 
+    // The file was uploaded successfully
+    res.status(200).json({ fileName: fileName, status: 200 });
+  });
+});
 /*POST add like productUser*/
 router.post("/add_like_product_user", (req, res) => {
   const { user_id, product_id, is_like } = req.body;
@@ -196,7 +218,6 @@ router.post("/add_like_product_user", (req, res) => {
     }
   );
 });
-
 
 /*PUT update price of product*/
 router.put("/update_price/:productid", (req, res) => {
