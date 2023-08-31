@@ -1,7 +1,7 @@
 const connection = require("../models/connection.js");
 const bodyParser = require("body-parser");
 const express = require("express");
-const fs = require("fs");
+const mysql = require("mysql2/promise");
 const router = express.Router();
 /*Parse request bodies as JSON*/
 router.use(bodyParser.json());
@@ -20,14 +20,11 @@ router.get("/", (req, res) => {
   });
 });
 
-/*GET product by productid*/
-
-
-
-router.get("/:productid", (req, res) => {
-  const productid = req.params.productid;
+/*GET product by ID*/
+router.get("/:userid", (req, res) => {
+  const { productid } = req.body;
   connection.query(
-    "SELECT * FROM products WHERE id = ?",
+    "SELECT * FROM users WHERE id = ?",
     [productid],
     (err, results) => {
       if (err) {
@@ -58,7 +55,13 @@ router.get("/user/:userid", (req, res) => {
         res.status(500).json({ error: "Failed to retrieve product" });
         return;
       }
-      res.json(results);
+
+      if (results.length === 0) {
+        res.status(404).json({ error: "product not found" });
+        return;
+      }
+
+      res.json(results[0]);
     }
   );
 });
@@ -67,7 +70,6 @@ router.get("/user/:userid", (req, res) => {
 router.get("/user/like/:userid", (req, res) => {
   const userid = req.params.userid;
   const like = 1;
-
   connection.query(
     "SELECT * FROM like_product_user WHERE user_id= ? AND is_like= ? ",
     [userid, like],
@@ -82,7 +84,7 @@ router.get("/user/like/:userid", (req, res) => {
         res.status(404).json({ error: "product not found" });
         return;
       }
-      console.log(results, 'results');
+
       res.json(results[0]);
     }
   );
@@ -174,32 +176,30 @@ router.post("/add_product", (req, res) => {
   );
 });
 
-router.post("/upload_image", (req, res) => {
-  const {fileName,fileData} = req.body;
-  // const fileData = req.body.fileData; // This is already the base64-encoded image data
-  console.log(fileName,fileData);
-  console.log("body", req.body);
 
-  // Check if the directory exists
-  const uploadsDir = `/path/to/uploads`;
-  if (!fs.existsSync(uploadsDir)) {
-    // The directory does not exist, so create it
-    fs.mkdirSync(uploadsDir);
+const pool = mysql.createPool(connection);
+
+router.post("/upload_image", async (req, res) => {
+  try {
+    const { fileName, fileData, productId } = req.body;
+
+    // Convert base64 file data to Buffer
+    const bufferData = Buffer.from(fileData, "base64");
+
+    // Insert the image into the database
+    const connection = await pool.getConnection();
+    const query = "INSERT INTO media_product (media, product_id) VALUES (?, ?)";
+    const result = await connection.query(query, [bufferData, productId]); // Replace 123 with your actual product ID
+    connection.release();
+
+    res.status(201).json({ message: "Image uploaded successfully" });
+  } catch (error) {
+    console.error("Error uploading image:", error);
+    res.status(500).json({ error: "Error uploading image" });
   }
-
-  // Save the base64-encoded data to the file system
-  const filePath = `${uploadsDir}/${fileName}`;
-  console.log(filePath);
-  fs.writeFile(filePath, fileData, 'base64', (err) => {
-    if (err) {
-      res.status(500).json({ error: err });
-      return;
-    }
-
-    // The file was uploaded successfully
-    res.status(200).json({ fileName: fileName, status: 200 });
-  });
 });
+
+
 /*POST add like productUser*/
 router.post("/add_like_product_user", (req, res) => {
   const { user_id, product_id, is_like } = req.body;
@@ -420,38 +420,18 @@ router.delete("/delete_products/:productid", (req, res) => {
 /*DELETE productUser*/
 router.delete("/delete_user_product/:productid", (req, res) => {
   const id = req.params.productid;
+  const { userid } = req.body;
   connection.query(
-    "DELETE FROM shoppind_cart WHERE id = ?",
-    [id],
+    "DELETE FROM shoppind_cart WHERE user_id = ? AND product_id = ?",
+    [userid, id],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed" });
+        res.status(500).json({ error: "Failed to update is_dairy" });
         return;
       }
-      res.json({ message: "Deleted successfully" });
     }
   );
 });
-
-/*DELETE productLike*/
-router.delete("/delete_like_product/:productid", (req, res) => {
-  const id = req.params.productid;
-  connection.query(
-    "DELETE FROM like_product_user WHERE id = ?",
-    [id],
-    (err, results) => {
-      if (err) {
-        console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed" });
-        return;
-      }
-      res.json({ message: "Deleted successfully" });
-    }
-  );
-});
-
-
-
 
 module.exports = router;

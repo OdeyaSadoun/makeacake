@@ -18,41 +18,38 @@ const AddProduct = () => {
 
     const handleUploadImage = (e) => {
         const file = e.target.files[0];
-        
+      
         if (file) {
-            const reader = new FileReader();
-          
-            reader.onload = (event) => {
-                const imageData = event.target.result; // This is the base64-encoded image data
-                
-                // Create a FormData object
-                // const formData = new FormData();
-                // formData.append("fileName", file.name);
-                // formData.append("fileData", imageData);
-                console.log("fileName", file.name);
-                console.log("fileData", imageData);
-                // console.log("formData", formData);
-                // Upload the image data to the server
-                RestAPI.uploadImage(file.name, imageData)
-                    .then(response => {
-                        console.log(response);
-                    })
-                    .catch(error => {
-                        console.error("Error uploading image:", error);
-                    });
-    
-                // Set the image variable to the file name
-                setImage(file.name);
-    
-                console.log(file.type);
-            };
-          
-            reader.readAsDataURL(file);
+          const reader = new FileReader();
+      
+          reader.onload = async (event) => {
+            const imageData = event.target.result; // This is the base64-encoded image data
+      
+            try {
+              const fileName = file.name;
+              const productId = 123; // Replace with the actual product ID
+              console.log("fileName", fileName);
+              console.log("fileData", imageData);
+      
+              // Upload the image data to the server using the updated uploadImage function
+              const response = await RestAPI.uploadImage(fileName, imageData, productId);
+              console.log(response);
+      
+              // Set the image variable to the file name
+              setImage(fileName);
+      
+              console.log(file.type);
+            } catch (error) {
+              console.error("Error uploading image:", error);
+            }
+          };
+      
+          reader.readAsDataURL(file);
         } else {
-            console.log("File has not been selected.");
+          console.log("File has not been selected.");
         }
-    };
-    
+      };
+      
     
     const navigate = useNavigate();
 

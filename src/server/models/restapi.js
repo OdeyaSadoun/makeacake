@@ -531,34 +531,36 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-  static async uploadImage(fileName, fileData) {
+  static async uploadImage(fileName, fileData, productId) {
     console.log("uploadImage", fileName, fileData);
   
     const url = `${PRODUCTS_BASE_URL}/upload_image`;
     const formData = new FormData();
     formData.append("fileName", fileName);
-    formData.append("fileData", fileData); // No need to pass fileData here
-  
+    formData.append("fileData", fileData);
+    formData.append("productId", productId); // Add productId to the form data
+    
     console.log("before response");
-    const body = {fileName, fileData }
+    const body = formData; // Use formData as the body
     console.log(body);
-
+  
     const options = {
       method: "POST",
-      body: formData,
+      body: formData, // Use formData as the body
     };
-
+  
     const response = await RestAPI.fetchData(url, options);
   
     console.log(response, "response");
-    if (response.status === 200) {
+    if (response.status === 201) { // Change status check to 201 for successful upload
       const data = await response.json();
       console.log(data, "data");
-      return data.fileName;
+      return data.message; // Use data.message since that's the response structure
     } else {
       throw new Error(`Failed to upload image: ${response.status}`);
     }
   }
+  
   
 
   static async addProductUser(user_id, product_id, quantity) {
@@ -690,10 +692,7 @@ export class RestAPI {
 
   static async deleteUserProduct(productid) {
     const url = `${PRODUCTS_BASE_URL}/delete_user_product/${productid}`;
-<<<<<<< HEAD
-=======
     // const body = { userid };
->>>>>>> 04c25f5dc0459b91a963cffad2f296e0e6140954
     const options = {
       method: "DELETE",
     };
