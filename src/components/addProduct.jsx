@@ -13,42 +13,41 @@ const AddProduct = () => {
     const [discount_percentage, setDiscountPercentage] = useState('');
     const [kosher_type, setKosherType] = useState('bet_yosef');
     const [comments, setComments] = useState('');
-    const [image, setImage] = useState('');
     const [sensitivity, setSensitivity] = useState('');
 
-    const handleUploadImage = (e) => {
-        const file = e.target.files[0];
+    // const handleUploadImage = (e) => {
+    //     const file = e.target.files[0];
       
-        if (file) {
-          const reader = new FileReader();
+    //     if (file) {
+    //       const reader = new FileReader();
       
-          reader.onload = async (event) => {
-            const imageData = event.target.result; // This is the base64-encoded image data
+    //       reader.onload = async (event) => {
+    //         const imageData = event.target.result; // This is the base64-encoded image data
       
-            try {
-              const fileName = file.name;
-              const productId = 123; // Replace with the actual product ID
-              console.log("fileName", fileName);
-              console.log("fileData", imageData);
+    //         try {
+    //           const fileName = file.name;
+    //         //   const productId = 123; // Replace with the actual product ID
+    //           console.log("fileName", fileName);
+    //           console.log("fileData", imageData);
       
-              // Upload the image data to the server using the updated uploadImage function
-              const response = await RestAPI.uploadImage(fileName, imageData, productId);
-              console.log(response);
+    //           // Upload the image data to the server using the updated uploadImage function
+    //           const response = await RestAPI.uploadImage(fileName, imageData, productId);
+    //           console.log(response);
       
-              // Set the image variable to the file name
-              setImage(fileName);
+    //           // Set the image variable to the file name
+    //           setImage(fileName);
       
-              console.log(file.type);
-            } catch (error) {
-              console.error("Error uploading image:", error);
-            }
-          };
+    //           console.log(file.type);
+    //         } catch (error) {
+    //           console.error("Error uploading image:", error);
+    //         }
+    //       };
       
-          reader.readAsDataURL(file);
-        } else {
-          console.log("File has not been selected.");
-        }
-      };
+    //       reader.readAsDataURL(file);
+    //     } else {
+    //       console.log("File has not been selected.");
+    //     }
+    //   };
       
     
     const navigate = useNavigate();
@@ -158,14 +157,14 @@ const AddProduct = () => {
                         onChange={(e) => setSensitivity(e.target.value)}
                     />
                 </div>
-                <div>
+                {/* <div>
                     <label>תמונה:</label>
                     <input
                         type="file"
                         name="image"
                         onChange={handleUploadImage}
                     />
-                </div>
+                </div> */}
                 <button type="submit" onClick={handleAddProduct}>הוספה</button>
             </form>
         </div>

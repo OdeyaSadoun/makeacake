@@ -100,7 +100,6 @@ router.post("/add_product", (req, res) => {
     kosher_type,
     comments,
     sensitivity,
-    image,
   } = req.body;
 
   // Check if the product with the same name already exists
@@ -143,39 +142,37 @@ router.post("/add_product", (req, res) => {
             //Get the product ID
             const productId = results.insertId;
 
-            connection.query(
-              "INSERT INTO media_product (media, product_id) VALUES (?, ?)",
-              [image, productId],
-              (err, results) => {
-                if (err) {
-                  console.error("Error executing MySQL query:", err);
-                  res.status(500).json({ error: "Failed to add image" });
-                  return;
-                }
+            // connection.query(
+            //   "INSERT INTO media_product (media, product_id) VALUES (?, ?)",
+            //   [image, productId],
+            //   (err, results) => {
+            //     if (err) {
+            //       console.error("Error executing MySQL query:", err);
+            //       res.status(500).json({ error: "Failed to add image" });
+            //       return;
+            //     }
 
-                // Product insertion successful
-                res.status(201).json({
-                  message: "Product created successfully",
-                  status: 201,
-                  product_name,
-                  productId,
-                  is_dairy,
-                  price,
-                  discount_percentage,
-                  kosher_type,
-                  comments,
-                  sensitivity,
-                  image,
-                });
-              }
-            );
+            // Product insertion successful
+            res.status(201).json({
+              message: "Product created successfully",
+              status: 201,
+              product_name,
+              productId,
+              is_dairy,
+              price,
+              discount_percentage,
+              kosher_type,
+              comments,
+              sensitivity,
+            });
           }
+          // );
         }
+        // }
       );
     }
   );
 });
-
 
 const pool = mysql.createPool(connection);
 
@@ -198,7 +195,6 @@ router.post("/upload_image", async (req, res) => {
     res.status(500).json({ error: "Error uploading image" });
   }
 });
-
 
 /*POST add like productUser*/
 router.post("/add_like_product_user", (req, res) => {
