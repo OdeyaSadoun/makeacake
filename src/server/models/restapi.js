@@ -8,15 +8,15 @@ const EVENTS_BASE_URL = `${BASE_URL}/events-managment`;
 export class RestAPI {
   static async fetchData(url, options) {
 
-    console.log(options)
+    // console.log(options)
     //general function to fetch
     var response;
-    console.log(options=== undefined);
+    // console.log(options=== undefined);
     if (options === undefined) {
-      console.log("!option");
+      // console.log("!option");
       response = await fetch(url);
     } else {
-      console.log("option ok");
+      // console.log("option ok");
       response = await fetch(url, options);
     }
     const jsonData = await response.json(); // Parse response body as JSON

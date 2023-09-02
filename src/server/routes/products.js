@@ -9,15 +9,18 @@ router.use(bodyParser.json());
 /*GET get all products*/
 router.get("/", (req, res) => {
   console.log("router.get");
-  connection.query("SELECT * FROM products", (err, results) => {
-    if (err) {
-      console.error("Error executing MySQL query:", err);
-      res.status(500).json({ error: "Failed to retrieve products" });
-      return;
+  connection.query(
+    "SELECT p.*, m.media FROM products p JOIN media_product m ON p.id = m.product_id",
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to retrieve products" });
+        return;
+      }
+      res.json(results);
+      console.log("results", results);
     }
-    res.json(results);
-    console.log("results", results);
-  });
+  );
 });
 
 /*GET product by ID*/
@@ -176,8 +179,9 @@ router.post("/add_product", (req, res) => {
 
 const pool = mysql.createPool(connection);
 
-router.post("/get_image", async (req, res) => {
+router.post("/get_image/:product_id", async (req, res) => {
   const product_id = req.params.productid;
+  console.lo4(product_id);
   connection.query(
     "SELECT media FROM media_product WHERE product_id = ?",
     [product_id],
@@ -189,12 +193,30 @@ router.post("/get_image", async (req, res) => {
       }
 
       if (results.length === 0) {
-        res.status(404).json({ error: "media not found" });
+        res.status(404).json({ error: "media not found", status: 404 });
         return;
       }
 
-      res.json(results[0]);
-    })
+      const buffer = results[0].media;
+
+      console.log(buffer, "buffer");
+
+      // Convert the blob to a buffer
+      const imageBuffer = buffer.toBuffer();
+
+      // Create a FileReader object
+      const reader = new FileReader();
+
+      // Read the image buffer
+      reader.readAsDataURL(imageBuffer);
+
+      // When the image is read, add it to the response
+      reader.onload = () => {
+        const imageData = reader.result;
+        res.json({ image: imageData });
+      };
+    }
+  );
 });
 
 /*POST add like productUser*/

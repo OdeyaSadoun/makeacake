@@ -23,7 +23,7 @@ function uploadImageToMediaProduct(imagePath, productid) {
 }
 
 // Example usage
-uploadImageToMediaProduct("../../media/logo.jpeg", 31); // Replace with your image path and product ID
+uploadImageToMediaProduct("../../media/logo.jpeg", 33); // Replace with your image path and product ID
 
 // // Retrieve an image from the database
 // function retrieveImage(imageId, outputPath) {

@@ -10,27 +10,13 @@ const ProductListAdmin = () => {
   const [products, setProducts] = useState([]);
   const [file, setFile] = useState(null);
 
-
   useEffect(() => {
-    // Fetch the products from the database
     async function fetchProducts() {
       const productsData = await RestAPI.getAllProducts();
       setProducts(productsData);
     }
     fetchProducts();
-
-    // Get the image for each product
-    products.forEach((product) => {
-      const productImages =  RestAPI.getProductImages(product.id);
-      product.image = productImages.find((image) => image.product_id === product.id).image;
-    });
   }, []);
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
-
   const handleDelete = async (productId) => {
     try {
       await RestAPI.deleteProduct(productId);
@@ -158,7 +144,7 @@ const ProductListAdmin = () => {
           {products.map(product => (
             <tr key={product.id}>
               <td>
-                <img src={product.image || '/images/default.png'} alt={product.product_name} />
+                {product.image}
               </td>
               <td>{product.product_name}</td>
               <td>{product.price}</td>
