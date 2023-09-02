@@ -6,6 +6,13 @@ import '../styles/productList.css';
 
 const ProductListAdmin = () => {
   const [products, setProducts] = useState([]);
+
+  const [file, setFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
 
@@ -102,6 +109,10 @@ const ProductListAdmin = () => {
     navigate(`/admin/${user.username}/add-product`);
   };
 
+  const openUploadImageDialog = () => {
+
+  }
+
   const handleLogout = () => {
     // Remove the user from local storage
     localStorage.removeItem('user');
@@ -112,16 +123,16 @@ const ProductListAdmin = () => {
     <div className='container'>
       <h2>המוצרים שלנו</h2>
       <div>
-      <button className="logoutButton" onClick={handleBackToAdminHome}>
-        חזרה לעמוד הראשי
-      </button>
+        <button className="logoutButton" onClick={handleBackToAdminHome}>
+          חזרה לעמוד הראשי
+        </button>
 
-      <button className="addProductButton" onClick={handleAddProduct}>
-        הוסף מוצר
-      </button>
-      <button className="logoutButton" onClick={handleLogout}>
-        יציאה
-      </button>
+        <button className="addProductButton" onClick={handleAddProduct}>
+          הוסף מוצר
+        </button>
+        <button className="logoutButton" onClick={handleLogout}>
+          יציאה
+        </button>
       </div>
       <table>
         <thead>
@@ -150,6 +161,11 @@ const ProductListAdmin = () => {
                 <button onClick={() => handleDelete(product.id)}>מחיקה</button>
                 <button onClick={() => updatePrice(product)}>עדכון מחיר</button>
                 <button onClick={() => updateDiscount(product)}>עדכון אחוז הנחה</button>
+                {/* <button onClick={() => openUploadImageDialog(product)}>הוספת תמונה</button> */}
+                <div>
+                  <input type="file" onChange={handleFileChange} accept="image/*" />
+                  <button onClick={() => RestAPI.uploadImage()}>הוספת תמונה</button>
+                </div>
               </td>
             </tr>
           ))}

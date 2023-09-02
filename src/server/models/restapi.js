@@ -534,6 +534,8 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
+
+  
   static async uploadImage(fileName, fileData, productId) {
     console.log("uploadImage", fileName, fileData);
   
