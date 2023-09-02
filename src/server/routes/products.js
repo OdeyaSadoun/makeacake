@@ -176,24 +176,25 @@ router.post("/add_product", (req, res) => {
 
 const pool = mysql.createPool(connection);
 
-router.post("/upload_image", async (req, res) => {
-  try {
-    const { fileName, fileData, productId } = req.body;
+router.post("/get_image", async (req, res) => {
+  const product_id = req.params.productid;
+  connection.query(
+    "SELECT media FROM media_product WHERE product_id = ?",
+    [product_id],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to add media" });
+        return;
+      }
 
-    // Convert base64 file data to Buffer
-    const bufferData = Buffer.from(fileData, "base64");
+      if (results.length === 0) {
+        res.status(404).json({ error: "media not found" });
+        return;
+      }
 
-    // Insert the image into the database
-    const connection = await pool.getConnection();
-    const query = "INSERT INTO media_product (media, product_id) VALUES (?, ?)";
-    const result = await connection.query(query, [bufferData, productId]); // Replace 123 with your actual product ID
-    connection.release();
-
-    res.status(201).json({ message: "Image uploaded successfully" });
-  } catch (error) {
-    console.error("Error uploading image:", error);
-    res.status(500).json({ error: "Error uploading image" });
-  }
+      res.json(results[0]);
+    })
 });
 
 /*POST add like productUser*/

@@ -2,7 +2,7 @@ const fs = require("fs");
 const connection = require("../models/connection.js");
 
 // Upload an image to the database
-export function uploadImageToMediaProduct(imagePath, productid) {
+function uploadImageToMediaProduct(imagePath, productid) {
   // Read the image as binary data
   fs.readFile(imagePath, (error, imageData) => {
     if (error) {
@@ -23,7 +23,7 @@ export function uploadImageToMediaProduct(imagePath, productid) {
 }
 
 // Example usage
-uploadImageToMediaProduct("../../media/products/song.mp3", 1); // Replace with your image path and product ID
+uploadImageToMediaProduct("../../media/logo.jpeg", 31); // Replace with your image path and product ID
 
 // // Retrieve an image from the database
 // function retrieveImage(imageId, outputPath) {

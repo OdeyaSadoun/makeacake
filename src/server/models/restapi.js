@@ -510,7 +510,12 @@ export class RestAPI {
     const url = `${PRODUCTS_BASE_URL}/${productid}`;
     return await RestAPI.fetchData(url);
   }
+  static async getProductImages(productid) {
+    const url = `${PRODUCTS_BASE_URL}/get_image/${productid}`;
+    return await RestAPI.fetchData(url);
+  }
 
+  
   static async getAllUserProducts(userid) {
     const url = `${PRODUCTS_BASE_URL}/user/${userid}`;
     return await RestAPI.fetchData(url);
@@ -534,39 +539,6 @@ export class RestAPI {
     return await RestAPI.fetchData(url, options);
   }
 
-
-  
-  static async uploadImage(fileName, fileData, productId) {
-    console.log("uploadImage", fileName, fileData);
-  
-    const url = `${PRODUCTS_BASE_URL}/upload_image`;
-    const formData = new FormData();
-    formData.append("fileName", fileName);
-    formData.append("fileData", fileData);
-    formData.append("productId", productId); // Add productId to the form data
-    
-    console.log("before response");
-    const body = formData; // Use formData as the body
-    console.log(body);
-  
-    const options = {
-      method: "POST",
-      body: formData, // Use formData as the body
-    };
-  
-    const response = await RestAPI.fetchData(url, options);
-  
-    console.log(response, "response");
-    if (response.status === 201) { // Change status check to 201 for successful upload
-      const data = await response.json();
-      console.log(data, "data");
-      return data.message; // Use data.message since that's the response structure
-    } else {
-      throw new Error(`Failed to upload image: ${response.status}`);
-    }
-  }
-  
-  
 
   static async addProductUser(user_id, product_id, quantity) {
     console.log(user_id, product_id, quantity, "user_id, product_id, quantity");

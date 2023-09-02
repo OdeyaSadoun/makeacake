@@ -5,25 +5,31 @@ import '../styles/productList.css';
 
 
 const ProductListAdmin = () => {
-  const [products, setProducts] = useState([]);
-
-  const [file, setFile] = useState(null);
-
-  const handleFileChange = (e) => {
-    setFile(e.target.files[0]);
-  };
-
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
+  const [products, setProducts] = useState([]);
+  const [file, setFile] = useState(null);
 
 
   useEffect(() => {
+    // Fetch the products from the database
     async function fetchProducts() {
       const productsData = await RestAPI.getAllProducts();
       setProducts(productsData);
     }
     fetchProducts();
+
+    // Get the image for each product
+    products.forEach((product) => {
+      const productImages =  RestAPI.getProductImages(product.id);
+      product.image = productImages.find((image) => image.product_id === product.id).image;
+    });
   }, []);
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
 
   const handleDelete = async (productId) => {
     try {
@@ -137,6 +143,7 @@ const ProductListAdmin = () => {
       <table>
         <thead>
           <tr>
+            <th>תמונה</th>
             <th>שם</th>
             <th>מחיר</th>
             <th>כשרות</th>
@@ -150,6 +157,9 @@ const ProductListAdmin = () => {
         <tbody>
           {products.map(product => (
             <tr key={product.id}>
+              <td>
+                <img src={product.image || '/images/default.png'} alt={product.product_name} />
+              </td>
               <td>{product.product_name}</td>
               <td>{product.price}</td>
               <td>{product.kosher_type}</td>
@@ -162,10 +172,10 @@ const ProductListAdmin = () => {
                 <button onClick={() => updatePrice(product)}>עדכון מחיר</button>
                 <button onClick={() => updateDiscount(product)}>עדכון אחוז הנחה</button>
                 {/* <button onClick={() => openUploadImageDialog(product)}>הוספת תמונה</button> */}
-                <div>
+                {/* <div>
                   <input type="file" onChange={handleFileChange} accept="image/*" />
                   <button onClick={() => RestAPI.uploadImage()}>הוספת תמונה</button>
-                </div>
+                </div> */}
               </td>
             </tr>
           ))}
