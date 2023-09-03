@@ -160,7 +160,7 @@ const ProductListAdmin = () => {
           {products.map(product => (
             <tr key={product.id}>
               <td>
-              <img src={product.image} alt={product.product_name} />
+              <img className='product-image' src={product.image} alt={product.product_name} />
               </td>
               <td>{product.product_name}</td>
               <td>{product.price}</td>
