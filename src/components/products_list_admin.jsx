@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RestAPI from '../server/models/restapi';
 import '../styles/productList.css';
+import { Buffer } from 'buffer';
+
 
 
 const ProductListAdmin = () => {
@@ -13,10 +15,24 @@ const ProductListAdmin = () => {
   useEffect(() => {
     async function fetchProducts() {
       const productsData = await RestAPI.getAllProducts();
+      productsData.forEach((product) => {
+        console.log(product.media, "before blob")
+
+        const imageBuffer = product.media;
+        const base64Image = Buffer.from(imageBuffer).toString('base64');
+        const imageSrc = `data:image/jpeg;base64,${base64Image}`;
+        product.image = imageSrc;
+      }
+      );
       setProducts(productsData);
     }
     fetchProducts();
   }, []);
+
+
+
+
+
   const handleDelete = async (productId) => {
     try {
       await RestAPI.deleteProduct(productId);
@@ -144,7 +160,7 @@ const ProductListAdmin = () => {
           {products.map(product => (
             <tr key={product.id}>
               <td>
-                {product.image}
+              <img src={product.image} alt={product.product_name} />
               </td>
               <td>{product.product_name}</td>
               <td>{product.price}</td>

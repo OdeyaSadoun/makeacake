@@ -10,7 +10,7 @@ router.use(bodyParser.json());
 router.get("/", (req, res) => {
   console.log("router.get");
   connection.query(
-    "SELECT p.*, m.media FROM products p JOIN media_product m ON p.id = m.product_id",
+    "SELECT p.*, m.media FROM products p JOIN media_product m ON p.id = m.product_id;",
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
