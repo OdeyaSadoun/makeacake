@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/addProduct.css';
 import RestAPI from '../server/models/restapi';
+import { Buffer } from 'buffer';
 
 
 const AddProduct = () => {
@@ -14,47 +15,19 @@ const AddProduct = () => {
     const [kosher_type, setKosherType] = useState('bet_yosef');
     const [comments, setComments] = useState('');
     const [sensitivity, setSensitivity] = useState('');
+    const [image, setImage] = useState('');
 
-    // const handleUploadImage = (e) => {
-    //     const file = e.target.files[0];
-      
-    //     if (file) {
-    //       const reader = new FileReader();
-      
-    //       reader.onload = async (event) => {
-    //         const imageData = event.target.result; // This is the base64-encoded image data
-      
-    //         try {
-    //           const fileName = file.name;
-    //         //   const productId = 123; // Replace with the actual product ID
-    //           console.log("fileName", fileName);
-    //           console.log("fileData", imageData);
-      
-    //           // Upload the image data to the server using the updated uploadImage function
-    //           const response = await RestAPI.uploadImage(fileName, imageData, productId);
-    //           console.log(response);
-      
-    //           // Set the image variable to the file name
-    //           setImage(fileName);
-      
-    //           console.log(file.type);
-    //         } catch (error) {
-    //           console.error("Error uploading image:", error);
-    //         }
-    //       };
-      
-    //       reader.readAsDataURL(file);
-    //     } else {
-    //       console.log("File has not been selected.");
-    //     }
-    //   };
-      
-    
+
+
+
     const navigate = useNavigate();
 
     const handleAddProduct = async (e) => {
         e.preventDefault(); // Prevent default form submission
         console.log('click on the button');
+
+        setImage(convertImageToBase64(image));
+        console.log("image", image);
 
         const newProduct = await RestAPI.addProduct(
             product_name,
@@ -63,7 +36,8 @@ const AddProduct = () => {
             discount_percentage,
             kosher_type,
             comments,
-            sensitivity
+            sensitivity,
+            image
         );
         if (newProduct && newProduct.status === 201) {
             // Registration successful, navigate to the login page
@@ -76,6 +50,31 @@ const AddProduct = () => {
             console.log('faild to create product');
         }
     };
+
+    const convertImageToBase64 = (file) => {
+        // Get the buffer from the file object
+        const buffer = file.slice(0, file.size);
+      
+        // Convert the buffer to a base64 string
+        const base64 = buffer.toString('base64');
+      
+        // Return the base64 string
+        return base64;
+      };
+      
+    const handleUploadFile = async () => {
+        const file = await document.getElementById('file').files[0];
+        if (!file) {
+            return;
+        }
+
+        setImage(convertImageToBase64(file));
+        console.log("image", image);
+
+
+    };
+
+
     const handleBackToAdminHome = () => {
         navigate(`/admin/${user.username}`);
     };
@@ -157,14 +156,11 @@ const AddProduct = () => {
                         onChange={(e) => setSensitivity(e.target.value)}
                     />
                 </div>
-                {/* <div>
+                <div>
                     <label>תמונה:</label>
-                    <input
-                        type="file"
-                        name="image"
-                        onChange={handleUploadImage}
-                    />
-                </div> */}
+                    <input type="file" id="file" onChange={handleUploadFile} />
+                </div>
+
                 <button type="submit" onClick={handleAddProduct}>הוספה</button>
             </form>
         </div>

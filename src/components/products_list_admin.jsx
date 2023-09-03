@@ -117,9 +117,21 @@ const ProductListAdmin = () => {
     navigate(`/admin/${user.username}/add-product`);
   };
 
-  const openUploadImageDialog = () => {
-
-  }
+  // const handleAddImage = (productId) => {
+  //   const file = this.state.file;
+  //   if (!file) {
+  //     return;
+  //   }
+  //   const product = RestAPI.getProductById(productId);
+  //   console.log(product)
+  //   // const productId = product.id;
+  //   const media = RestAPI.uploadImage(productId, file);
+  
+  //   // Update the product object with the new image
+  //   product.image = media;
+  //   setProducts([...products, product]);
+  // }
+  
 
   const handleLogout = () => {
     // Remove the user from local storage
@@ -160,7 +172,7 @@ const ProductListAdmin = () => {
           {products.map(product => (
             <tr key={product.id}>
               <td>
-              <img className='product-image' src={product.image} alt={product.product_name} />
+                <img className='product-image' src={product.image} alt={product.product_name} />
               </td>
               <td>{product.product_name}</td>
               <td>{product.price}</td>
@@ -173,11 +185,10 @@ const ProductListAdmin = () => {
                 <button onClick={() => handleDelete(product.id)}>מחיקה</button>
                 <button onClick={() => updatePrice(product)}>עדכון מחיר</button>
                 <button onClick={() => updateDiscount(product)}>עדכון אחוז הנחה</button>
-                {/* <button onClick={() => openUploadImageDialog(product)}>הוספת תמונה</button> */}
-                {/* <div>
-                  <input type="file" onChange={handleFileChange} accept="image/*" />
-                  <button onClick={() => RestAPI.uploadImage()}>הוספת תמונה</button>
-                </div> */}
+                {/* <td>
+               
+                  <button onClick={() => handleAddImage(product.id)}>הוספת תמונה</button>
+                </td> */}
               </td>
             </tr>
           ))}

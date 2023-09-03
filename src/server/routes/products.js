@@ -103,6 +103,7 @@ router.post("/add_product", (req, res) => {
     kosher_type,
     comments,
     sensitivity,
+    image
   } = req.body;
 
   // Check if the product with the same name already exists
@@ -145,15 +146,15 @@ router.post("/add_product", (req, res) => {
             //Get the product ID
             const productId = results.insertId;
 
-            // connection.query(
-            //   "INSERT INTO media_product (media, product_id) VALUES (?, ?)",
-            //   [image, productId],
-            //   (err, results) => {
-            //     if (err) {
-            //       console.error("Error executing MySQL query:", err);
-            //       res.status(500).json({ error: "Failed to add image" });
-            //       return;
-            //     }
+            connection.query(
+              "INSERT INTO media_product (media, product_id) VALUES (?, ?)",
+              [image, productId],
+              (err, results) => {
+                if (err) {
+                  console.error("Error executing MySQL query:", err);
+                  res.status(500).json({ error: "Failed to add image" });
+                  return;
+                }
 
             // Product insertion successful
             res.status(201).json({
@@ -169,9 +170,9 @@ router.post("/add_product", (req, res) => {
               sensitivity,
             });
           }
-          // );
+          );
         }
-        // }
+        }
       );
     }
   );

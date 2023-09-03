@@ -526,9 +526,9 @@ export class RestAPI {
     return await RestAPI.fetchData(url);
   }
 
-  static async addProduct(product_name, is_dairy, price, discount_percentage,kosher_type, comments, sensitivity) {
+  static async addProduct(product_name, is_dairy, price, discount_percentage,kosher_type, comments, sensitivity, image) {
     const url = `${PRODUCTS_BASE_URL}/add_product`;
-    const body = { product_name, is_dairy, price, discount_percentage,kosher_type, comments, sensitivity};
+    const body = { product_name, is_dairy, price, discount_percentage,kosher_type, comments, sensitivity, image};
     const options = {
       method: "POST",
       headers: {
