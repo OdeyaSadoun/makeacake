@@ -12,7 +12,7 @@ const ShoppingCart = () => {
     const fetchData = async () => {
       try {
         const pr = await restApi.getAllUserProducts(user.id);
-        setCart([pr]);
+        setCart(pr);
       } catch (error) {
         console.log("Error fetching data", error);
       }
@@ -95,7 +95,7 @@ const ShoppingCart = () => {
     let totalPrice = 0;
     console.log(cart, 'cart-97');
     for (const product of cart) {
-      console.log(product, 'product199');
+      console.log(product, 'product-98');
       console.log(product.quantity, 'product.quantity');
       console.log(productprices[product.id], 'productprices[product.id]');
       totalPrice += Number(productprices[product.id] * product.quantity);
