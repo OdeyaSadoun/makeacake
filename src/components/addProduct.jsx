@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/addProduct.css';
 import RestAPI from '../server/models/restapi';
+import { Buffer } from 'buffer';
 
 
 const AddProduct = () => {
@@ -13,52 +14,20 @@ const AddProduct = () => {
     const [discount_percentage, setDiscountPercentage] = useState('');
     const [kosher_type, setKosherType] = useState('bet_yosef');
     const [comments, setComments] = useState('');
-    const [image, setImage] = useState('');
     const [sensitivity, setSensitivity] = useState('');
+    const [image, setImage] = useState('');
 
-    const handleUploadImage = (e) => {
-        const file = e.target.files[0];
-        
-        if (file) {
-            const reader = new FileReader();
-          
-            reader.onload = (event) => {
-                const imageData = event.target.result; // This is the base64-encoded image data
-                
-                // Create a FormData object
-                // const formData = new FormData();
-                // formData.append("fileName", file.name);
-                // formData.append("fileData", imageData);
-                console.log("fileName", file.name);
-                console.log("fileData", imageData);
-                // console.log("formData", formData);
-                // Upload the image data to the server
-                RestAPI.uploadImage(file.name, imageData)
-                    .then(response => {
-                        console.log(response);
-                    })
-                    .catch(error => {
-                        console.error("Error uploading image:", error);
-                    });
-    
-                // Set the image variable to the file name
-                setImage(file.name);
-    
-                console.log(file.type);
-            };
-          
-            reader.readAsDataURL(file);
-        } else {
-            console.log("File has not been selected.");
-        }
-    };
-    
-    
+
+
+
     const navigate = useNavigate();
 
     const handleAddProduct = async (e) => {
         e.preventDefault(); // Prevent default form submission
         console.log('click on the button');
+
+        setImage(convertImageToBase64(image));
+        console.log("image", image);
 
         const newProduct = await RestAPI.addProduct(
             product_name,
@@ -67,7 +36,8 @@ const AddProduct = () => {
             discount_percentage,
             kosher_type,
             comments,
-            sensitivity
+            sensitivity,
+            image
         );
         if (newProduct && newProduct.status === 201) {
             // Registration successful, navigate to the login page
@@ -80,6 +50,31 @@ const AddProduct = () => {
             console.log('faild to create product');
         }
     };
+
+    const convertImageToBase64 = (file) => {
+        // Get the buffer from the file object
+        const buffer = file.slice(0, file.size);
+      
+        // Convert the buffer to a base64 string
+        const base64 = buffer.toString('base64');
+      
+        // Return the base64 string
+        return base64;
+      };
+      
+    const handleUploadFile = async () => {
+        const file = await document.getElementById('file').files[0];
+        if (!file) {
+            return;
+        }
+
+        setImage(convertImageToBase64(file));
+        console.log("image", image);
+
+
+    };
+
+
     const handleBackToAdminHome = () => {
         navigate(`/admin/${user.username}`);
     };
@@ -163,12 +158,9 @@ const AddProduct = () => {
                 </div>
                 <div>
                     <label>תמונה:</label>
-                    <input
-                        type="file"
-                        name="image"
-                        onChange={handleUploadImage}
-                    />
+                    <input type="file" id="file" onChange={handleUploadFile} />
                 </div>
+
                 <button type="submit" onClick={handleAddProduct}>הוספה</button>
             </form>
         </div>

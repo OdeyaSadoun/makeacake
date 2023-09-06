@@ -1,7 +1,7 @@
 const connection = require("../models/connection.js");
 const bodyParser = require("body-parser");
 const express = require("express");
-const fs = require("fs");
+const mysql = require("mysql2/promise");
 const router = express.Router();
 /*Parse request bodies as JSON*/
 router.use(bodyParser.json());
@@ -9,25 +9,25 @@ router.use(bodyParser.json());
 /*GET get all products*/
 router.get("/", (req, res) => {
   console.log("router.get");
-  connection.query("SELECT * FROM products", (err, results) => {
-    if (err) {
-      console.error("Error executing MySQL query:", err);
-      res.status(500).json({ error: "Failed to retrieve products" });
-      return;
+  connection.query(
+    "SELECT p.*, m.media FROM products p JOIN media_product m ON p.id = m.product_id;",
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to retrieve products" });
+        return;
+      }
+      res.json(results);
+      console.log("results", results);
     }
-    res.json(results);
-    console.log("results", results);
-  });
+  );
 });
 
-/*GET product by productid*/
-
-
-
-router.get("/:productid", (req, res) => {
-  const productid = req.params.productid;
+/*GET product by ID*/
+router.get("/:userid", (req, res) => {
+  const { productid } = req.body;
   connection.query(
-    "SELECT * FROM products WHERE id = ?",
+    "SELECT * FROM users WHERE id = ?",
     [productid],
     (err, results) => {
       if (err) {
@@ -58,8 +58,18 @@ router.get("/user/:userid", (req, res) => {
         res.status(500).json({ error: "Failed to retrieve product" });
         return;
       }
+<<<<<<< HEAD
       console.log(results);
       res.json(results);
+=======
+
+      if (results.length === 0) {
+        res.status(404).json({ error: "product not found" });
+        return;
+      }
+
+      res.json(results[0]);
+>>>>>>> b3dfef9dd03909f343f8efbecb387ab66e1d7011
     }
   );
 });
@@ -68,7 +78,6 @@ router.get("/user/:userid", (req, res) => {
 router.get("/user/like/:userid", (req, res) => {
   const userid = req.params.userid;
   const like = 1;
-
   connection.query(
     "SELECT * FROM like_product_user WHERE user_id= ? AND is_like= ? ",
     [userid, like],
@@ -78,8 +87,18 @@ router.get("/user/like/:userid", (req, res) => {
         res.status(500).json({ error: "Failed to retrieve product" });
         return;
       }
+<<<<<<< HEAD
       console.log(results, 'results');
       res.json(results);
+=======
+
+      if (results.length === 0) {
+        res.status(404).json({ error: "product not found" });
+        return;
+      }
+
+      res.json(results[0]);
+>>>>>>> b3dfef9dd03909f343f8efbecb387ab66e1d7011
     }
   );
 });
@@ -94,7 +113,7 @@ router.post("/add_product", (req, res) => {
     kosher_type,
     comments,
     sensitivity,
-    image,
+    image
   } = req.body;
 
   // Check if the product with the same name already exists
@@ -147,56 +166,71 @@ router.post("/add_product", (req, res) => {
                   return;
                 }
 
-                // Product insertion successful
-                res.status(201).json({
-                  message: "Product created successfully",
-                  status: 201,
-                  product_name,
-                  productId,
-                  is_dairy,
-                  price,
-                  discount_percentage,
-                  kosher_type,
-                  comments,
-                  sensitivity,
-                  image,
-                });
-              }
-            );
+            // Product insertion successful
+            res.status(201).json({
+              message: "Product created successfully",
+              status: 201,
+              product_name,
+              productId,
+              is_dairy,
+              price,
+              discount_percentage,
+              kosher_type,
+              comments,
+              sensitivity,
+            });
           }
+          );
+        }
         }
       );
     }
   );
 });
 
-router.post("/upload_image", (req, res) => {
-  const {fileName,fileData} = req.body;
-  // const fileData = req.body.fileData; // This is already the base64-encoded image data
-  console.log(fileName,fileData);
-  console.log("body", req.body);
+const pool = mysql.createPool(connection);
 
-  // Check if the directory exists
-  const uploadsDir = `/path/to/uploads`;
-  if (!fs.existsSync(uploadsDir)) {
-    // The directory does not exist, so create it
-    fs.mkdirSync(uploadsDir);
-  }
+router.post("/get_image/:product_id", async (req, res) => {
+  const product_id = req.params.productid;
+  console.lo4(product_id);
+  connection.query(
+    "SELECT media FROM media_product WHERE product_id = ?",
+    [product_id],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to add media" });
+        return;
+      }
 
-  // Save the base64-encoded data to the file system
-  const filePath = `${uploadsDir}/${fileName}`;
-  console.log(filePath);
-  fs.writeFile(filePath, fileData, 'base64', (err) => {
-    if (err) {
-      res.status(500).json({ error: err });
-      return;
+      if (results.length === 0) {
+        res.status(404).json({ error: "media not found", status: 404 });
+        return;
+      }
+
+      const buffer = results[0].media;
+
+      console.log(buffer, "buffer");
+
+      // Convert the blob to a buffer
+      const imageBuffer = buffer.toBuffer();
+
+      // Create a FileReader object
+      const reader = new FileReader();
+
+      // Read the image buffer
+      reader.readAsDataURL(imageBuffer);
+
+      // When the image is read, add it to the response
+      reader.onload = () => {
+        const imageData = reader.result;
+        res.json({ image: imageData });
+      };
     }
-
-    // The file was uploaded successfully
-    res.status(200).json({ fileName: fileName, status: 200 });
-  });
+  );
 });
 
+<<<<<<< HEAD
 
 
 /*POST add product to shopping cart*/
@@ -219,6 +253,8 @@ router.post("/add_product_user", (req, res) => {
 });
 
 
+=======
+>>>>>>> b3dfef9dd03909f343f8efbecb387ab66e1d7011
 /*POST add like productUser*/
 router.post("/add_like_product_user", (req, res) => {
   const { user_id, product_id, is_like } = req.body;
@@ -439,20 +475,21 @@ router.delete("/delete_products/:productid", (req, res) => {
 /*DELETE productUser*/
 router.delete("/delete_user_product/:productid", (req, res) => {
   const id = req.params.productid;
+  const { userid } = req.body;
   connection.query(
-    "DELETE FROM shoppind_cart WHERE id = ?",
-    [id],
+    "DELETE FROM shoppind_cart WHERE user_id = ? AND product_id = ?",
+    [userid, id],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed" });
+        res.status(500).json({ error: "Failed to update is_dairy" });
         return;
       }
-      res.json({ message: "Deleted successfully" });
     }
   );
 });
 
+<<<<<<< HEAD
 /*DELETE productLike*/
 router.delete("/delete_like_product/:productid", (req, res) => {
   const productid = req.params.productid;
@@ -474,4 +511,6 @@ router.delete("/delete_like_product/:productid", (req, res) => {
 
 
 
+=======
+>>>>>>> b3dfef9dd03909f343f8efbecb387ab66e1d7011
 module.exports = router;

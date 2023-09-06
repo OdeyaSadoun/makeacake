@@ -2,21 +2,36 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import RestAPI from '../server/models/restapi';
 import '../styles/productList.css';
+import { Buffer } from 'buffer';
+
 
 
 const ProductListAdmin = () => {
-  const [products, setProducts] = useState([]);
   const user = JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
-
+  const [products, setProducts] = useState([]);
+  const [file, setFile] = useState(null);
 
   useEffect(() => {
     async function fetchProducts() {
       const productsData = await RestAPI.getAllProducts();
+      productsData.forEach((product) => {
+        console.log(product.media, "before blob")
+
+        const imageBuffer = product.media;
+        const base64Image = Buffer.from(imageBuffer).toString('base64');
+        const imageSrc = `data:image/jpeg;base64,${base64Image}`;
+        product.image = imageSrc;
+      }
+      );
       setProducts(productsData);
     }
     fetchProducts();
   }, []);
+
+
+
+
 
   const handleDelete = async (productId) => {
     try {
@@ -102,6 +117,22 @@ const ProductListAdmin = () => {
     navigate(`/admin/${user.username}/add-product`);
   };
 
+  // const handleAddImage = (productId) => {
+  //   const file = this.state.file;
+  //   if (!file) {
+  //     return;
+  //   }
+  //   const product = RestAPI.getProductById(productId);
+  //   console.log(product)
+  //   // const productId = product.id;
+  //   const media = RestAPI.uploadImage(productId, file);
+  
+  //   // Update the product object with the new image
+  //   product.image = media;
+  //   setProducts([...products, product]);
+  // }
+  
+
   const handleLogout = () => {
     // Remove the user from local storage
     localStorage.removeItem('user');
@@ -112,20 +143,21 @@ const ProductListAdmin = () => {
     <div className='container'>
       <h2>המוצרים שלנו</h2>
       <div>
-      <button className="logoutButton" onClick={handleBackToAdminHome}>
-        חזרה לעמוד הראשי
-      </button>
+        <button className="logoutButton" onClick={handleBackToAdminHome}>
+          חזרה לעמוד הראשי
+        </button>
 
-      <button className="addProductButton" onClick={handleAddProduct}>
-        הוסף מוצר
-      </button>
-      <button className="logoutButton" onClick={handleLogout}>
-        יציאה
-      </button>
+        <button className="addProductButton" onClick={handleAddProduct}>
+          הוסף מוצר
+        </button>
+        <button className="logoutButton" onClick={handleLogout}>
+          יציאה
+        </button>
       </div>
       <table>
         <thead>
           <tr>
+            <th>תמונה</th>
             <th>שם</th>
             <th>מחיר</th>
             <th>כשרות</th>
@@ -139,6 +171,9 @@ const ProductListAdmin = () => {
         <tbody>
           {products.map(product => (
             <tr key={product.id}>
+              <td>
+                <img className='product-image' src={product.image} alt={product.product_name} />
+              </td>
               <td>{product.product_name}</td>
               <td>{product.price}</td>
               <td>{product.kosher_type}</td>
@@ -150,6 +185,10 @@ const ProductListAdmin = () => {
                 <button onClick={() => handleDelete(product.id)}>מחיקה</button>
                 <button onClick={() => updatePrice(product)}>עדכון מחיר</button>
                 <button onClick={() => updateDiscount(product)}>עדכון אחוז הנחה</button>
+                {/* <td>
+               
+                  <button onClick={() => handleAddImage(product.id)}>הוספת תמונה</button>
+                </td> */}
               </td>
             </tr>
           ))}

@@ -8,15 +8,15 @@ const EVENTS_BASE_URL = `${BASE_URL}/events-managment`;
 export class RestAPI {
   static async fetchData(url, options) {
 
-    console.log(options)
+    // console.log(options)
     //general function to fetch
     var response;
-    console.log(options=== undefined);
+    // console.log(options=== undefined);
     if (options === undefined) {
-      console.log("!option");
+      // console.log("!option");
       response = await fetch(url);
     } else {
-      console.log("option ok");
+      // console.log("option ok");
       response = await fetch(url, options);
     }
     const jsonData = await response.json(); // Parse response body as JSON
@@ -510,7 +510,12 @@ export class RestAPI {
     const url = `${PRODUCTS_BASE_URL}/${productid}`;
     return await RestAPI.fetchData(url);
   }
+  static async getProductImages(productid) {
+    const url = `${PRODUCTS_BASE_URL}/get_image/${productid}`;
+    return await RestAPI.fetchData(url);
+  }
 
+  
   static async getAllUserProducts(userid) {
     const url = `${PRODUCTS_BASE_URL}/user/${userid}`;
     return await RestAPI.fetchData(url);
@@ -521,45 +526,19 @@ export class RestAPI {
     return await RestAPI.fetchData(url);
   }
 
-  static async addProduct(formData) {
+  static async addProduct(product_name, is_dairy, price, discount_percentage,kosher_type, comments, sensitivity, image) {
     const url = `${PRODUCTS_BASE_URL}/add_product`;
+    const body = { product_name, is_dairy, price, discount_percentage,kosher_type, comments, sensitivity, image};
     const options = {
       method: "POST",
-      body: formData,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(body),
     };
-
     return await RestAPI.fetchData(url, options);
   }
 
-  static async uploadImage(fileName, fileData) {
-    console.log("uploadImage", fileName, fileData);
-  
-    const url = `${PRODUCTS_BASE_URL}/upload_image`;
-    const formData = new FormData();
-    formData.append("fileName", fileName);
-    formData.append("fileData", fileData); // No need to pass fileData here
-  
-    console.log("before response");
-    const body = {fileName, fileData }
-    console.log(body);
-
-    const options = {
-      method: "POST",
-      body: formData,
-    };
-
-    const response = await RestAPI.fetchData(url, options);
-  
-    console.log(response, "response");
-    if (response.status === 200) {
-      const data = await response.json();
-      console.log(data, "data");
-      return data.fileName;
-    } else {
-      throw new Error(`Failed to upload image: ${response.status}`);
-    }
-  }
-  
 
   static async addProductUser(user_id, product_id, quantity) {
     console.log(user_id, product_id, quantity, "user_id, product_id, quantity");
@@ -690,6 +669,10 @@ export class RestAPI {
 
   static async deleteUserProduct(productid) {
     const url = `${PRODUCTS_BASE_URL}/delete_user_product/${productid}`;
+<<<<<<< HEAD
+=======
+    // const body = { userid };
+>>>>>>> b3dfef9dd03909f343f8efbecb387ab66e1d7011
     const options = {
       method: "DELETE",
     };

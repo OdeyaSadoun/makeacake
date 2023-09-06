@@ -5,6 +5,10 @@
     grid-gap: 20px;
     margin-top: 20px;
   }
+  .product-image {
+    width: 5cm;
+    height: 5cm;
+  }
   
   .product-card {
     background-color: pink;
