@@ -58,10 +58,6 @@ router.get("/user/:userid", (req, res) => {
         res.status(500).json({ error: "Failed to retrieve product" });
         return;
       }
-<<<<<<< HEAD
-      console.log(results);
-      res.json(results);
-=======
 
       if (results.length === 0) {
         res.status(404).json({ error: "product not found" });
@@ -69,7 +65,6 @@ router.get("/user/:userid", (req, res) => {
       }
 
       res.json(results[0]);
->>>>>>> b3dfef9dd03909f343f8efbecb387ab66e1d7011
     }
   );
 });
@@ -87,18 +82,8 @@ router.get("/user/like/:userid", (req, res) => {
         res.status(500).json({ error: "Failed to retrieve product" });
         return;
       }
-<<<<<<< HEAD
       console.log(results, 'results');
       res.json(results);
-=======
-
-      if (results.length === 0) {
-        res.status(404).json({ error: "product not found" });
-        return;
-      }
-
-      res.json(results[0]);
->>>>>>> b3dfef9dd03909f343f8efbecb387ab66e1d7011
     }
   );
 });
@@ -230,7 +215,6 @@ router.post("/get_image/:product_id", async (req, res) => {
   );
 });
 
-<<<<<<< HEAD
 
 
 /*POST add product to shopping cart*/
@@ -253,8 +237,6 @@ router.post("/add_product_user", (req, res) => {
 });
 
 
-=======
->>>>>>> b3dfef9dd03909f343f8efbecb387ab66e1d7011
 /*POST add like productUser*/
 router.post("/add_like_product_user", (req, res) => {
   const { user_id, product_id, is_like } = req.body;
@@ -489,7 +471,6 @@ router.delete("/delete_user_product/:productid", (req, res) => {
   );
 });
 
-<<<<<<< HEAD
 /*DELETE productLike*/
 router.delete("/delete_like_product/:productid", (req, res) => {
   const productid = req.params.productid;
@@ -511,6 +492,4 @@ router.delete("/delete_like_product/:productid", (req, res) => {
 
 
 
-=======
->>>>>>> b3dfef9dd03909f343f8efbecb387ab66e1d7011
 module.exports = router;
