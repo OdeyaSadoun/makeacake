@@ -82,13 +82,8 @@ router.get("/user/like/:userid", (req, res) => {
         res.status(500).json({ error: "Failed to retrieve product" });
         return;
       }
-
-      if (results.length === 0) {
-        res.status(404).json({ error: "product not found" });
-        return;
-      }
-
-      res.json(results[0]);
+      console.log(results, 'results');
+      res.json(results);
     }
   );
 });
@@ -220,6 +215,28 @@ router.post("/get_image/:product_id", async (req, res) => {
   );
 });
 
+
+
+/*POST add product to shopping cart*/
+router.post("/add_product_user", (req, res) => {
+  const {user_id, product_id, quantity } = req.body;
+
+  console.log(user_id, product_id, quantity, "serveradd shopping cart");
+
+  connection.query(
+    "INSERT INTO shopping_cart ( user_id, product_id, quantity) VALUES (?, ?, ?)",
+    [user_id, product_id, quantity],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to add product" });
+        return;
+      }
+    }
+  );
+});
+
+
 /*POST add like productUser*/
 router.post("/add_like_product_user", (req, res) => {
   const { user_id, product_id, is_like } = req.body;
@@ -282,7 +299,7 @@ router.put("/update_quantity/:productid", (req, res) => {
   const productid = req.params.productid;
   const { userid, quantity } = req.body;
   connection.query(
-    "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND id = ?",
+    "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND product_id = ?",
     [quantity, userid, productid],
     (err, results) => {
       if (err) {
@@ -453,5 +470,26 @@ router.delete("/delete_user_product/:productid", (req, res) => {
     }
   );
 });
+
+/*DELETE productLike*/
+router.delete("/delete_like_product/:productid", (req, res) => {
+  const productid = req.params.productid;
+  const { userid } = req.body;
+  connection.query(
+    "DELETE FROM like_product_user WHERE product_id = ? and user_id = ?",
+    [productid, userid],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed" });
+        return;
+      }
+      res.json({ message: "Deleted successfully" });
+    }
+  );
+});
+
+
+
 
 module.exports = router;

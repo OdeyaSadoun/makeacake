@@ -1,6 +1,4 @@
-// LikedProducts.js
-import React from 'react';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import restApi from '../server/models/restapi';
 
 
@@ -13,7 +11,7 @@ const LikedProducts = async ( ) => {
     const fetchData = async () => {
       try {
         const likePr = await restApi.getAllLikeUserProducts(user.id);
-        setLike([likePr]);
+        setLike(likePr);
       } catch (error) {
         console.log("Error fetching data", error);
       }
@@ -39,19 +37,6 @@ const LikedProducts = async ( ) => {
   }, [like]);
 
 
-  // useEffect(() => {
-  //   // Fetch product names when cart updates
-  //   const fetchProductNames = async () => {
-  //     const names = {};
-  //     for (const item of like) {
-  //       const name = await handleNameProduct(item.product_id);
-  //       names[item.id] = name;
-  //     }
-  //     setProductNames(names);
-  //   };
-  //   fetchProductNames();
-  // }, [like]);
-
 
 
 
@@ -70,10 +55,11 @@ const LikedProducts = async ( ) => {
   };
 
 
-  const handleDelete = async (itemId) => {
+  const handleDelete = async (item) => {
     try {
-      await restApi.deleteLikeProduct(itemId);
-      setLike(prevLike => prevLike.filter((item) => item.id !== itemId));
+      const productid=item.product_id
+      await restApi.deleteLikeProduct(productid, user.id);
+      setLike(prevLike => prevLike.filter((pr) => pr.id !== productid));
     } catch (error) {
       console.log("Error deleting", error);
     }   
@@ -86,18 +72,13 @@ const LikedProducts = async ( ) => {
       <h2>like products</h2>
       {like.map((item) => (
         <div key={item.id}>
-          <p>Product Name: {productNames[item.id] || "Loading..."}</p>
-          {/* <p>Product Name: {productNames[item.id]}</p> */}
+          <p>Product Name: {productNames[item.id]}</p>
           <p>Like: {item.is_like}</p>
-          <button onClick={() => handleDelete(item.id)}>Remove</button>
+          <button onClick={() => handleDelete(item)}>Remove</button>
         </div>
       ))}
     </div>
   );
-
-
-
-
 };
 export default LikedProducts;
 
