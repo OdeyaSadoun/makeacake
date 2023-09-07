@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import restApi from '../server/models/restapi';
+import { Buffer } from 'buffer';
+
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
@@ -14,8 +16,17 @@ const ProductsList = () => {
       console.log(cartProducts, 'start-cartProducts');
       console.log(products, 'start-products');
       console.log(likeProducts, 'start-likeProducts');
-      const allProducts = await restApi.getAllProducts();
-      setProducts(allProducts);
+      const productsData = await restApi.getAllProducts();
+      productsData.forEach((product) => {
+        console.log(product.media, "before blob")
+        const imageBuffer = product.media;
+        const base64Image = Buffer.from(imageBuffer).toString('base64');
+        const imageSrc = `data:image/jpeg;base64,${base64Image}`;
+        product.image = imageSrc;
+      }
+      );
+      setProducts(productsData);
+
       const allCartProducts = await restApi.getAllUserProducts(user.id);
       setCartProducts(allCartProducts);
       const allLikeProducts = await restApi.getAllLikeUserProducts(user.id);//
@@ -99,15 +110,40 @@ const refresh = async () => {
   };
 
   return (
-    <div>
-      <h2>Product List</h2>
-      {products.map((product) => (
-        <div key={product.id}>
-          <p>{product.product_name}</p>
-          <p>Price: ${product.price}</p>
-          <p>Quantity: {product.quantity}</p>
-          <label>
-            Add Quantity:
+    <div>     
+      <h2>המוצרים</h2>   
+      <Link to="/cart">לעגלה שלי</Link>
+      <Link to="/liked">מוצרים שאהבתי</Link>
+      <table>
+        <thead>
+          <tr>
+            <th>תמונה</th>
+            <th>שם</th>
+            <th>מחיר</th>
+            <th>כשרות</th>
+            <th>חלבי</th>
+            <th>אחוזי הנחה</th>
+            <th>רגישויות</th>
+            <th>הערות</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map(product => (
+            <tr key={product.id}>
+              <td>
+                <img className='product-image' src={product.image} alt={product.product_name} />
+              </td>
+              <td>{product.product_name}</td>
+              <td>{product.price}</td>
+              <td>{product.kosher_type}</td>
+              <td>{product.is_dairy}</td>
+              <td>{product.discount_percentage}</td>
+              <td>{product.sensitivity}</td>
+              <td>{product.comments}</td>
+              <td>
+                <label>
+            בחירת כמות:
             <input
               type="number"
               value={quantityToAdd}
@@ -115,13 +151,13 @@ const refresh = async () => {
               min="1"
             />
           </label>
-          <button onClick={() => handleAddProduct(product)}>Add to Cart</button>
-          <button onClick={() => handleLike(product)}>Like</button>
-        </div>
-      ))}
-
-      <Link to="/cart">Go to Cart</Link>
-      <Link to="/liked">Go to Liked Products</Link>
+          <button onClick={() => handleAddProduct(product)}>הוספה לעגלה</button>
+          <button onClick={() => handleLike(product)}>אהבתי</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
