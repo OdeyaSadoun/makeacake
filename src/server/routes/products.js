@@ -305,6 +305,25 @@ router.put("/update_quantity/:productid", (req, res) => {
   const productid = req.params.productid;
   const { userid, quantity } = req.body;
   connection.query(
+    "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND id = ?",
+    [quantity, userid, productid],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to update quantity" });
+        return;
+      }
+
+      res.json({ message: "updated quantity" });
+    }
+  );
+});
+
+
+router.put("/main_update_quantity/:productid", (req, res) => {
+  const productid = req.params.productid;
+  const { userid, quantity } = req.body;
+  connection.query(
     "UPDATE shopping_cart SET quantity = ? WHERE user_id = ? AND product_id = ?",
     [quantity, userid, productid],
     (err, results) => {
@@ -318,6 +337,8 @@ router.put("/update_quantity/:productid", (req, res) => {
     }
   );
 });
+
+
 
 /*PUT update sensitivity of product*/
 router.put("/update_sensitivity/:productid", (req, res) => {
@@ -462,15 +483,16 @@ router.delete("/delete_products/:productid", (req, res) => {
 
 /*DELETE productUser*/
 router.delete("/delete_user_product/:productid", (req, res) => {
+  console.log("delete user product-server")
   const id = req.params.productid;
-  const { userid } = req.body;
+  console.log("id" , id)
   connection.query(
-    "DELETE FROM shoppind_cart WHERE user_id = ? AND product_id = ?",
-    [userid, id],
+    "DELETE FROM shopping_cart WHERE id = ?",
+    [ id],
     (err, results) => {
       if (err) {
         console.error("Error executing MySQL query:", err);
-        res.status(500).json({ error: "Failed to update is_dairy" });
+        res.status(500).json({ error: "Failed to delete product user" });
         return;
       }
     }

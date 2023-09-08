@@ -57,6 +57,7 @@ const ShoppingCart = () => {
 
   const getProductQuantityValue = async (productId, newQ) => {
     try {
+      console.log(productId, 'prid');
       await restApi.updateProductQuantity(user.id, productId, newQ);
       setCart(prevCart => {
         const updatePr = prevCart.map((pr) =>
@@ -73,8 +74,9 @@ const ShoppingCart = () => {
     try {
       await restApi.deleteUserProduct(itemId);
       setCart(prevCart => prevCart.filter((item) => item.id !== itemId));
-      // const updatedProducts = products.filter((product) => product.id !== productId);
-      // setProducts(updatedProducts);
+
+
+
     } catch (error) {
       console.log("Error deleting", error);
     }   
@@ -98,7 +100,14 @@ const ShoppingCart = () => {
       const product =await restApi.getProductById(productId);
       console.log(product,'handleNameProduct product' );
       console.log(product.product_name,'product.product_name' );
-      return product.price;
+      console.log(product.price, 'productprice');
+      console.log(product.discount_percentage, 'price-dis');
+      console.log(product.price * ((100-product.discount_percentage) / 100), 'priceafterdis');
+      if(Number(product.discount_percentage)!==0){
+        console.log('ariive');
+        return (product.price * ((100-product.discount_percentage) / 100));
+      }
+      return product.price
     } catch (error) {
       console.log("Error getting product price", error);
       return 0;

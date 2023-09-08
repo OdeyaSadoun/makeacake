@@ -71,12 +71,12 @@ const handleLike = async (product) => {
       for(let i=0; i<cartProducts.length; i++){
         console.log('start');
         if (cartProducts[i].product_id === product.id) {
-          console.log(cartProducts[i].id, 'cartProducts[i].id', product.id, 'product.id' );
+          console.log(cartProducts[i].product_id, 'cartProducts[i].product_id', product.id, 'product.id' );
           console.log(cartProducts[i].quantity, 'cartProducts[i].quantity',quantityToAdd, 'quantityToAdd' );
           const q = quantityToAdd + cartProducts[i].quantity;
           console.log(q, 'q');
           if (q!==null) {
-            restApi.updateProductQuantity(user.id, product.id, q);
+            restApi.updateMainProductQuantity(user.id, product.id, q);
             console.log(cartProducts, 'cartProductsAfterUpdate');
             return;
           } 
