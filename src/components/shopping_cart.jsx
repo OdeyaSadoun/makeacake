@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import restApi from '../server/models/restapi';
 import { Buffer } from 'buffer';
+import { useNavigate } from 'react-router-dom';
 
 
 const ShoppingCart = () => {
@@ -9,6 +10,7 @@ const ShoppingCart = () => {
   const [productNames, setProductNames] = useState({});
   const [productprices, setProductPrices] = useState({});
   const [showMessage, setShowMessage] = useState(false);
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -132,13 +134,31 @@ const ShoppingCart = () => {
     return totalPrice;
   };
 
+  const handleLogout = () => {
+    // Remove the user from local storage
+    localStorage.removeItem('user');
+    navigate('/Login', { replace: true });
+  };
 
 
+
+  const handleBackHome = () => {
+    navigate(`/${user.username}/ProductsList`);
+  };
   
   return (
     <div>
+<h2>העגלה שלי</h2>
+      <div>
+        <button className="logoutButton" onClick={handleBackHome}>
+        חזרה לחנות
+        </button>
+        <button className="logoutButton" onClick={handleLogout}>
+          יציאה
+        </button>
+      </div>
 
-<h2>העגלה שלי</h2>  
+
       <table>
         <thead>
           <tr>

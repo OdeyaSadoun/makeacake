@@ -2,10 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import restApi from '../server/models/restapi';
 import { Buffer } from 'buffer';
+import { useNavigate } from 'react-router-dom';
 
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
   const [cartProducts, setCartProducts] = useState([]);
   const [likeProducts, setLikeProducts] = useState([]);
   const [quantityToAdd, setQuantityToAdd] = useState(1);
@@ -90,7 +92,7 @@ const handleLike = async (product) => {
       console.log(user.id, product.id, quantityToAdd, 'user.id, product.id, quantityToAdd');
       restApi.addProductUser(user.id, product.id, quantityToAdd);
       setQuantityToAdd(1); 
-      refreshPr();
+      refresh();
       console.log(cartProducts,'ufter-setUserProducts(pr)');
     } catch (error) {
       console.log("Error adding pr", error);
@@ -98,22 +100,40 @@ const handleLike = async (product) => {
 };
 
 const refresh = async () => {
-  const pr = await restApi.getAllLikeUserProducts(user.id);
+  const pr = await restApi.getAllUserProducts(user.id);
   setCartProducts(pr);
   console.log(cartProducts,'setCartProducts(pr)');
 };
 
-  const refreshPr = async () => {
-    const pr = await restApi.getAllUserProducts(user.id);
-    setLikeProducts(pr);
-    console.log(cartProducts,'setCartProducts(pr)');
+  // const refreshPr = async () => {
+  //   const pr = await restApi.getAllUserProducts(user.id);
+  //   setLikeProducts(pr);
+  // };
+
+  const handleLogout = () => {
+    // Remove the user from local storage
+    localStorage.removeItem('user');
+    navigate('/Login', { replace: true });
   };
+
+
+
+  const handleCart = () => {
+    navigate(`/${user.username}/ShoppingCart`);
+  };
+
 
   return (
     <div>     
       <h2>המוצרים</h2>   
-      <Link to="/cart">לעגלה שלי</Link>
-      <Link to="/liked">מוצרים שאהבתי</Link>
+      <div>
+        <button className="logoutButton" onClick={handleCart}>
+       לעגלה שלי
+        </button>
+        <button className="logoutButton" onClick={handleLogout}>
+          יציאה
+        </button>
+      </div>
       <table>
         <thead>
           <tr>
@@ -152,7 +172,7 @@ const refresh = async () => {
             />
           </label>
           <button onClick={() => handleAddProduct(product)}>הוספה לעגלה</button>
-          <button onClick={() => handleLike(product)}>אהבתי</button>
+          {/* <button onClick={() => handleLike(product)}>אהבתי</button> */}
               </td>
             </tr>
           ))}
