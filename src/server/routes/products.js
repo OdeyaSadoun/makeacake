@@ -499,6 +499,25 @@ router.delete("/delete_user_product/:productid", (req, res) => {
   );
 });
 
+
+/*DELETE all productUser*/
+router.delete("/delete_all_user_product/:userid", (req, res) => {
+  console.log("delete all user product-server")
+  const id = req.params.userid;
+  console.log("id" , id)
+  connection.query(
+    "DELETE FROM shopping_cart WHERE user_id = ?",
+    [ id],
+    (err, results) => {
+      if (err) {
+        console.error("Error executing MySQL query:", err);
+        res.status(500).json({ error: "Failed to delete product user" });
+        return;
+      }
+    }
+  );
+});
+
 /*DELETE productLike*/
 router.delete("/delete_like_product/:productid", (req, res) => {
   const productid = req.params.productid;

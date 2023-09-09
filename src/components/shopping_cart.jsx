@@ -8,6 +8,7 @@ const ShoppingCart = () => {
   const [cart, setCart] = useState([]);
   const [productNames, setProductNames] = useState({});
   const [productprices, setProductPrices] = useState({});
+  const [showMessage, setShowMessage] = useState(false);
 
 
   useEffect(() => {
@@ -54,6 +55,13 @@ const ShoppingCart = () => {
     fetchProductNames();
   }, [cart]);
 
+  const handleClick= async () =>  {
+    setShowMessage(true);
+    setCart([]);   
+    await restApi.deleteAllUserProduct(user.id);
+  };
+
+
 
   const getProductQuantityValue = async (productId, newQ) => {
     try {
@@ -72,11 +80,9 @@ const ShoppingCart = () => {
   
   const handleDelete = async (itemId) => {
     try {
+      const updatedProducts = cart.filter((product) => product.id !== itemId);
+      setCart(updatedProducts);
       await restApi.deleteUserProduct(itemId);
-      setCart(prevCart => prevCart.filter((item) => item.id !== itemId));
-
-
-
     } catch (error) {
       console.log("Error deleting", error);
     }   
@@ -170,6 +176,14 @@ const ShoppingCart = () => {
       <div>
         <h3>סך הכל: ${getTotalPrice().toFixed(2)}</h3>
       </div>
+      <div>
+      <button onClick={handleClick}>לתשלום</button>
+      {showMessage && (
+        <div className="message-window">
+          <p>תודה שקניתם אצלינו!</p>
+        </div>
+      )}
+    </div>
     </div>
   );
 };
