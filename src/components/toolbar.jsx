@@ -39,25 +39,25 @@ const Toolbar = () => {
     <div className="tollbarcontainer" dir="rtl">
       <h2>{user.first_last_name}</h2>
       <nav className="navbar">
-        <button className="NavLinkButton" onClick={handleHomeClick}>
+        {/* <button className="NavLinkButton" onClick={handleHomeClick}>
           ראשי
-        </button>
+        </button> */}
         <button className="NavLinkButton" onClick={handleShopClick}>
           חנות
         </button>
         <button className="NavLinkButton" onClick={handleCartClick}>
           עגלה
         </button>
-        <button className="NavLinkButton" onClick={handleLikedProductsClick}>
+        {/* <button className="NavLinkButton" onClick={handleLikedProductsClick}>
           אהבתי
         </button>
         <button className="NavLinkButton" onClick={handlePrivatPageClick}>
           אזור אישי
-        </button>
-      </nav>
-      <button className="logoutButton" onClick={handleLogout}>
+        </button> */}
+        <button className="logoutButton" onClick={handleLogout}>
         יציאה
       </button>
+      </nav>
     </div>
   );
 };

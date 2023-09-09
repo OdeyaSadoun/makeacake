@@ -1,9 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import restApi from '../server/models/restapi';
+import { Buffer } from 'buffer';
+import { useNavigate } from 'react-router-dom';
+
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate();
   const [cartProducts, setCartProducts] = useState([]);
   const [likeProducts, setLikeProducts] = useState([]);
   const [quantityToAdd, setQuantityToAdd] = useState(1);
@@ -14,8 +18,17 @@ const ProductsList = () => {
       console.log(cartProducts, 'start-cartProducts');
       console.log(products, 'start-products');
       console.log(likeProducts, 'start-likeProducts');
-      const allProducts = await restApi.getAllProducts();
-      setProducts(allProducts);
+      const productsData = await restApi.getAllProducts();
+      productsData.forEach((product) => {
+        console.log(product.media, "before blob")
+        const imageBuffer = product.media;
+        const base64Image = Buffer.from(imageBuffer).toString('base64');
+        const imageSrc = `data:image/jpeg;base64,${base64Image}`;
+        product.image = imageSrc;
+      }
+      );
+      setProducts(productsData);
+
       const allCartProducts = await restApi.getAllUserProducts(user.id);
       setCartProducts(allCartProducts);
       const allLikeProducts = await restApi.getAllLikeUserProducts(user.id);//
@@ -60,12 +73,12 @@ const handleLike = async (product) => {
       for(let i=0; i<cartProducts.length; i++){
         console.log('start');
         if (cartProducts[i].product_id === product.id) {
-          console.log(cartProducts[i].id, 'cartProducts[i].id', product.id, 'product.id' );
+          console.log(cartProducts[i].product_id, 'cartProducts[i].product_id', product.id, 'product.id' );
           console.log(cartProducts[i].quantity, 'cartProducts[i].quantity',quantityToAdd, 'quantityToAdd' );
           const q = quantityToAdd + cartProducts[i].quantity;
           console.log(q, 'q');
           if (q!==null) {
-            restApi.updateProductQuantity(user.id, product.id, q);
+            restApi.updateMainProductQuantity(user.id, product.id, q);
             console.log(cartProducts, 'cartProductsAfterUpdate');
             return;
           } 
@@ -79,7 +92,7 @@ const handleLike = async (product) => {
       console.log(user.id, product.id, quantityToAdd, 'user.id, product.id, quantityToAdd');
       restApi.addProductUser(user.id, product.id, quantityToAdd);
       setQuantityToAdd(1); 
-      refreshPr();
+      refresh();
       console.log(cartProducts,'ufter-setUserProducts(pr)');
     } catch (error) {
       console.log("Error adding pr", error);
@@ -87,27 +100,70 @@ const handleLike = async (product) => {
 };
 
 const refresh = async () => {
-  const pr = await restApi.getAllLikeUserProducts(user.id);
+  const pr = await restApi.getAllUserProducts(user.id);
   setCartProducts(pr);
   console.log(cartProducts,'setCartProducts(pr)');
 };
 
-  const refreshPr = async () => {
-    const pr = await restApi.getAllUserProducts(user.id);
-    setLikeProducts(pr);
-    console.log(cartProducts,'setCartProducts(pr)');
+  // const refreshPr = async () => {
+  //   const pr = await restApi.getAllUserProducts(user.id);
+  //   setLikeProducts(pr);
+  // };
+
+  const handleLogout = () => {
+    // Remove the user from local storage
+    localStorage.removeItem('user');
+    navigate('/Login', { replace: true });
   };
 
+
+
+  const handleCart = () => {
+    navigate(`/${user.username}/ShoppingCart`);
+  };
+
+
   return (
-    <div>
-      <h2>Product List</h2>
-      {products.map((product) => (
-        <div key={product.id}>
-          <p>{product.product_name}</p>
-          <p>Price: ${product.price}</p>
-          <p>Quantity: {product.quantity}</p>
-          <label>
-            Add Quantity:
+    <div>     
+      <h2>המוצרים</h2>   
+      <div>
+        <button className="logoutButton" onClick={handleCart}>
+       לעגלה שלי
+        </button>
+        <button className="logoutButton" onClick={handleLogout}>
+          יציאה
+        </button>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>תמונה</th>
+            <th>שם</th>
+            <th>מחיר</th>
+            <th>כשרות</th>
+            <th>חלבי</th>
+            <th>אחוזי הנחה</th>
+            <th>רגישויות</th>
+            <th>הערות</th>
+            <th>פעולות</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map(product => (
+            <tr key={product.id}>
+              <td>
+                <img className='product-image' src={product.image} alt={product.product_name} />
+              </td>
+              <td>{product.product_name}</td>
+              <td>{product.price}</td>
+              <td>{product.kosher_type}</td>
+              <td>{product.is_dairy}</td>
+              <td>{product.discount_percentage}</td>
+              <td>{product.sensitivity}</td>
+              <td>{product.comments}</td>
+              <td>
+                <label>
+            בחירת כמות:
             <input
               type="number"
               value={quantityToAdd}
@@ -115,13 +171,13 @@ const refresh = async () => {
               min="1"
             />
           </label>
-          <button onClick={() => handleAddProduct(product)}>Add to Cart</button>
-          <button onClick={() => handleLike(product)}>Like</button>
-        </div>
-      ))}
-
-      <Link to="/cart">Go to Cart</Link>
-      <Link to="/liked">Go to Liked Products</Link>
+          <button onClick={() => handleAddProduct(product)}>הוספה לעגלה</button>
+          {/* <button onClick={() => handleLike(product)}>אהבתי</button> */}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
