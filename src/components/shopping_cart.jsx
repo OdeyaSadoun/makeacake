@@ -194,7 +194,7 @@ const ShoppingCart = () => {
         </tbody>
       </table>
       <div>
-        <h3>סך הכל: ${getTotalPrice().toFixed(2)}</h3>
+        <h3>סך הכל: ₪ {getTotalPrice().toFixed(2)}</h3>
       </div>
       <div>
       <button onClick={handleClick}>לתשלום</button>
